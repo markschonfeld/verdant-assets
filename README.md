@@ -26,6 +26,42 @@ text (not diffusion-generated lettering).
 - `posters/wild_branch_1024x1536.png`
 - `posters/pruning_direction_1024x1536.png`
 
+## Batch 2
+
+### Corrected and new seamless base-color textures
+
+All texture exports are 2048×2048 RGB PNGs. They are generated on a torus,
+export with pixel-identical opposite edges, and use flat chromatic material
+variation rather than baked directional highlights or shadows.
+
+- `textures/soil_terrace_2048.png` (corrected dark, wet worked earth)
+- `textures/rust_corrugated_2048.png`
+- `textures/terrazzo_institutional_2048.png`
+- `textures/dome_glass_dirty_2048.png`
+- `textures/concrete_rubble_2048.png`
+
+### Alpha-cutout foliage cards
+
+All cutouts are 1024×1024 RGBA PNGs with real transparent alpha, centered
+silhouettes, clean padding, and alpha-correct downsampling to avoid white or
+dark edge halos.
+
+- `cutouts/vine_hanging_1024.png`
+- `cutouts/vine_wall_patch_1024.png`
+- `cutouts/weed_clump_1024.png`
+- `cutouts/leaf_debris_1024.png`
+
+Batch 2 reproduction and QA:
+
+```bash
+python3 scripts/generate_batch2.py
+python3 scripts/verify_batch2.py
+```
+
+`qa/batch2_report.json` records seam, lighting-spread, alpha-range, transparent
+RGB, content-padding, and format checks. The `batch2_*_contact_sheet.png` files
+and individual 2×2/checkerboard previews support visual review.
+
 ## Reproduction and QA
 
 ```bash

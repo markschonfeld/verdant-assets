@@ -1,0 +1,175 @@
+{
+  "textures": {
+    "soil_terrace": {
+      "size": [
+        2048,
+        2048
+      ],
+      "mode": "RGB",
+      "format": "PNG",
+      "exact_left_right": true,
+      "exact_top_bottom": true,
+      "edge_derivative_mae_lr": 1.381,
+      "edge_derivative_mae_tb": 0.866,
+      "quadrant_luminance_spread": 0.598,
+      "mean_luminance": 24.219,
+      "bytes": 1147620,
+      "pass": true
+    },
+    "rust_corrugated": {
+      "size": [
+        2048,
+        2048
+      ],
+      "mode": "RGB",
+      "format": "PNG",
+      "exact_left_right": true,
+      "exact_top_bottom": true,
+      "edge_derivative_mae_lr": 12.181,
+      "edge_derivative_mae_tb": 1.369,
+      "quadrant_luminance_spread": 0.557,
+      "mean_luminance": 122.994,
+      "bytes": 2711220,
+      "pass": true
+    },
+    "terrazzo_institutional": {
+      "size": [
+        2048,
+        2048
+      ],
+      "mode": "RGB",
+      "format": "PNG",
+      "exact_left_right": true,
+      "exact_top_bottom": true,
+      "edge_derivative_mae_lr": 4.967,
+      "edge_derivative_mae_tb": 4.581,
+      "quadrant_luminance_spread": 2.156,
+      "mean_luminance": 197.827,
+      "bytes": 725901,
+      "pass": true
+    },
+    "dome_glass_dirty": {
+      "size": [
+        2048,
+        2048
+      ],
+      "mode": "RGB",
+      "format": "PNG",
+      "exact_left_right": true,
+      "exact_top_bottom": true,
+      "edge_derivative_mae_lr": 1.037,
+      "edge_derivative_mae_tb": 1.171,
+      "quadrant_luminance_spread": 1.616,
+      "mean_luminance": 206.297,
+      "bytes": 984420,
+      "pass": true
+    },
+    "concrete_rubble": {
+      "size": [
+        2048,
+        2048
+      ],
+      "mode": "RGB",
+      "format": "PNG",
+      "exact_left_right": true,
+      "exact_top_bottom": true,
+      "edge_derivative_mae_lr": 2.787,
+      "edge_derivative_mae_tb": 2.128,
+      "quadrant_luminance_spread": 9.164,
+      "mean_luminance": 108.42,
+      "bytes": 545384,
+      "pass": true
+    }
+  },
+  "cutouts": {
+    "vine_hanging": {
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "format": "PNG",
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "transparent_fraction": 0.93,
+      "partial_alpha_pixels": 32956,
+      "opaque_pixels": 40430,
+      "content_bbox": [
+        386,
+        66,
+        649,
+        913
+      ],
+      "transparent_rgb_max": 0,
+      "bytes": 133767,
+      "pass": true
+    },
+    "vine_wall_patch": {
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "format": "PNG",
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "transparent_fraction": 0.7712,
+      "partial_alpha_pixels": 118403,
+      "opaque_pixels": 121491,
+      "content_bbox": [
+        92,
+        112,
+        914,
+        892
+      ],
+      "transparent_rgb_max": 0,
+      "bytes": 485350,
+      "pass": true
+    },
+    "weed_clump": {
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "format": "PNG",
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "transparent_fraction": 0.8435,
+      "partial_alpha_pixels": 65850,
+      "opaque_pixels": 98274,
+      "content_bbox": [
+        295,
+        173,
+        735,
+        923
+      ],
+      "transparent_rgb_max": 0,
+      "bytes": 194776,
+      "pass": true
+    },
+    "leaf_debris": {
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "format": "PNG",
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "transparent_fraction": 0.8865,
+      "partial_alpha_pixels": 60280,
+      "opaque_pixels": 58715,
+      "content_bbox": [
+        97,
+        111,
+        941,
+        911
+      ],
+      "transparent_rgb_max": 0,
+      "bytes": 239184,
+      "pass": true
+    }
+  },
+  "pass": true
+}
