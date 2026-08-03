@@ -1,0 +1,96 @@
+{
+  "textures": {
+    "soil_terrace": {
+      "size": [
+        2048,
+        2048
+      ],
+      "mode": "RGB",
+      "exact_left_right": true,
+      "exact_top_bottom": true,
+      "edge_derivative_mae_lr": 5.06,
+      "edge_derivative_mae_tb": 0.445,
+      "quadrant_mean_spread": 1.019,
+      "bytes": 453226
+    },
+    "concrete_formed": {
+      "size": [
+        2048,
+        2048
+      ],
+      "mode": "RGB",
+      "exact_left_right": true,
+      "exact_top_bottom": true,
+      "edge_derivative_mae_lr": 0.28,
+      "edge_derivative_mae_tb": 0.417,
+      "quadrant_mean_spread": 0.234,
+      "bytes": 456592
+    },
+    "steel_pastel_turquoise": {
+      "size": [
+        2048,
+        2048
+      ],
+      "mode": "RGB",
+      "exact_left_right": true,
+      "exact_top_bottom": true,
+      "edge_derivative_mae_lr": 0.492,
+      "edge_derivative_mae_tb": 0.656,
+      "quadrant_mean_spread": 1.716,
+      "bytes": 366730
+    },
+    "stucco_cream": {
+      "size": [
+        2048,
+        2048
+      ],
+      "mode": "RGB",
+      "exact_left_right": true,
+      "exact_top_bottom": true,
+      "edge_derivative_mae_lr": 0.533,
+      "edge_derivative_mae_tb": 0.572,
+      "quadrant_mean_spread": 0.126,
+      "bytes": 322480
+    },
+    "overgrowth_vine": {
+      "size": [
+        2048,
+        2048
+      ],
+      "mode": "RGB",
+      "exact_left_right": true,
+      "exact_top_bottom": true,
+      "edge_derivative_mae_lr": 2.282,
+      "edge_derivative_mae_tb": 2.444,
+      "quadrant_mean_spread": 2.698,
+      "bytes": 481913
+    }
+  },
+  "posters": {
+    "garden_loved": {
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGB",
+      "bytes": 41706
+    },
+    "wild_branch": {
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGB",
+      "bytes": 53265
+    },
+    "pruning_direction": {
+      "size": [
+        1024,
+        1536
+      ],
+      "mode": "RGB",
+      "bytes": 49059
+    }
+  },
+  "pass": true
+}
