@@ -1,0 +1,520 @@
+{
+  "spec": {
+    "dimensions": [
+      2048,
+      2048
+    ],
+    "format": "PNG",
+    "normal_convention": "DirectX tangent-space; green channel down (+image-Y slope => +G)",
+    "roughness_encoding": "black=smooth/mirror, white=rough",
+    "ao_encoding": "white=open, dark=crevice",
+    "opacity_encoding": "white=clear glass, dark=heavy grime",
+    "basecolor_policy": "material pigment/color only; no height, normal, AO, lighting, shadow, or vignette multiplication"
+  },
+  "materials": {
+    "soil_terrace": {
+      "maps": {
+        "basecolor": {
+          "path": "textures/pbr/soil_terrace_basecolor.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "RGB",
+          "format": "PNG",
+          "exact_left_right": true,
+          "exact_top_bottom": true,
+          "bytes": 2055361,
+          "statistics": {
+            "min": 11,
+            "max": 106,
+            "mean": 24.218,
+            "stddev": 4.808,
+            "p05": 18.484,
+            "p95": 29.833,
+            "quadrant_luminance_spread": 0.594
+          },
+          "pass": true
+        },
+        "normal": {
+          "path": "textures/pbr/soil_terrace_normal.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "RGB",
+          "format": "PNG",
+          "exact_left_right": true,
+          "exact_top_bottom": true,
+          "bytes": 7149316,
+          "statistics": {
+            "min": 36,
+            "max": 222,
+            "mean": 134.628,
+            "stddev": 32.147,
+            "p05": 74.749,
+            "p95": 191.44,
+            "channels_rgb": [
+              {
+                "min": 0,
+                "max": 252,
+                "mean": 127.178,
+                "stddev": 55.268,
+                "p05": 39.0,
+                "p95": 215.0
+              },
+              {
+                "min": 2,
+                "max": 252,
+                "mean": 127.025,
+                "stddev": 41.751,
+                "p05": 50.0,
+                "p95": 204.0
+              },
+              {
+                "min": 142,
+                "max": 255,
+                "mean": 231.872,
+                "stddev": 21.333,
+                "p05": 187.0,
+                "p95": 254.0
+              }
+            ]
+          },
+          "pass": true
+        },
+        "roughness": {
+          "path": "textures/pbr/soil_terrace_roughness.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "L",
+          "format": "PNG",
+          "exact_left_right": true,
+          "exact_top_bottom": true,
+          "bytes": 1785906,
+          "statistics": {
+            "min": 75,
+            "max": 249,
+            "mean": 132.007,
+            "stddev": 24.84,
+            "p05": 102.0,
+            "p95": 183.0,
+            "p95_minus_p05": 81.0
+          },
+          "pass": true
+        },
+        "ao": {
+          "path": "textures/pbr/soil_terrace_ao.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "L",
+          "format": "PNG",
+          "exact_left_right": true,
+          "exact_top_bottom": true,
+          "bytes": 2098931,
+          "statistics": {
+            "min": 45,
+            "max": 255,
+            "mean": 186.771,
+            "stddev": 60.484,
+            "p05": 86.0,
+            "p95": 255.0,
+            "p95_minus_p05": 169.0
+          },
+          "pass": true
+        }
+      },
+      "alignment_pass": true,
+      "pass": true
+    },
+    "steel_rusted_beam": {
+      "maps": {
+        "basecolor": {
+          "path": "textures/pbr/steel_rusted_beam_basecolor.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "RGB",
+          "format": "PNG",
+          "exact_left_right": true,
+          "exact_top_bottom": true,
+          "bytes": 3396291,
+          "statistics": {
+            "min": 47,
+            "max": 135,
+            "mean": 114.468,
+            "stddev": 8.509,
+            "p05": 98.542,
+            "p95": 125.628,
+            "quadrant_luminance_spread": 1.983
+          },
+          "pass": true
+        },
+        "normal": {
+          "path": "textures/pbr/steel_rusted_beam_normal.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "RGB",
+          "format": "PNG",
+          "exact_left_right": true,
+          "exact_top_bottom": true,
+          "bytes": 7003251,
+          "statistics": {
+            "min": 34,
+            "max": 222,
+            "mean": 135.694,
+            "stddev": 20.679,
+            "p05": 99.041,
+            "p95": 170.865,
+            "channels_rgb": [
+              {
+                "min": 2,
+                "max": 252,
+                "mean": 126.992,
+                "stddev": 29.104,
+                "p05": 75.0,
+                "p95": 179.0
+              },
+              {
+                "min": 2,
+                "max": 252,
+                "mean": 127.01,
+                "stddev": 27.55,
+                "p05": 79.0,
+                "p95": 175.0
+              },
+              {
+                "min": 146,
+                "max": 255,
+                "mean": 247.348,
+                "stddev": 12.447,
+                "p05": 222.0,
+                "p95": 254.0
+              }
+            ]
+          },
+          "pass": true
+        },
+        "roughness": {
+          "path": "textures/pbr/steel_rusted_beam_roughness.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "L",
+          "format": "PNG",
+          "exact_left_right": true,
+          "exact_top_bottom": true,
+          "bytes": 1700778,
+          "statistics": {
+            "min": 29,
+            "max": 255,
+            "mean": 151.245,
+            "stddev": 36.245,
+            "p05": 110.0,
+            "p95": 222.0,
+            "p95_minus_p05": 112.0
+          },
+          "pass": true
+        },
+        "ao": {
+          "path": "textures/pbr/steel_rusted_beam_ao.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "L",
+          "format": "PNG",
+          "exact_left_right": true,
+          "exact_top_bottom": true,
+          "bytes": 1570638,
+          "statistics": {
+            "min": 76,
+            "max": 255,
+            "mean": 237.853,
+            "stddev": 28.316,
+            "p05": 181.0,
+            "p95": 255.0,
+            "p95_minus_p05": 74.0
+          },
+          "pass": true
+        }
+      },
+      "alignment_pass": true,
+      "pass": true
+    },
+    "concrete_formed": {
+      "maps": {
+        "basecolor": {
+          "path": "textures/pbr/concrete_formed_basecolor.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "RGB",
+          "format": "PNG",
+          "exact_left_right": true,
+          "exact_top_bottom": true,
+          "bytes": 1670805,
+          "statistics": {
+            "min": 62,
+            "max": 159,
+            "mean": 135.534,
+            "stddev": 8.497,
+            "p05": 119.491,
+            "p95": 146.487,
+            "quadrant_luminance_spread": 3.215
+          },
+          "pass": true
+        },
+        "normal": {
+          "path": "textures/pbr/concrete_formed_normal.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "RGB",
+          "format": "PNG",
+          "exact_left_right": true,
+          "exact_top_bottom": true,
+          "bytes": 2007103,
+          "statistics": {
+            "min": 34,
+            "max": 222,
+            "mean": 135.443,
+            "stddev": 21.035,
+            "p05": 93.6,
+            "p95": 167.906,
+            "channels_rgb": [
+              {
+                "min": 2,
+                "max": 254,
+                "mean": 126.994,
+                "stddev": 16.41,
+                "p05": 120.0,
+                "p95": 134.0
+              },
+              {
+                "min": 2,
+                "max": 252,
+                "mean": 126.541,
+                "stddev": 29.066,
+                "p05": 70.0,
+                "p95": 173.0
+              },
+              {
+                "min": 141,
+                "max": 255,
+                "mean": 248.509,
+                "stddev": 16.996,
+                "p05": 202.0,
+                "p95": 254.0
+              }
+            ]
+          },
+          "pass": true
+        },
+        "roughness": {
+          "path": "textures/pbr/concrete_formed_roughness.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "L",
+          "format": "PNG",
+          "exact_left_right": true,
+          "exact_top_bottom": true,
+          "bytes": 1102210,
+          "statistics": {
+            "min": 70,
+            "max": 255,
+            "mean": 192.207,
+            "stddev": 25.502,
+            "p05": 149.0,
+            "p95": 233.0,
+            "p95_minus_p05": 84.0
+          },
+          "pass": true
+        },
+        "ao": {
+          "path": "textures/pbr/concrete_formed_ao.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "L",
+          "format": "PNG",
+          "exact_left_right": true,
+          "exact_top_bottom": true,
+          "bytes": 460043,
+          "statistics": {
+            "min": 61,
+            "max": 255,
+            "mean": 244.85,
+            "stddev": 33.353,
+            "p05": 189.0,
+            "p95": 255.0,
+            "p95_minus_p05": 66.0
+          },
+          "pass": true
+        }
+      },
+      "alignment_pass": true,
+      "pass": true
+    },
+    "glass_dome_grime": {
+      "maps": {
+        "basecolor": {
+          "path": "textures/pbr/glass_dome_grime_basecolor.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "RGB",
+          "format": "PNG",
+          "exact_left_right": true,
+          "exact_top_bottom": true,
+          "bytes": 1115066,
+          "statistics": {
+            "min": 151,
+            "max": 223,
+            "mean": 216.055,
+            "stddev": 6.424,
+            "p05": 205.023,
+            "p95": 221.231,
+            "quadrant_luminance_spread": 0.767
+          },
+          "pass": true
+        },
+        "normal": {
+          "path": "textures/pbr/glass_dome_grime_normal.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "RGB",
+          "format": "PNG",
+          "exact_left_right": true,
+          "exact_top_bottom": true,
+          "bytes": 2365984,
+          "statistics": {
+            "min": 89,
+            "max": 183,
+            "mean": 136.182,
+            "stddev": 4.191,
+            "p05": 129.273,
+            "p95": 143.089,
+            "channels_rgb": [
+              {
+                "min": 63,
+                "max": 198,
+                "mean": 127.001,
+                "stddev": 6.076,
+                "p05": 117.0,
+                "p95": 137.0
+              },
+              {
+                "min": 67,
+                "max": 187,
+                "mean": 127.011,
+                "stddev": 5.569,
+                "p05": 118.0,
+                "p95": 136.0
+              },
+              {
+                "min": 231,
+                "max": 255,
+                "mean": 254.055,
+                "stddev": 0.717,
+                "p05": 253.0,
+                "p95": 255.0
+              }
+            ]
+          },
+          "pass": true
+        },
+        "roughness": {
+          "path": "textures/pbr/glass_dome_grime_roughness.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "L",
+          "format": "PNG",
+          "exact_left_right": true,
+          "exact_top_bottom": true,
+          "bytes": 1113884,
+          "statistics": {
+            "min": 32,
+            "max": 246,
+            "mean": 55.937,
+            "stddev": 21.605,
+            "p05": 35.0,
+            "p95": 100.0,
+            "p95_minus_p05": 65.0
+          },
+          "pass": true
+        },
+        "ao": {
+          "path": "textures/pbr/glass_dome_grime_ao.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "L",
+          "format": "PNG",
+          "exact_left_right": true,
+          "exact_top_bottom": true,
+          "bytes": 1210792,
+          "statistics": {
+            "min": 168,
+            "max": 255,
+            "mean": 240.428,
+            "stddev": 16.803,
+            "p05": 206.0,
+            "p95": 255.0,
+            "p95_minus_p05": 49.0
+          },
+          "pass": true
+        },
+        "opacity": {
+          "path": "textures/pbr/glass_dome_grime_opacity.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "L",
+          "format": "PNG",
+          "exact_left_right": true,
+          "exact_top_bottom": true,
+          "bytes": 879846,
+          "statistics": {
+            "min": 57,
+            "max": 255,
+            "mean": 232.392,
+            "stddev": 23.83,
+            "p05": 186.0,
+            "p95": 255.0,
+            "p95_minus_p05": 69.0
+          },
+          "pass": true
+        }
+      },
+      "alignment_pass": true,
+      "pass": true
+    }
+  },
+  "directx_convention_unit_check": {
+    "positive_image_y_slope_green": 141,
+    "negative_image_y_slope_green": 113,
+    "pass": true
+  },
+  "pass": true
+}
