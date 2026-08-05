@@ -129,7 +129,7 @@ def weather(draw, paths):
 
 def make_joinery():
     im=Image.new("RGB",(W,H),BG); d=ImageDraw.Draw(im)
-    title(d,"01","DOME FRAME JOINERY","Three-quarter modelling reference / even inspection light / 1950s heavy steel")
+    title(d,"01","SEALED STEEL INFRASTRUCTURE JOINT","Tunnel / blast door / freight-lock reference / 1950s heavy steel")
     # main illustration panel
     d.rounded_rectangle((70,300,1640,1660),radius=26,fill=(216,215,202),outline=(150,151,141),width=3)
     # shadow below hub
@@ -180,7 +180,7 @@ def make_joinery():
     callout(d,(660,855),(1660,970),(1680,940),3,"Gusset fins + welds","Triangular stiffeners carry rib forces into the cast boss. Model broad fillets and proud, continuous weld beads where fabricated plates meet machined lugs.",560)
     callout(d,(915,1290),(1660,1210),(1680,1180),4,"Drainage weathering","Rain/condensation begins at horizontal ledges, tracks around fasteners, then runs vertically down webs and lower flange edges. Keep rust directional; avoid uniform orange noise.",560)
     note_box(d,(1665,1420,2310,1660),"Material / surface callout","Lead-based industrial enamel over zinc-rich primer on structural steel. Surviving paint is satin and desaturated blue-green; exposed edges are dark burnished steel; rust is layered brown-black at wet seams, orange only at fresh scale. Cast surfaces are subtly pebbled; machined faces and bolt heads are smoother.")
-    path=OUT/"dome_frame_joinery_reference_2400x1800.png"; im.save(path,optimize=True)
+    path=OUT/"sealed_steel_infrastructure_joint_reference_2400x1800.png"; im.save(path,optimize=True)
     return path
 
 
