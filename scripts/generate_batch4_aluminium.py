@@ -138,33 +138,38 @@ def save_l(name, suffix, a):
 def aluminium_oxidised() -> None:
     name = "alu_oxidised"
 
-    lines = die_lines(41, frequency=190, jitter=1.6)
-    pit = pits(42, count=34000, sigma=1.8)
-    bloom = periodic_noise(43, ((9, .34), (26, .32), (64, .22), (150, .12)))
-    broad = periodic_noise(44, ((120, .6), (300, .4)))
+    lines = die_lines(41, frequency=150, jitter=.55)
+    # Pits are isolated corrosion events, not an all-over aggregate.  The prior
+    # placeholder used 34,000 impulses and read as cast stone at arm's length.
+    pit = pits(42, count=620, sigma=2.35)
+    bloom = periodic_noise(43, ((18, .30), (48, .34), (110, .24), (260, .12)))
+    broad = periodic_noise(44, ((150, .58), (360, .42)))
+    polish = periodic_noise(46, ((95, .62), (260, .38)))
 
     # ---- height: die lines are shallow, pits are the real relief
-    height = (0.10 * lines + 0.30 * bloom + 0.10 * broad) - 0.70 * pit
-    height = norm01(gaussian_filter(height, 0.7, mode="wrap"))
+    height = (0.018 * (lines - .5) + 0.045 * (bloom - .5)
+              + 0.020 * (broad - .5)) - 0.24 * pit
 
     # ---- base colour: narrow, near-neutral. Chalk lifts value and desaturates;
     # pitting darkens slightly and goes very faintly warm-grey, never orange.
     base = np.empty((N, N, 3), np.float32)
-    base[:] = np.array((168.0, 171.0, 172.0), np.float32)
+    base[:] = np.array((167.0, 170.0, 171.0), np.float32)
     chalk = norm01(bloom * 0.7 + broad * 0.3)
-    base += chalk[..., None] * np.array((26.0, 25.0, 22.0), np.float32)
-    base += (lines - 0.5)[..., None] * np.array((3.0, 3.0, 3.2), np.float32)
-    base -= pit[..., None] * np.array((44.0, 43.0, 41.0), np.float32)
+    base += chalk[..., None] * np.array((18.0, 18.0, 17.0), np.float32)
+    base += (lines - 0.5)[..., None] * np.array((1.2, 1.2, 1.3), np.float32)
+    base -= pit[..., None] * np.array((8.0, 8.0, 7.0), np.float32)
     base = np.clip(base, 0, 255).astype(np.uint8)
 
     # ---- roughness: the load-bearing map. Chalked oxide rough, polished flanks
     # smooth, pits roughest of all. Wide range on purpose.
-    rough = 150.0 + 66.0 * chalk - 16.0 * norm01(lines) + 62.0 * pit
-    rough += 18.0 * (periodic_noise(45, ((40, .6), (110, .4))) - 0.5)
-    rough = np.clip(rough, 40, 245)
+    # Broad polished flanks interrupt chalk bloom.  Even the matte end stays
+    # below fully rough so grazing highlights still identify bare metal.
+    rough = 92.0 + 100.0 * chalk - 38.0 * polish - 9.0 * (lines - .5) + 24.0 * pit
+    rough += 13.0 * (periodic_noise(45, ((34, .58), (105, .42))) - 0.5)
+    rough = np.clip(rough, 62, 208)
 
     save_rgb(name, "basecolor", base)
-    save_rgb(name, "normal", normal_dx(height, 11.0))
+    save_rgb(name, "normal", normal_dx(height, 8.0))
     save_l(name, "roughness", rough.astype(np.uint8))
     save_l(name, "ao", ao_from_height(height, 0.45))
 
