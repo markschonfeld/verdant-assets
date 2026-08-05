@@ -97,3 +97,17 @@ Regenerate both sheets with:
 ```bash
 python3 scripts/generate_structure_reference_sheets.py
 ```
+
+## Atomic-research references
+
+Source-grounded concept sheets for Eden Prime’s reconciled research-station canon:
+
+- `references/atomic_research/gamma_garden_damage_gradient_wide_2400x1600.png`
+- `references/atomic_research/climatron_hex_glazing_decay_reference_2400x1600.png`
+- `references/atomic_research/SOURCES.md` (verified history versus VERDANT interpretation)
+
+Regenerate both images with:
+
+```bash
+python3 scripts/generate_atomic_research_references.py
+```
