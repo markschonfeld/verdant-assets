@@ -1,0 +1,466 @@
+{
+  "spec": {
+    "dimensions_pbr": [
+      2048,
+      2048
+    ],
+    "dimensions_cutouts": [
+      1024,
+      1024
+    ],
+    "normal": "DirectX green-down",
+    "opacity": "white=clear, dark=grime (matches glass_dome_grime)",
+    "projection": "PBR maps are exact-edge seamless for triplanar/world-aligned projection"
+  },
+  "materials": {
+    "alu_oxidised": {
+      "maps": {
+        "basecolor": {
+          "path": "textures/pbr/alu_oxidised_basecolor.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "RGB",
+          "exact_lr": true,
+          "exact_tb": true,
+          "statistics": {
+            "min": 160,
+            "max": 187,
+            "mean": 177.81,
+            "stddev": 4.09,
+            "p05": 171.36,
+            "p95": 184.36,
+            "channel_spread_mean": 4.04
+          },
+          "pass": true
+        },
+        "normal": {
+          "path": "textures/pbr/alu_oxidised_normal.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "RGB",
+          "exact_lr": true,
+          "exact_tb": true,
+          "statistics": {
+            "min": 52,
+            "max": 211,
+            "mean": 136.14,
+            "stddev": 5.31,
+            "p05": 134.39,
+            "p95": 137.95,
+            "rgb": [
+              {
+                "min": 20,
+                "max": 234,
+                "mean": 127.0,
+                "stddev": 8.33,
+                "p05": 120.0,
+                "p95": 134.0
+              },
+              {
+                "min": 21,
+                "max": 232,
+                "mean": 127.0,
+                "stddev": 6.98,
+                "p05": 126.0,
+                "p95": 128.0
+              },
+              {
+                "min": 194,
+                "max": 255,
+                "mean": 253.57,
+                "stddev": 3.9,
+                "p05": 254.0,
+                "p95": 254.0
+              }
+            ]
+          },
+          "pass": true
+        },
+        "roughness": {
+          "path": "textures/pbr/alu_oxidised_roughness.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "L",
+          "exact_lr": true,
+          "exact_tb": true,
+          "statistics": {
+            "min": 62,
+            "max": 208,
+            "mean": 125.5,
+            "stddev": 24.71,
+            "p05": 85.0,
+            "p95": 167.0,
+            "p95_minus_p05": 82.0
+          },
+          "pass": true
+        },
+        "ao": {
+          "path": "textures/pbr/alu_oxidised_ao.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "L",
+          "exact_lr": true,
+          "exact_tb": true,
+          "statistics": {
+            "min": 140,
+            "max": 255,
+            "mean": 252.23,
+            "stddev": 9.7,
+            "p05": 248.0,
+            "p95": 255.0
+          },
+          "pass": true
+        }
+      },
+      "pass": true
+    },
+    "glaze_acrylic_original": {
+      "maps": {
+        "basecolor": {
+          "path": "textures/pbr/glaze_acrylic_original_basecolor.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "RGB",
+          "exact_lr": true,
+          "exact_tb": true,
+          "statistics": {
+            "min": 192,
+            "max": 221,
+            "mean": 213.96,
+            "stddev": 3.15,
+            "p05": 208.35,
+            "p95": 218.49,
+            "channel_spread_mean": 3.28
+          },
+          "pass": true
+        },
+        "normal": {
+          "path": "textures/pbr/glaze_acrylic_original_normal.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "RGB",
+          "exact_lr": true,
+          "exact_tb": true,
+          "statistics": {
+            "min": 61,
+            "max": 204,
+            "mean": 136.14,
+            "stddev": 5.7,
+            "p05": 132.59,
+            "p95": 139.75,
+            "rgb": [
+              {
+                "min": 33,
+                "max": 222,
+                "mean": 127.0,
+                "stddev": 7.75,
+                "p05": 122.0,
+                "p95": 132.0
+              },
+              {
+                "min": 37,
+                "max": 221,
+                "mean": 127.0,
+                "stddev": 7.61,
+                "p05": 122.0,
+                "p95": 132.0
+              },
+              {
+                "min": 196,
+                "max": 255,
+                "mean": 253.58,
+                "stddev": 2.94,
+                "p05": 254.0,
+                "p95": 254.0
+              }
+            ]
+          },
+          "pass": true
+        },
+        "roughness": {
+          "path": "textures/pbr/glaze_acrylic_original_roughness.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "L",
+          "exact_lr": true,
+          "exact_tb": true,
+          "statistics": {
+            "min": 62,
+            "max": 234,
+            "mean": 108.29,
+            "stddev": 20.61,
+            "p05": 76.0,
+            "p95": 145.0,
+            "p95_minus_p05": 69.0
+          },
+          "pass": true
+        },
+        "ao": {
+          "path": "textures/pbr/glaze_acrylic_original_ao.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "L",
+          "exact_lr": true,
+          "exact_tb": true,
+          "statistics": {
+            "min": 164,
+            "max": 255,
+            "mean": 251.61,
+            "stddev": 6.32,
+            "p05": 240.0,
+            "p95": 255.0
+          },
+          "pass": true
+        },
+        "opacity": {
+          "path": "textures/pbr/glaze_acrylic_original_opacity.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "L",
+          "exact_lr": true,
+          "exact_tb": true,
+          "statistics": {
+            "min": 114,
+            "max": 255,
+            "mean": 245.75,
+            "stddev": 13.57,
+            "p05": 218.0,
+            "p95": 255.0
+          },
+          "pass": true
+        }
+      },
+      "pass": true
+    },
+    "glaze_glass_repair": {
+      "maps": {
+        "basecolor": {
+          "path": "textures/pbr/glaze_glass_repair_basecolor.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "RGB",
+          "exact_lr": true,
+          "exact_tb": true,
+          "statistics": {
+            "min": 216,
+            "max": 233,
+            "mean": 228.36,
+            "stddev": 1.93,
+            "p05": 224.87,
+            "p95": 231.3,
+            "channel_spread_mean": 2.15
+          },
+          "pass": true
+        },
+        "normal": {
+          "path": "textures/pbr/glaze_glass_repair_normal.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "RGB",
+          "exact_lr": true,
+          "exact_tb": true,
+          "statistics": {
+            "min": 81,
+            "max": 189,
+            "mean": 136.16,
+            "stddev": 3.02,
+            "p05": 134.02,
+            "p95": 138.31,
+            "rgb": [
+              {
+                "min": 55,
+                "max": 194,
+                "mean": 127.0,
+                "stddev": 4.46,
+                "p05": 124.0,
+                "p95": 130.0
+              },
+              {
+                "min": 63,
+                "max": 199,
+                "mean": 127.0,
+                "stddev": 4.01,
+                "p05": 124.0,
+                "p95": 130.0
+              },
+              {
+                "min": 224,
+                "max": 255,
+                "mean": 253.93,
+                "stddev": 1.33,
+                "p05": 254.0,
+                "p95": 255.0
+              }
+            ]
+          },
+          "pass": true
+        },
+        "roughness": {
+          "path": "textures/pbr/glaze_glass_repair_roughness.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "L",
+          "exact_lr": true,
+          "exact_tb": true,
+          "statistics": {
+            "min": 26,
+            "max": 189,
+            "mean": 65.29,
+            "stddev": 16.97,
+            "p05": 40.0,
+            "p95": 96.0,
+            "p95_minus_p05": 56.0
+          },
+          "pass": true
+        },
+        "ao": {
+          "path": "textures/pbr/glaze_glass_repair_ao.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "L",
+          "exact_lr": true,
+          "exact_tb": true,
+          "statistics": {
+            "min": 210,
+            "max": 255,
+            "mean": 253.27,
+            "stddev": 3.44,
+            "p05": 247.0,
+            "p95": 255.0
+          },
+          "pass": true
+        },
+        "opacity": {
+          "path": "textures/pbr/glaze_glass_repair_opacity.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "L",
+          "exact_lr": true,
+          "exact_tb": true,
+          "statistics": {
+            "min": 119,
+            "max": 255,
+            "mean": 244.68,
+            "stddev": 14.52,
+            "p05": 213.0,
+            "p95": 255.0
+          },
+          "pass": true
+        }
+      },
+      "pass": true
+    }
+  },
+  "cutouts": {
+    "growth_tube_cling": {
+      "path": "cutouts/growth_tube_cling_1024.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "mean": 14.01,
+        "stddev": 57.21,
+        "p05": 0.0,
+        "p95": 241.0
+      },
+      "occupancy_gt_8": 0.0594,
+      "transparent_rgb_zero": true,
+      "pass": true
+    },
+    "growth_joint_mass": {
+      "path": "cutouts/growth_joint_mass_1024.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "mean": 48.26,
+        "stddev": 98.29,
+        "p05": 0.0,
+        "p95": 255.0
+      },
+      "occupancy_gt_8": 0.198,
+      "transparent_rgb_zero": true,
+      "pass": true
+    },
+    "growth_creeping_mat": {
+      "path": "cutouts/growth_creeping_mat_1024.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "mean": 35.49,
+        "stddev": 85.62,
+        "p05": 0.0,
+        "p95": 255.0
+      },
+      "occupancy_gt_8": 0.1568,
+      "transparent_rgb_zero": true,
+      "pass": true
+    },
+    "growth_reaching": {
+      "path": "cutouts/growth_reaching_1024.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha": {
+        "min": 0,
+        "max": 255,
+        "mean": 15.09,
+        "stddev": 59.15,
+        "p05": 0.0,
+        "p95": 250.0
+      },
+      "occupancy_gt_8": 0.064,
+      "transparent_rgb_zero": true,
+      "pass": true
+    }
+  },
+  "directx_unit": {
+    "positive_slope_green": 143,
+    "negative_slope_green": 111,
+    "pass": true
+  },
+  "pass": true
+}

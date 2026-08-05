@@ -62,6 +62,41 @@ python3 scripts/verify_batch2.py
 RGB, content-padding, and format checks. The `batch2_*_contact_sheet.png` files
 and individual 2×2/checkerboard previews support visual review.
 
+## Vault materials and engineered growth
+
+The vault-frame and glazing PBR maps are 2048×2048, aligned, and exact-edge
+seamless for triplanar/world-aligned projection. Normals use Unreal's DirectX
+(green-down) convention. Base color contains no baked lighting or AO.
+
+- `textures/pbr/alu_oxidised_{basecolor,normal,roughness,ao}.png`
+- `textures/pbr/glaze_acrylic_original_{basecolor,normal,roughness,ao,opacity}.png`
+- `textures/pbr/glaze_glass_repair_{basecolor,normal,roughness,ao,opacity}.png`
+
+Glazing opacity follows the existing `glass_dome_grime` convention: white is
+clear pane and dark values mark heavier grime. The two eras are intentionally
+distinct: warm/cloudy/crazed original acrylic versus clearer, sharper,
+green-edged laminated repairs.
+
+The replacement growth cards are 1024×1024 RGBA PNGs. They follow structure or
+a directional stimulus instead of hanging like generic ivy:
+
+- `cutouts/growth_tube_cling_1024.png`
+- `cutouts/growth_joint_mass_1024.png`
+- `cutouts/growth_creeping_mat_1024.png`
+- `cutouts/growth_reaching_1024.png`
+
+Regenerate and verify this delivery with:
+
+```bash
+python3 scripts/generate_batch4_aluminium.py
+python3 scripts/generate_vault_glazing_growth.py
+python3 scripts/verify_vault_materials_growth.py
+```
+
+The machine report and visual contact sheets are under
+`qa/vault_materials_growth/`; the focused aluminium sheet remains under
+`qa/batch4_aluminium/`.
+
 ## Reproduction and QA
 
 ```bash
