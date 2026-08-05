@@ -30,9 +30,13 @@ These sheets are design-intent references, not engineering or radiation-safety p
   reconstruction.
 - Original acrylic and later laminated-glass repair panes coexist to expose two
   maintenance eras.
-- No HABS measured drawings have been pulled. MO-1135-L is cited here from
-  photographs 6 and 7 only. Dimensions and frequency are a proportional
-  reconstruction from the published 175 ft x 70 ft figures, not a measured source.
+- HABS MO-1135-L contains NO measured drawings. The Library of Congress record
+  holds 12 photographs, 2 data pages and 1 photo-caption page — checked against
+  the record itself, 05 Aug 2026. It is therefore a construction-language
+  reference and never a dimensional source; earlier wording here said the
+  drawings had "not been pulled", which wrongly implied they existed. Dimensions
+  and frequency are a proportional reconstruction from the published
+  175 ft x 70 ft figures.
 - Eden Prime's envelope is a 466 m barrel vault, not a dome: measured at
   466.4 m long x 152.4 m wide with a 61.9 m rise. Its cross-section is
   Climatron-proportioned (rise/half-span 0.81 against the Climatron's 0.80), so
