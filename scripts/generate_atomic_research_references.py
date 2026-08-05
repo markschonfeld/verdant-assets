@@ -115,7 +115,7 @@ def gamma_garden():
 
 def hexpoly(cx,cy,r): return [(cx+r*cos(pi/6+i*pi/3),cy+r*sin(pi/6+i*pi/3)) for i in range(6)]
 def climatron_glazing():
- im=Image.new('RGB',(W,H),BG); d=ImageDraw.Draw(im); title(d,'04','CLIMATRON-DERIVED HEX GLAZING','Surface-and-decay study / aluminium compression tubes + tension rods / dimensions deferred to HABS')
+ im=Image.new('RGB',(W,H),BG); d=ImageDraw.Draw(im); title(d,'04','CLIMATRON-DERIVED HEX GLAZING','Vault surface-and-decay study / aluminium lattice + suspended glazing / HABS photographs only')
  d.rounded_rectangle((55,255,1720,1515),radius=26,fill=(205,211,199),outline=(137,137,124),width=3)
  # hex field in perspective-ish staggered grid
  centers=[]; r=175
@@ -172,9 +172,9 @@ def climatron_glazing():
  leader(d,(1485,610),(1770,1160),'FAILURE + GROWTH',4)
  note(d,(1800,270,2340,515),'01 / FRAME LANGUAGE','HABS shows large aluminium compression tubes, slender tension rods, circular nodes, and a separate suspended glazing network. Preserve the airy double-layer hierarchy; do not turn it into a heavy steel grid.')
  note(d,(1800,545,2340,790),'02 / PANEL SURFACE','Original-era rigid acrylic: soft reflections, fine crazing, slight milkiness, scratches, and amber UV aging near edges. Later repair panes can be laminated glass: clearer, greener edge, sharper fracture behavior.')
- note(d,(1800,820,2340,1065),'03 / JOINT HISTORY','Compressed black gasket plus irregular surviving putty/sealant and stamped retaining clips. Mix generations of fasteners and seals so maintenance eras remain visible without changing the measured frame geometry.')
+ note(d,(1800,820,2340,1065),'03 / JOINT HISTORY','Compressed black gasket plus irregular surviving putty/sealant and stamped retaining clips. Mix generations of fasteners and seals so maintenance eras remain visible without changing the settled vault geometry.')
  note(d,(1800,1095,2340,1340),'04 / DECAY LOGIC','Moisture hangs at low hex corners, then tracks down rods and tube undersides. Aluminium oxidizes dull grey-white rather than orange; reserve rust for dissimilar-steel screws, brackets, and contaminated runoff.')
- note(d,(1800,1370,2340,1515),'REFERENCE BOUNDARY','Climatron-derived, not literal. Use HABS for member dimensions and frequency; this sheet governs surface, repair, failure, and decay.',AMBER)
+ note(d,(1800,1370,2340,1555),'REFERENCE BOUNDARY','HABS MO-1135-L supplies photographs, not measured drawings. Eden Prime is a 466 m lamella vault; this sheet governs surface, repair, failure, and decay.',AMBER)
  path=OUT/'climatron_hex_glazing_decay_reference_2400x1600.png'; im.save(path,optimize=True); return path
 
 if __name__=='__main__':

@@ -89,13 +89,28 @@ These are design-intent reference sheets rather than fabrication drawings; each
 uses an evenly lit three-quarter view, numbered construction notes, and explicit
 material/surface callouts.
 
-- `references/structure/dome_frame_joinery_reference_2400x1800.png`
+- `references/structure/sealed_steel_infrastructure_joint_reference_2400x1800.png`
+  (tunnel, blast-door, and freight-lock steel; not the aluminium vault)
 - `references/structure/greenhouse_glazing_detail_reference_2400x1800.png`
 
 Regenerate both sheets with:
 
 ```bash
 python3 scripts/generate_structure_reference_sheets.py
+```
+
+## Environment concept references
+
+The west blast-door reveal fixes the first eastward view down Eden Prime's
+466 m aluminium lamella vault: dirty mixed-era glazing, stepped terraces, pier
+colonnade, structure-following growth, and deliberate quarantine decay.
+
+- `references/environment/greenhouse_vault_reveal_west_2560x1440.png`
+
+Regenerate it with:
+
+```bash
+python3 scripts/generate_greenhouse_vault_reveal.py
 ```
 
 ## Atomic-research references
