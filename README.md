@@ -81,3 +81,19 @@ copies. Export then makes opposite boundary pixels exactly equal. QA verifies:
 - 2×2 tiled previews under `qa/` for visual seam inspection.
 
 `qa/batch1_report.json` is the machine-readable verification report.
+
+## Structural modelling references
+
+Lore-independent close studies for rebuilding the 1950s greenhouse envelope.
+These are design-intent reference sheets rather than fabrication drawings; each
+uses an evenly lit three-quarter view, numbered construction notes, and explicit
+material/surface callouts.
+
+- `references/structure/dome_frame_joinery_reference_2400x1800.png`
+- `references/structure/greenhouse_glazing_detail_reference_2400x1800.png`
+
+Regenerate both sheets with:
+
+```bash
+python3 scripts/generate_structure_reference_sheets.py
+```
