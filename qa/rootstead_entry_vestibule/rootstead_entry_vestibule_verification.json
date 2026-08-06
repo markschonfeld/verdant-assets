@@ -4,11 +4,11 @@
     "VD_RootsteadEntryVestibule_Frame": {
       "pass": true,
       "failures": [],
-      "vertices": 824,
-      "texture_coordinates": 2472,
-      "faces": 568,
-      "triangles": 1336,
-      "uv_indexed_face_corners": 2472,
+      "vertices": 744,
+      "texture_coordinates": 2232,
+      "faces": 522,
+      "triangles": 1188,
+      "uv_indexed_face_corners": 2232,
       "object_names": [
         "VD_RootsteadEntryVestibule_Frame"
       ],
@@ -34,10 +34,11 @@
         "M_Vestibule_BareSteel",
         "M_Vestibule_Kickplate",
         "M_Vestibule_PaintedSteel",
+        "M_Vestibule_PaintedSteel_BaseWear",
         "M_Vestibule_RubberSeal"
       ],
       "edge_incidence": {
-        "total": 1236,
+        "total": 1116,
         "non_two_face": 0
       }
     },
@@ -84,6 +85,20 @@
     "pass": true,
     "clear_width_cm": 920.0,
     "clear_height_cm": 520.0,
+    "intrusions": []
+  },
+  "removed_rear_intermediate_posts": {
+    "pass": true,
+    "cleared_post_centres_cm": [
+      [
+        10.0,
+        -470.0
+      ],
+      [
+        10.0,
+        470.0
+      ]
+    ],
     "intrusions": []
   },
   "material_separation": {

@@ -18,7 +18,8 @@ EXPECTED = {
     "VD_RootsteadEntryVestibule_Frame": {
         "materials": {
             "M_Vestibule_PaintedSteel", "M_Vestibule_BareSteel",
-            "M_Vestibule_RubberSeal", "M_Vestibule_Kickplate",
+            "M_Vestibule_PaintedSteel_BaseWear", "M_Vestibule_RubberSeal",
+            "M_Vestibule_Kickplate",
         },
         "closed": True,
     },
@@ -29,6 +30,7 @@ EXPECTED = {
 }
 COLORS = {
     "M_Vestibule_PaintedSteel": (36, 75, 70, 255),
+    "M_Vestibule_PaintedSteel_BaseWear": (30, 48, 40, 255),
     "M_Vestibule_BareSteel": (100, 108, 104, 255),
     "M_Vestibule_RubberSeal": (17, 21, 19, 255),
     "M_Vestibule_Kickplate": (61, 66, 58, 255),
@@ -190,6 +192,26 @@ def validate_walkthrough(meshes: dict[str, ObjMesh]) -> dict[str, object]:
     }
 
 
+def validate_removed_rear_posts(mesh: ObjMesh) -> dict[str, object]:
+    """Keep the former X=10, Y=+/-470 rear post volumes visibly empty."""
+    intrusions: list[dict[str, object]] = []
+    for face_index, (_, face, _) in enumerate(mesh.faces):
+        points = [mesh.vertices[index] for index in face]
+        if (max(point[0] for point in points) >= 0.0
+                and min(point[0] for point in points) <= 22.0
+                and max(point[2] for point in points) > 100.0
+                and min(point[2] for point in points) < 775.0):
+            for centre_y in (-470.0, 470.0):
+                if (max(point[1] for point in points) > centre_y - 15.0
+                        and min(point[1] for point in points) < centre_y + 15.0):
+                    intrusions.append({"face": face_index, "centre_y": centre_y})
+    return {
+        "pass": not intrusions,
+        "cleared_post_centres_cm": [[10.0, -470.0], [10.0, 470.0]],
+        "intrusions": intrusions,
+    }
+
+
 def normalize(vector: Vec3) -> Vec3:
     length = math.sqrt(sum(value * value for value in vector))
     return (vector[0] / length, vector[1] / length, vector[2] / length)
@@ -271,7 +293,8 @@ def render_preview(meshes: dict[str, ObjMesh], output: Path) -> None:
         "19.44 m overall wall-shoe envelope; 18.4 m internal trellis clearance",
         "8.1 m clear eave; 9.0 m ridge; 9.2 x 5.2 m unobstructed entry",
         "aged original panes + selective laminated repairs; bolted wall shoes and gutters",
-        "Place both meshes at world (128, 0, 3500); Nanite OFF on glazing",
+        "rear intermediate posts removed; deep full-span rear head member retained",
+        "ComplexAsSimple on frame + glazing; Nanite OFF on glazing",
     ]
     for index, note in enumerate(notes):
         draw.text((80, 985 + index * 45), note, fill=(194, 202, 187, 255), font=font)
@@ -283,6 +306,9 @@ def main() -> None:
     meshes = {name: parse_obj(name) for name in EXPECTED}
     checks = {name: validate(mesh) for name, mesh in meshes.items()}
     walkthrough = validate_walkthrough(meshes)
+    removed_rear_posts = validate_removed_rear_posts(
+        meshes["VD_RootsteadEntryVestibule_Frame"]
+    )
     separation = {
         "pass": all("Glass" not in material
                     for material, _, _ in meshes["VD_RootsteadEntryVestibule_Frame"].faces)
@@ -293,9 +319,11 @@ def main() -> None:
     }
     report = {
         "all_pass": all(check["pass"] for check in checks.values())
-                    and walkthrough["pass"] and separation["pass"],
+                    and walkthrough["pass"] and removed_rear_posts["pass"]
+                    and separation["pass"],
         "checks": checks,
         "walkthrough": walkthrough,
+        "removed_rear_intermediate_posts": removed_rear_posts,
         "material_separation": separation,
         "placement_world_cm": [128, 0, 3500],
     }

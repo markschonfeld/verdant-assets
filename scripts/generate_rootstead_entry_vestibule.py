@@ -175,17 +175,27 @@ def roof_height(y: float) -> float:
 def build_frame() -> Mesh:
     mesh = Mesh("VD_RootsteadEntryVestibule_Frame")
     painted = "M_Vestibule_PaintedSteel"
+    base_wear = "M_Vestibule_PaintedSteel_BaseWear"
     bare = "M_Vestibule_BareSteel"
     seal = "M_Vestibule_RubberSeal"
     kick = "M_Vestibule_Kickplate"
 
     # Main posts: 18.8 m clear outer frame, 3.6 m projection, 8.2 m eaves.
+    # Split the lower 85 cm into a weathered slot so water staining and paint loss
+    # can be authored without adding plinth-like geometry around the sections.
     for x in (10.0, 180.0, 350.0):
         for y in (-930.0, 930.0):
-            mesh.add_box((x - 10, y - 10, 0), (x + 10, y + 10, 820), painted)
-    for x in (10.0, 350.0):
-        for y in (-470.0, 470.0):
-            mesh.add_box((x - 10, y - 10, 0), (x + 10, y + 10, 820), painted)
+            mesh.add_box((x - 10, y - 10, 0), (x + 10, y + 10, 85), base_wear)
+            mesh.add_box((x - 10, y - 10, 85), (x + 10, y + 10, 820), painted)
+    # Keep only the front opening jambs. The former rear pair at X=10, Y=+/-470
+    # read as freestanding poles from the player approach and are intentionally gone.
+    for y in (-470.0, 470.0):
+        mesh.add_box((340, y - 10, 0), (360, y + 10, 85), base_wear)
+        mesh.add_box((340, y - 10, 85), (360, y + 10, 820), painted)
+
+    # A deeper continuous rear head member carries the full span between corner
+    # posts after removal of the intermediate rear supports.
+    mesh.add_box((0, -930, 780), (20, 930, 820), painted)
 
     # Side-wall sills, transoms, eaves, and greenhouse roof ribs.
     for y in (-930.0, 930.0):
@@ -219,12 +229,17 @@ def build_frame() -> Mesh:
         mesh.add_box((347, y - 3, 72), (353, y + 3, 810), seal)
     mesh.add_box((347, -476, 536), (353, 476, 544), seal)
 
-    # Bolted wall shoes make the light addition visibly secondary to the concrete wall.
-    for y in (-930.0, -470.0, 470.0, 930.0):
+    # Bolted corner wall shoes make the light addition visibly secondary to the
+    # concrete wall. One enlarged replacement washer breaks factory symmetry.
+    for y in (-930.0, 930.0):
         mesh.add_box((0, y - 42, 0), (12, y + 42, 95), bare)
         for bolt_y in (y - 27, y + 27):
             for bolt_z in (20.0, 72.0):
-                mesh.add_cylinder((12, bolt_y, bolt_z), (22, bolt_y, bolt_z), 5, 8, bare)
+                replacement = y > 0 and bolt_y > y and bolt_z > 50
+                radius = 7 if replacement else 5
+                sides = 12 if replacement else 8
+                mesh.add_cylinder((12, bolt_y, bolt_z), (22, bolt_y, bolt_z),
+                                  radius, sides, bare)
 
     # Age and repair: two unapologetically visible fishplates and restrained side bracing.
     mesh.add_box((338, -735, 795), (362, -555, 827), bare)
@@ -283,6 +298,7 @@ def build_glazing() -> Mesh:
 def write_mtl(path: Path) -> None:
     materials = {
         "M_Vestibule_PaintedSteel": (0.105, 0.205, 0.190, 0.75, 0.52, 1.0),
+        "M_Vestibule_PaintedSteel_BaseWear": (0.085, 0.125, 0.105, 0.70, 0.78, 1.0),
         "M_Vestibule_BareSteel": (0.290, 0.315, 0.305, 0.95, 0.38, 1.0),
         "M_Vestibule_RubberSeal": (0.025, 0.030, 0.026, 0.0, 0.88, 1.0),
         "M_Vestibule_Kickplate": (0.155, 0.165, 0.145, 0.85, 0.62, 1.0),

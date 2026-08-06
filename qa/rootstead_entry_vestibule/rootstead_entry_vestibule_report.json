@@ -17,9 +17,9 @@
   },
   "meshes": {
     "VD_RootsteadEntryVestibule_Frame": {
-      "vertices": 824,
-      "faces": 568,
-      "triangles_after_import": 1336,
+      "vertices": 744,
+      "faces": 522,
+      "triangles_after_import": 1188,
       "bounds_cm": {
         "min": [
           0.0,
@@ -41,6 +41,7 @@
         "M_Vestibule_BareSteel",
         "M_Vestibule_Kickplate",
         "M_Vestibule_PaintedSteel",
+        "M_Vestibule_PaintedSteel_BaseWear",
         "M_Vestibule_RubberSeal"
       ]
     },

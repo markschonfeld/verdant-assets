@@ -6,7 +6,9 @@ This kit replaces the engine-primitive entrance enclosure with a later **glazed
 steel greenhouse porch** bolted to the Rootstead west concrete end wall. It is
 light, repairable, and visibly younger than the bunker fabric: narrow painted
 steel sections, rubber glazing seats, shallow pitched roof, gutters, wall shoes,
-selective laminated replacement panes, and a few bare-steel repairs.
+selective laminated replacement panes, and a few bare-steel repairs. The rear
+intermediate posts at `X 10, Y +/-470` were removed after level review; a deeper
+continuous rear head member now spans between the actual corner posts.
 
 The existing 15.9 m wide × 7.8 m tall trellis and its vines remain inside the
 porch. The kit does not include, replace, or modify that trellis, the blast door,
@@ -31,8 +33,8 @@ plates.
 
 | OBJ | Role | Unreal settings |
 |---|---|---|
-| `VD_RootsteadEntryVestibule_Frame.obj` | opaque painted/bare steel frame, seals, kickplates, gutters, fasteners | Opaque; Nanite may be enabled; simple collision only if needed |
-| `VD_RootsteadEntryVestibule_Glazing.obj` | aged original panes and clearer laminated repairs | **Translucent; Nanite OFF; NoCollision** |
+| `VD_RootsteadEntryVestibule_Frame.obj` | opaque painted/bare steel frame, seals, kickplates, gutters, fasteners | Opaque; Nanite may be enabled; **Collision Complexity: Use Complex Collision As Simple** |
+| `VD_RootsteadEntryVestibule_Glazing.obj` | aged original panes and clearer laminated repairs | **Translucent; Nanite OFF; Collision Complexity: Use Complex Collision As Simple** |
 | `VD_RootsteadEntryVestibule.mtl` | named material-slot declarations | retain `usemtl` assignments on import |
 
 Each OBJ contains exactly one `o` object, **no `g` group records**, one UV0
@@ -48,6 +50,8 @@ material unless the final Unreal import is explicitly given thickness.
 ### Opaque frame
 
 - `M_Vestibule_PaintedSteel`: distressed Institute blue-green paint over steel.
+- `M_Vestibule_PaintedSteel_BaseWear`: lower-post variant with darker water
+  staining, chipped paint, exposed oxidation, and accumulated terrace grime.
 - `M_Vestibule_BareSteel`: galvanized/bare repairs, wall shoes, gutters, fasteners.
 - `M_Vestibule_RubberSeal`: dark glazing gaskets and shadow lines.
 - `M_Vestibule_Kickplate`: dull sacrificial lower steel skirt.
@@ -65,9 +69,12 @@ for the opaque frame if baked lighting requires one.
 
 ## Collision and gameplay
 
-- Keep `VD_RootsteadEntryVestibule_Glazing` at `NoCollision`.
-- Prefer simple authored blocking volumes for the side walls/frame rather than
-  complex-as-simple collision.
+- Set **`CTF_USE_COMPLEX_AS_SIMPLE` / Use Complex Collision As Simple** on import
+  for both frame and glazing. Unreal's single auto-generated convex hull seals
+  the doorway and produces an invisible wall.
+- Do not replace this with one auto-convex/simple hull. If the glazing should not
+  block after import, disable its collision responses explicitly while retaining
+  the import setting as the safe geometry fallback.
 - The east face is intentionally empty inside `Y -460…460`, `Z 0…520`; no mesh
   face intrudes into that opening.
 - Confirm the trellis, vine cards, and blast-door interaction remain reachable in
@@ -83,7 +90,7 @@ python3 scripts/verify_rootstead_entry_vestibule.py
 ```
 
 The verifier checks the one-object/no-group OBJ contract, UV completeness,
-material separation, bounds, non-degenerate faces, closed opaque sub-solids, and
-the east walk-through volume. Outputs are under
+material separation, bounds, non-degenerate faces, closed opaque sub-solids,
+the removed rear-post volumes, and the east walk-through volume. Outputs are under
 `qa/rootstead_entry_vestibule/`, including the machine reports and three-view
 preview.
