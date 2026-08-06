@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify and render the generated VERDANT spire landmark OBJ assets."""
+"""Verify and render the generated VERDANT exhaust-stack landmark OBJ assets."""
 
 from __future__ import annotations
 
@@ -16,8 +16,9 @@ SOURCE = ROOT / "SourceMesh" / "props"
 QA = ROOT / "qa" / "spire_landmark"
 
 EXPECTED = {
-    "VD_SpireBase": {"size": (360.0, 360.0, 110.0), "min_z": 0.0},
-    "VD_Spire": {"size": (360.0, 360.0, 1200.0), "min_z": 0.0},
+    "VD_SpireBase": {"size": (2400.0, 2400.0, 1200.0), "min_z": 0.0},
+    "VD_Spire": {"size": (2200.0, 2200.0, 18000.0), "min_z": 0.0},
+    "VD_SpireLights": {"size": (1320.0, 1320.0, 11790.0), "min_z": 5980.0},
 }
 
 Vec3 = tuple[float, float, float]
@@ -32,11 +33,13 @@ class ObjMesh:
 
 COLORS = {
     "M_Spire_Concrete": (82, 78, 68),
+    "M_Spire_StackConcrete": (112, 104, 84),
     "M_Spire_PaintedSteel": (45, 72, 69),
     "M_Spire_BareMetal": (105, 113, 112),
     "M_Spire_ServicePanel": (126, 63, 28),
-    "M_Spire_Fin": (55, 83, 77),
     "M_Spire_Fastener": (52, 54, 54),
+    "M_Spire_Soot": (12, 12, 10),
+    "M_Spire_WarningLens": (235, 42, 28),
 }
 
 
@@ -103,7 +106,7 @@ def validate(name: str, data: ObjMesh) -> dict[str, object]:
     if any(abs(size[i] - expected["size"][i]) > 0.01 for i in range(3)):
         failures.append(f"bounds size {size} != expected {expected['size']}")
     if abs(mins[2] - expected["min_z"]) > 0.01:
-        failures.append(f"pivot plane min Z {mins[2]} != 0")
+        failures.append(f"geometry min Z {mins[2]} != expected {expected['min_z']}")
     if data.mtllib != "VD_Spire_Landmark.mtl":
         failures.append("unexpected or missing mtllib")
 
@@ -119,73 +122,75 @@ def validate(name: str, data: ObjMesh) -> dict[str, object]:
     }
 
 
-def render_preview(base: ObjMesh, spire: ObjMesh, output: Path) -> None:
-    width, height = 1900, 1320
+def render_preview(meshes: dict[str, ObjMesh], output: Path) -> None:
+    width, height = 2200, 1400
     image = Image.new("RGB", (width, height), (20, 24, 23))
     draw = ImageDraw.Draw(image)
     font = ImageFont.load_default()
-    scale = 0.82
-    origin_x, ground_y = 570, 1170
 
-    assembled = []
-    for data, z_offset in ((base, 0), (spire, 110)):
-        verts = [(x, y, z + z_offset) for x, y, z in data.vertices]
-        for material, face in data.faces:
-            points = [verts[i] for i in face]
-            assembled.append((sum(p[1] for p in points) / len(points), material, points))
-    # Front elevation, looking along -Y. Painter order handles the authored solids well enough for QA.
-    for _, material, points in sorted(assembled, reverse=True):
-        poly = [(origin_x + p[0] * scale, ground_y - p[2] * scale) for p in points]
-        draw.polygon(poly, fill=COLORS.get(material, (110, 110, 110)), outline=(155, 164, 157))
+    def draw_elevation(origin_x: float, ground_y: float, scale: float,
+                       z_max: float | None = None) -> None:
+        assembled = []
+        for data in meshes.values():
+            for material, face in data.faces:
+                points = [data.vertices[i] for i in face]
+                if z_max is not None and max(p[2] for p in points) > z_max:
+                    continue
+                assembled.append((sum(p[1] for p in points) / len(points), material, points))
+        for _, material, points in sorted(assembled, reverse=True):
+            poly = [(origin_x + p[0] * scale, ground_y - p[2] * scale) for p in points]
+            draw.polygon(poly, fill=COLORS.get(material, (110, 110, 110)),
+                         outline=(155, 164, 157))
 
-    # Ground and dimension bars.
-    draw.line((110, ground_y, 1030, ground_y), fill=(202, 173, 91), width=3)
-    dim_x = 920
-    draw.line((dim_x, ground_y, dim_x, ground_y - 1310 * scale), fill=(236, 198, 93), width=2)
+    # Full 180 m elevation establishes skyline silhouette and staged taper.
+    full_x, ground_y, full_scale = 500, 1280, 0.065
+    draw_elevation(full_x, ground_y, full_scale)
+    draw.line((120, ground_y, 890, ground_y), fill=(202, 173, 91), width=3)
+    dim_x = 850
+    draw.line((dim_x, ground_y, dim_x, ground_y - 18000 * full_scale),
+              fill=(236, 198, 93), width=2)
     draw.line((dim_x - 12, ground_y, dim_x + 12, ground_y), fill=(236, 198, 93), width=2)
-    draw.line((dim_x - 12, ground_y - 1310 * scale, dim_x + 12, ground_y - 1310 * scale), fill=(236, 198, 93), width=2)
-    draw.text((dim_x + 18, ground_y - 660 * scale), "13.10 m assembly", fill=(247, 215, 120), font=font)
+    draw.line((dim_x - 12, ground_y - 18000 * full_scale,
+               dim_x + 12, ground_y - 18000 * full_scale), fill=(236, 198, 93), width=2)
+    draw.text((dim_x + 18, ground_y - 9000 * full_scale), "180 m total",
+              fill=(247, 215, 120), font=font)
+    draw.text((315, 1320), "FULL ELEVATION", fill=(235, 225, 197), font=font)
 
-    # 1.80 m human reference keeps the landmark scale explicit in the handoff.
-    human_x = 175
-    human_top = ground_y - 180 * scale
+    # Lower 40 m inset exposes the human-scale detail invisible at the entrance sightline.
+    inset_x, inset_ground, inset_scale = 1510, 1280, 0.25
+    draw.rectangle((1030, 215, 2110, 1320), outline=(78, 91, 84), width=2)
+    draw_elevation(inset_x, inset_ground, inset_scale, z_max=4200)
+    draw.line((1080, inset_ground, 2050, inset_ground), fill=(202, 173, 91), width=3)
+    draw.text((1080, 235), "LOWER 40 m DETAIL BAND", fill=(235, 225, 197), font=font)
+    draw.text((1080, 258), "tram-approach priority: process ducts, doors, ladder, pods, platforms",
+              fill=(164, 175, 166), font=font)
+
+    # 1.80 m human reference in the enlarged inset.
+    human_x = 1110
+    human_top = inset_ground - 180 * inset_scale
     human_color = (211, 205, 184)
-    draw.ellipse((human_x - 9, human_top, human_x + 9, human_top + 18), fill=human_color)
-    draw.line((human_x, human_top + 18, human_x, ground_y - 52), fill=human_color, width=6)
-    draw.line((human_x, human_top + 48, human_x - 22, human_top + 90), fill=human_color, width=4)
-    draw.line((human_x, human_top + 48, human_x + 22, human_top + 90), fill=human_color, width=4)
-    draw.line((human_x, ground_y - 52, human_x - 18, ground_y), fill=human_color, width=5)
-    draw.line((human_x, ground_y - 52, human_x + 18, ground_y), fill=human_color, width=5)
-    draw.text((human_x - 34, ground_y + 12), "1.80 m", fill=human_color, font=font)
-    draw.text((110, 45), "VD SPIRE LANDMARK — FRONT ELEVATION / TOP PLAN", fill=(235, 225, 197), font=font)
-    draw.text((110, 68), "Unreal centimetres, 1:1 · Z-up · bottom-centre pivots", fill=(164, 175, 166), font=font)
+    draw.ellipse((human_x - 6, human_top, human_x + 6, human_top + 12), fill=human_color)
+    draw.line((human_x, human_top + 12, human_x, inset_ground - 17), fill=human_color, width=4)
+    draw.line((human_x, human_top + 22, human_x - 9, human_top + 35), fill=human_color, width=3)
+    draw.line((human_x, human_top + 22, human_x + 9, human_top + 35), fill=human_color, width=3)
+    draw.line((human_x, inset_ground - 17, human_x - 7, inset_ground), fill=human_color, width=3)
+    draw.line((human_x, inset_ground - 17, human_x + 7, inset_ground), fill=human_color, width=3)
+    draw.text((1080, inset_ground + 12), "1.80 m", fill=human_color, font=font)
 
-    # Base top plan at right.
-    plan_cx, plan_cy, plan_scale = 1450, 400, 1.25
-    plan_faces = []
-    verts = base.vertices
-    for material, face in base.faces:
-        points = [verts[i] for i in face]
-        plan_faces.append((sum(p[2] for p in points) / len(points), material, points))
-    for _, material, points in sorted(plan_faces):
-        poly = [(plan_cx + p[0] * plan_scale, plan_cy + p[1] * plan_scale) for p in points]
-        draw.polygon(poly, fill=COLORS.get(material, (100, 100, 100)), outline=(155, 164, 157))
-    draw.text((1270, 650), "3.60 m base footprint", fill=(247, 215, 120), font=font)
+    draw.text((110, 38), "VD EXHAUST STACK / SIGNAL-MAST ADAPTATION", fill=(235, 225, 197), font=font)
+    draw.text((110, 62), "Unreal centimetres, 1:1 · Z-up · shared ground-centre origin",
+              fill=(164, 175, 166), font=font)
+    draw.text((110, 86), "24 m service base · 22 m max stack hardware span · separate warning-light mesh",
+              fill=(164, 175, 166), font=font)
 
-    # Legend / import lock.
-    y = 790
-    draw.text((1200, y), "MATERIAL SLOTS", fill=(235, 225, 197), font=font)
+    # Compact material legend between the two elevation studies.
+    y = 145
+    x = 865
+    draw.text((x, y), "MATERIAL SLOTS", fill=(235, 225, 197), font=font)
     for material, color in COLORS.items():
-        y += 35
-        draw.rectangle((1200, y, 1230, y + 18), fill=color, outline=(170, 170, 160))
-        draw.text((1245, y + 2), material, fill=(190, 199, 190), font=font)
-    y += 55
-    for line in ("Spire: 12.00 m high / 3.60 m instrument span",
-                 "Base: 1.10 m high / 3.60 m footprint",
-                 "Opaque geometry: Nanite ON",
-                 "Recommended: base simple collision; mast NoCollision"):
-        draw.text((1200, y), line, fill=(190, 199, 190), font=font)
-        y += 27
+        y += 30
+        draw.rectangle((x, y, x + 24, y + 15), fill=color, outline=(170, 170, 160))
+        draw.text((x + 34, y + 1), material, fill=(190, 199, 190), font=font)
 
     image.save(output)
 
@@ -194,15 +199,27 @@ def main() -> None:
     QA.mkdir(parents=True, exist_ok=True)
     meshes = {name: parse_obj(SOURCE / f"{name}.obj") for name in EXPECTED}
     results = {name: validate(name, data) for name, data in meshes.items()}
+    opaque_names = ("VD_SpireBase", "VD_Spire")
+    lens_material = "M_Spire_WarningLens"
+    separation_pass = (
+        {material for material, _ in meshes["VD_SpireLights"].faces} == {lens_material}
+        and all(lens_material not in {material for material, _ in meshes[name].faces}
+                for name in opaque_names)
+    )
     report = {
-        "all_pass": all(result["pass"] for result in results.values()),
-        "assembly_height_cm": 1310.0,
+        "all_pass": all(result["pass"] for result in results.values()) and separation_pass,
+        "assembly_height_cm": 18000.0,
+        "warning_lens_separation": {
+            "pass": separation_pass,
+            "opaque_meshes": list(opaque_names),
+            "non_nanite_mesh": "VD_SpireLights",
+        },
         "checks": results,
     }
     (QA / "spire_landmark_verification.json").write_text(
         json.dumps(report, indent=2) + "\n", encoding="utf-8"
     )
-    render_preview(meshes["VD_SpireBase"], meshes["VD_Spire"], QA / "spire_landmark_preview.png")
+    render_preview(meshes, QA / "spire_landmark_preview.png")
     print(json.dumps(report, indent=2))
     if not report["all_pass"]:
         raise SystemExit(1)

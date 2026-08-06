@@ -4,6 +4,11 @@ Kd 0.190 0.180 0.160
 # metallic 0.00
 # roughness 0.86
 
+newmtl M_Spire_StackConcrete
+Kd 0.340 0.320 0.270
+# metallic 0.00
+# roughness 0.78
+
 newmtl M_Spire_PaintedSteel
 Kd 0.160 0.240 0.230
 # metallic 0.75
@@ -19,12 +24,17 @@ Kd 0.350 0.180 0.080
 # metallic 0.80
 # roughness 0.48
 
-newmtl M_Spire_Fin
-Kd 0.190 0.280 0.260
-# metallic 0.80
-# roughness 0.40
-
 newmtl M_Spire_Fastener
 Kd 0.160 0.170 0.170
 # metallic 1.00
 # roughness 0.26
+
+newmtl M_Spire_Soot
+Kd 0.025 0.025 0.022
+# metallic 0.00
+# roughness 0.96
+
+newmtl M_Spire_WarningLens
+Kd 0.720 0.025 0.018
+# metallic 0.00
+# roughness 0.18

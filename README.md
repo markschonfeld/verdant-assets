@@ -104,10 +104,14 @@ Generators are committed beside their outputs; imported actors must remain at
 uniform scale `1.0`.
 
 The first prop family replaces the two Engine cylinders used for the Eden Prime
-landmark with a 13.10 m atomic-age environmental-research pylon:
+landmark with a **180 m working research exhaust stack later adapted as a
+settlement signal/observation mast**. Opaque stack/base geometry remains separate
+from the translucent aircraft-warning lenses so Nanite can stay enabled where
+supported:
 
 - `SourceMesh/props/VD_Spire.obj`
 - `SourceMesh/props/VD_SpireBase.obj`
+- `SourceMesh/props/VD_SpireLights.obj`
 - `references/props/SPIRE_LANDMARK_HANDOFF.md`
 
 Regenerate and verify with:

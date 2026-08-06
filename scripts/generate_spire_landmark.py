@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Generate the VERDANT atomic-age landmark spire as Unreal-centimetre OBJ assets.
+"""Generate the VERDANT exhaust-stack landmark as Unreal-centimetre OBJ assets.
 
 Outputs are dependency-free Wavefront OBJ files. Geometry is authored 1:1 in cm,
-Z-up, with each pivot at bottom centre. The spire and base remain separate so the
-base can receive simple collision while the inaccessible mast can use NoCollision.
+Z-up, with a shared ground-centre assembly origin. Opaque stack/base and translucent
+warning emitters remain separate so Nanite can stay enabled on opaque geometry.
 """
 
 from __future__ import annotations
@@ -173,89 +173,187 @@ class Mesh:
         path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def build_base() -> Mesh:
-    m = Mesh("VD_SpireBase")
-    # 3.6 m across the cardinal flats, 1.1 m high. For the 22.5-degree phase,
-    # circumradius must account for the octagon apothem rather than equal 180 cm.
-    outer_r = 180 / math.cos(math.pi / 8)
-    m.add_frustum(0, 24, outer_r, outer_r, 8, "M_Spire_Concrete")
-    m.add_frustum(24, 38, outer_r, 158, 8, "M_Spire_BareMetal")
-    m.add_frustum(38, 82, 158, 145, 8, "M_Spire_PaintedSteel")
-    m.add_frustum(82, 110, 145, 118, 8, "M_Spire_BareMetal")
-
-    # Four raised service plates, oriented to cardinal faces.
+def add_platform(mesh: Mesh, z: float, radius: float, body_radius: float, detailed: bool) -> None:
+    """Add a closed maintenance deck with human-scale rail geometry."""
+    mesh.add_frustum(z, z + 28, radius, radius, 16, "M_Spire_BareMetal")
+    post_count = 16 if detailed else 8
+    for i in range(post_count):
+        a = 2 * math.pi * i / post_count
+        p = (radius * math.cos(a), radius * math.sin(a))
+        mesh.add_cylinder_between((p[0], p[1], z + 28), (p[0], p[1], z + 138),
+                                  5, 8, "M_Spire_Fastener")
+    # Continuous top rail remains real geometry even on far-band platforms.
+    for i in range(post_count):
+        a0 = 2 * math.pi * i / post_count
+        a1 = 2 * math.pi * (i + 1) / post_count
+        mesh.add_cylinder_between(
+            (radius * math.cos(a0), radius * math.sin(a0), z + 138),
+            (radius * math.cos(a1), radius * math.sin(a1), z + 138),
+            5,
+            8,
+            "M_Spire_Fastener",
+        )
+    # Four radial bearers make the deck read as supported, not floating.
     for yaw in (0, 90, 180, 270):
         a = math.radians(yaw)
-        r = 150
-        m.add_box((r * math.cos(a), r * math.sin(a), 61), (4, 72, 34), yaw,
-                  "M_Spire_ServicePanel")
-        # Six real fasteners per plate; cylinders point radially out.
-        for tangent_offset in (-25, 0, 25):
-            for z in (49, 73):
-                tx, ty = -math.sin(a), math.cos(a)
-                start = (151 * math.cos(a) + tangent_offset * tx,
-                         151 * math.sin(a) + tangent_offset * ty, z)
-                end = (156 * math.cos(a) + tangent_offset * tx,
-                       156 * math.sin(a) + tangent_offset * ty, z)
-                m.add_cylinder_between(start, end, 2.4, 8, "M_Spire_Fastener")
+        mesh.add_cylinder_between(
+            (body_radius * math.cos(a), body_radius * math.sin(a), z - 80),
+            ((radius - 35) * math.cos(a), (radius - 35) * math.sin(a), z + 4),
+            9 if detailed else 7,
+            8,
+            "M_Spire_BareMetal",
+        )
+
+
+def add_lower_ladder(mesh: Mesh) -> None:
+    """Add a fixed-width ladder that follows the lower stack taper."""
+    y0, y1 = -32, 32
+    z0, z1, step = 1200, 4000, 35
+
+    def x_at(z: float) -> float:
+        # Lower shell radius is 800 -> 650 cm over the first 40 m.
+        shell_r = 800 - 150 * (z / 4000)
+        return shell_r + 55
+
+    levels = list(range(z0, z1, step)) + [z1]
+    for a, b in zip(levels, levels[1:]):
+        for y in (y0, y1):
+            mesh.add_cylinder_between((x_at(a), y, a), (x_at(b), y, b),
+                                      4, 8, "M_Spire_Fastener")
+    for z in levels[1:-1]:
+        mesh.add_cylinder_between((x_at(z), y0, z), (x_at(z), y1, z),
+                                  3, 8, "M_Spire_Fastener")
+    for z in range(z0 + 140, z1, 140):
+        shell_r = x_at(z) - 55
+        mesh.add_cylinder_between((shell_r, 0, z), (x_at(z), 0, z),
+                                  4, 8, "M_Spire_BareMetal")
+
+
+def build_base() -> Mesh:
+    m = Mesh("VD_SpireBase")
+    # 24 m across cardinal flats, 12 m high. This is an authored process/service
+    # enclosure rather than a scaled copy of the placeholder's 60 m cylinder.
+    outer_r = 1200 / math.cos(math.pi / 8)
+    m.add_frustum(0, 120, outer_r, outer_r, 8, "M_Spire_Concrete")
+    m.add_frustum(120, 240, outer_r, 1120, 8, "M_Spire_BareMetal")
+    m.add_frustum(240, 1050, 950, 900, 8, "M_Spire_PaintedSteel")
+    m.add_frustum(1050, 1200, 1000, 850, 8, "M_Spire_BareMetal")
+
+    # Four full-height access/plant doors with correctly human-scale fasteners.
+    for yaw in (0, 90, 180, 270):
+        a = math.radians(yaw)
+        radial = (math.cos(a), math.sin(a))
+        tangent = (-math.sin(a), math.cos(a))
+        face_r = 900
+        m.add_box((face_r * radial[0], face_r * radial[1], 485),
+                  (24, 180, 250), yaw, "M_Spire_ServicePanel")
+        for offset in (-72, -24, 24, 72):
+            for z in (380, 590):
+                start = ((face_r + 13) * radial[0] + offset * tangent[0],
+                         (face_r + 13) * radial[1] + offset * tangent[1], z)
+                end = ((face_r + 20) * radial[0] + offset * tangent[0],
+                       (face_r + 20) * radial[1] + offset * tangent[1], z)
+                m.add_cylinder_between(start, end, 4, 8, "M_Spire_Fastener")
+
+    # Two 3 m process ducts and flange collars establish exhaust function at ground level.
+    for yaw in (45, 225):
+        a = math.radians(yaw)
+        radial = (math.cos(a), math.sin(a))
+        m.add_cylinder_between((760 * radial[0], 760 * radial[1], 720),
+                               (1200 * radial[0], 1200 * radial[1], 720),
+                               150, 16, "M_Spire_BareMetal")
+        m.add_cylinder_between((1160 * radial[0], 1160 * radial[1], 720),
+                               (1220 * radial[0], 1220 * radial[1], 720),
+                               175, 16, "M_Spire_Fastener")
     return m
 
 
 def build_spire() -> Mesh:
     m = Mesh("VD_Spire")
-    # 12.0 m faceted research mast. Assembly height with base is 13.1 m.
-    m.add_frustum(0, 250, 80, 68, 12, "M_Spire_PaintedSteel")
-    m.add_frustum(250, 650, 68, 50, 12, "M_Spire_PaintedSteel")
-    m.add_frustum(650, 1050, 50, 24, 12, "M_Spire_PaintedSteel")
+    # 180 m working exhaust stack. Closed staged shells overlap at collars so each
+    # generated component remains manifold while the silhouette tapers materially.
+    sections = (
+        (0, 4000, 800, 650),
+        (4000, 9000, 650, 500),
+        (9000, 14000, 500, 390),
+        (14000, 17400, 390, 300),
+        (17400, 17920, 300, 280),
+    )
+    for z0, z1, r0, r1 in sections:
+        m.add_frustum(z0, z1, r0, r1, 16, "M_Spire_StackConcrete")
 
-    # Short lower buttresses keep the base planted without creating a rocket silhouette.
-    for yaw in (0, 90, 180, 270):
-        m.add_radial_fin(yaw, 90, 410, 76, 60, 115, 10, "M_Spire_Fin")
+    # Dark recessed exhaust mouth and heavy rim make chimney function unambiguous.
+    m.add_frustum(17920, 18000, 330, 330, 16, "M_Spire_BareMetal")
+    m.add_frustum(17996, 18000, 270, 270, 16, "M_Spire_Soot")
 
-    # Staggered environmental-instrument arms make the function legible and break
-    # axial symmetry. Each pod remains opaque; future lights/lenses must be separate.
-    for yaw, z in ((0, 430), (90, 610), (180, 790), (270, 970)):
+    # Lower 40 m: dense human-scale access, instrumentation, and settlement repair.
+    add_lower_ladder(m)
+    for yaw, z in ((0, 1550), (90, 2350), (180, 3150), (270, 3950)):
         a = math.radians(yaw)
         radial = (math.cos(a), math.sin(a))
-        arm_start = (42 * radial[0], 42 * radial[1], z)
-        arm_end = (150 * radial[0], 150 * radial[1], z)
-        brace_start = (38 * radial[0], 38 * radial[1], z - 62)
-        brace_end = (142 * radial[0], 142 * radial[1], z - 4)
-        m.add_cylinder_between(arm_start, arm_end, 6, 10, "M_Spire_BareMetal")
-        m.add_cylinder_between(brace_start, brace_end, 4, 8, "M_Spire_BareMetal")
-        m.add_cylinder_between(
-            (145 * radial[0], 145 * radial[1], z),
-            (180 * radial[0], 180 * radial[1], z),
-            18,
-            10,
-            "M_Spire_ServicePanel",
-        )
+        body_r = 745 - z * 0.025
+        m.add_cylinder_between((body_r * radial[0], body_r * radial[1], z),
+                               (1030 * radial[0], 1030 * radial[1], z),
+                               15, 10, "M_Spire_BareMetal")
+        m.add_cylinder_between((body_r * radial[0], body_r * radial[1], z - 85),
+                               (1010 * radial[0], 1010 * radial[1], z - 8),
+                               9, 8, "M_Spire_BareMetal")
+        m.add_cylinder_between((1030 * radial[0], 1030 * radial[1], z),
+                               (1100 * radial[0], 1100 * radial[1], z),
+                               50, 12, "M_Spire_ServicePanel")
 
-    # Structural collars and visible bolted seams.
-    for z, radius in ((220, 105), (590, 90), (920, 65)):
-        m.add_frustum(z, z + 18, radius, radius, 16, "M_Spire_BareMetal")
-        for i in range(8):
-            a = 2 * math.pi * i / 8
-            start = ((radius - 1) * math.cos(a), (radius - 1) * math.sin(a), z + 9)
-            end = ((radius + 5) * math.cos(a), (radius + 5) * math.sin(a), z + 9)
-            m.add_cylinder_between(start, end, 2.2, 8, "M_Spire_Fastener")
+    # Maintenance platforms are detailed below 40 m and simplified in the far band.
+    for z, radius, body_radius, detailed in (
+        (1800, 980, 730, True),
+        (3600, 920, 665, True),
+        (8200, 740, 525, False),
+        (12600, 620, 420, False),
+        (16600, 500, 320, False),
+    ):
+        add_platform(m, z, radius, body_radius, detailed)
 
-    # Flat service cap, antenna rod, and cross-vane avoid a missile-like cone.
-    m.add_frustum(1050, 1080, 30, 24, 12, "M_Spire_BareMetal")
-    m.add_frustum(1080, 1200, 5, 3, 8, "M_Spire_Fastener")
-    m.add_cylinder_between((-75, 0, 1160), (75, 0, 1160), 4, 8, "M_Spire_BareMetal")
-    m.add_box((69, 0, 1160), (28, 8, 32), 0, "M_Spire_ServicePanel")
+    # Structural collars mark staged construction without scaling bolt size upward.
+    for z, radius in ((3950, 690), (8950, 540), (13950, 430), (17350, 340)):
+        m.add_frustum(z, z + 55, radius, radius, 16, "M_Spire_BareMetal")
+        for i in range(12):
+            a = 2 * math.pi * i / 12
+            m.add_cylinder_between(((radius - 4) * math.cos(a), (radius - 4) * math.sin(a), z + 27),
+                                   ((radius + 12) * math.cos(a), (radius + 12) * math.sin(a), z + 27),
+                                   4, 8, "M_Spire_Fastener")
+
+    # A later settlement signal yard and braces reuse the industrial stack at 90 m.
+    m.add_cylinder_between((-900, 0, 9000), (900, 0, 9000), 12, 12, "M_Spire_BareMetal")
+    m.add_cylinder_between((-620, 0, 8800), (-860, 0, 9000), 8, 8, "M_Spire_BareMetal")
+    m.add_cylinder_between((620, 0, 8800), (860, 0, 9000), 8, 8, "M_Spire_BareMetal")
+    for x in (-875, 875):
+        m.add_box((x, 0, 8980), (42, 28, 72), 0, "M_Spire_ServicePanel")
+    return m
+
+
+def build_warning_lights() -> Mesh:
+    m = Mesh("VD_SpireLights")
+    # Separate translucent/emissive asset: shared ground-centre assembly origin.
+    for z, body_r in ((6000, 590), (12000, 435), (17750, 290)):
+        for yaw in (0, 90, 180, 270):
+            a = math.radians(yaw)
+            radial = (math.cos(a), math.sin(a))
+            r = body_r + 45
+            m.add_cylinder_between((r * radial[0], r * radial[1], z - 20),
+                                   (r * radial[0], r * radial[1], z + 20),
+                                   25, 12, "M_Spire_WarningLens")
     return m
 
 
 def write_mtl(path: Path) -> None:
     materials = {
         "M_Spire_Concrete": (0.19, 0.18, 0.16, 0.0, 0.86),
+        "M_Spire_StackConcrete": (0.34, 0.32, 0.27, 0.0, 0.78),
         "M_Spire_PaintedSteel": (0.16, 0.24, 0.23, 0.75, 0.42),
         "M_Spire_BareMetal": (0.31, 0.34, 0.34, 0.95, 0.32),
         "M_Spire_ServicePanel": (0.35, 0.18, 0.08, 0.8, 0.48),
-        "M_Spire_Fin": (0.19, 0.28, 0.26, 0.8, 0.40),
         "M_Spire_Fastener": (0.16, 0.17, 0.17, 1.0, 0.26),
+        "M_Spire_Soot": (0.025, 0.025, 0.022, 0.0, 0.96),
+        "M_Spire_WarningLens": (0.72, 0.025, 0.018, 0.0, 0.18),
     }
     lines = ["# Unreal material-slot placeholders; PBR values documented as comments."]
     for name, (r, g, b, metallic, roughness) in materials.items():
@@ -287,14 +385,15 @@ def main() -> None:
     QA.mkdir(parents=True, exist_ok=True)
     mtl = OUT / "VD_Spire_Landmark.mtl"
     write_mtl(mtl)
-    meshes = [build_base(), build_spire()]
+    meshes = [build_base(), build_spire(), build_warning_lights()]
     for mesh in meshes:
         mesh.write_obj(OUT / f"{mesh.name}.obj", mtl.name)
     report = {
         "units": "centimetres (1 unit = 1 Unreal uu = 1 cm)",
         "axis": "Z-up",
-        "pivot": "bottom centre for each mesh",
-        "assembly_height_cm": 1310,
+        "pivot": "shared ground-centre assembly origin",
+        "assembly_height_cm": 18000,
+        "canonical_function": "research exhaust stack later adapted as signal/observation mast",
         "meshes": {mesh.name: mesh_record(mesh) for mesh in meshes},
     }
     (QA / "spire_landmark_report.json").write_text(
