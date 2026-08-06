@@ -97,6 +97,29 @@ The machine report and visual contact sheets are under
 `qa/vault_materials_growth/`; the focused aluminium sheet remains under
 `qa/batch4_aluminium/`.
 
+## Authored prop geometry
+
+Source OBJ meshes use Unreal centimetres at 1:1, Z-up, and bottom-centre pivots.
+Generators are committed beside their outputs; imported actors must remain at
+uniform scale `1.0`.
+
+The first prop family replaces the two Engine cylinders used for the Eden Prime
+landmark with a 13.10 m atomic-age environmental-research pylon:
+
+- `SourceMesh/props/VD_Spire.obj`
+- `SourceMesh/props/VD_SpireBase.obj`
+- `references/props/SPIRE_LANDMARK_HANDOFF.md`
+
+Regenerate and verify with:
+
+```bash
+python3 scripts/generate_spire_landmark.py
+python3 scripts/verify_spire_landmark.py
+```
+
+Machine topology/bounds reports and the dimensioned orthographic preview are
+under `qa/spire_landmark/`.
+
 ## Reproduction and QA
 
 ```bash

@@ -1,0 +1,76 @@
+{
+  "all_pass": true,
+  "assembly_height_cm": 1310.0,
+  "checks": {
+    "VD_SpireBase": {
+      "pass": true,
+      "failures": [],
+      "vertices": 480,
+      "faces": 304,
+      "triangles": 832,
+      "bounds_cm": {
+        "min": [
+          -180.0,
+          -180.0,
+          0.0
+        ],
+        "max": [
+          180.0,
+          180.0,
+          110.0
+        ],
+        "size": [
+          360.0,
+          360.0,
+          110.0
+        ]
+      },
+      "material_slots": [
+        "M_Spire_BareMetal",
+        "M_Spire_Concrete",
+        "M_Spire_Fastener",
+        "M_Spire_PaintedSteel",
+        "M_Spire_ServicePanel"
+      ],
+      "edge_incidence": {
+        "total": 720,
+        "nonmanifold": 0
+      }
+    },
+    "VD_Spire": {
+      "pass": true,
+      "failures": [],
+      "vertices": 872,
+      "faces": 536,
+      "triangles": 1544,
+      "bounds_cm": {
+        "min": [
+          -180.0,
+          -180.0,
+          0.0
+        ],
+        "max": [
+          180.0,
+          180.0,
+          1200.0
+        ],
+        "size": [
+          360.0,
+          360.0,
+          1200.0
+        ]
+      },
+      "material_slots": [
+        "M_Spire_BareMetal",
+        "M_Spire_Fastener",
+        "M_Spire_Fin",
+        "M_Spire_PaintedSteel",
+        "M_Spire_ServicePanel"
+      ],
+      "edge_incidence": {
+        "total": 1308,
+        "nonmanifold": 0
+      }
+    }
+  }
+}

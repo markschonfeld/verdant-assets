@@ -1,0 +1,66 @@
+{
+  "units": "centimetres (1 unit = 1 Unreal uu = 1 cm)",
+  "axis": "Z-up",
+  "pivot": "bottom centre for each mesh",
+  "assembly_height_cm": 1310,
+  "meshes": {
+    "VD_SpireBase": {
+      "vertices": 480,
+      "faces": 304,
+      "triangles_after_import": 832,
+      "bounds_cm": {
+        "min": [
+          -180.0,
+          -180.0,
+          0
+        ],
+        "max": [
+          180.0,
+          180.0,
+          110
+        ],
+        "size": [
+          360.0,
+          360.0,
+          110
+        ]
+      },
+      "materials": [
+        "M_Spire_BareMetal",
+        "M_Spire_Concrete",
+        "M_Spire_Fastener",
+        "M_Spire_PaintedSteel",
+        "M_Spire_ServicePanel"
+      ]
+    },
+    "VD_Spire": {
+      "vertices": 872,
+      "faces": 536,
+      "triangles_after_import": 1544,
+      "bounds_cm": {
+        "min": [
+          -180.0,
+          -180.0,
+          0
+        ],
+        "max": [
+          180.0,
+          180.0,
+          1200
+        ],
+        "size": [
+          360.0,
+          360.0,
+          1200
+        ]
+      },
+      "materials": [
+        "M_Spire_BareMetal",
+        "M_Spire_Fastener",
+        "M_Spire_Fin",
+        "M_Spire_PaintedSteel",
+        "M_Spire_ServicePanel"
+      ]
+    }
+  }
+}
