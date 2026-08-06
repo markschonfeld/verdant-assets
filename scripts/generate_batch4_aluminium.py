@@ -136,6 +136,48 @@ def save_l(name, suffix, a):
 
 
 def aluminium_oxidised() -> None:
+    """v7 — Hermes' texture design, calibrated against the actual level.
+
+    TWO SETS COLLIDED HERE. Hermes built this file to a brief while I was
+    iterating my own version of the same maps in engine; we both pushed to
+    alu_oxidised_*. Rather than pick a winner, this keeps what each side had
+    evidence for.
+
+    KEPT FROM HERMES, because his texture design is better than mine was:
+      * pits(count=620) instead of my 4,500. Real pitting is a scatter of
+        isolated corrosion events, not an all-over aggregate. His note that a
+        dense field "read as cast stone at arm's length" is the same diagnosis I
+        reached from the other direction, and his fix is the cleaner one.
+      * the `polish` field — broad smooth flanks (sigma 95/260) interrupting the
+        chalk bloom. I chased the same effect by stretching the triplanar
+        projection from 2 m to 5.2 m, which coarsens the pit scale as a side
+        effect. Doing it inside the texture is strictly better; the projection
+        can go back to a sane physical scale later if we want.
+      * `broad` low-frequency variation, the shallow height amplitudes, and the
+        much stronger AO (0.45 vs my 0.07). Sparse pits that read dark at their
+        centres are what sells corrosion up close, and my AO was too timid.
+
+    CHANGED, because these three were tuned in the level and Hermes never saw it
+    there — all three are the direct cause of a "frosted ice" read that Mark
+    rejected on 5 Aug:
+
+      1. ROUGHNESS FLOOR 62 -> 105 (0.24 -> 0.41). Under a glass roof the sky is
+         the dominant light, so any patch below about 0.4 turns into a mirror for
+         it and the whole frame goes pale blue. My own v4 sat at 0.17 and failed
+         exactly this way. The SHAPE of Hermes' roughness is kept — chalk up,
+         polish down, pits roughest — only the band is lifted.
+      2. BASE COLOUR was 167/170/171, i.e. faintly COOL (B > R). For a metal this
+         is F0, and it is the one thing that can counteract a blue environment.
+         Now 190/188/185, warm-neutral, lifting to ~208 under chalk. Oxidised
+         aluminium's F0 is about 205 sRGB (245 bare); cool-and-dark compounds the
+         sky instead of resisting it.
+      3. METALLIC 235 -> 255. The passivation layer is nanometres thick and does
+         not make aluminium a dielectric. I already made the mistake of dropping
+         metallic to compensate for a gloss problem and got matte white ceramic
+         for it.
+
+    Verified in engine at PyTools/vshot.py preset frame_close before shipping.
+    """
     name = "alu_oxidised"
 
     lines = die_lines(41, frequency=150, jitter=.55)
@@ -153,7 +195,9 @@ def aluminium_oxidised() -> None:
     # ---- base colour: narrow, near-neutral. Chalk lifts value and desaturates;
     # pitting darkens slightly and goes very faintly warm-grey, never orange.
     base = np.empty((N, N, 3), np.float32)
-    base[:] = np.array((167.0, 170.0, 171.0), np.float32)
+    # v7: was (167, 170, 171) — faintly cool, which compounds the blue sky in a
+    # glass building. Warm-neutral and brighter; this is F0, not diffuse albedo.
+    base[:] = np.array((190.0, 188.0, 185.0), np.float32)
     chalk = norm01(bloom * 0.7 + broad * 0.3)
     base += chalk[..., None] * np.array((18.0, 18.0, 17.0), np.float32)
     base += (lines - 0.5)[..., None] * np.array((1.2, 1.2, 1.3), np.float32)
@@ -164,9 +208,11 @@ def aluminium_oxidised() -> None:
     # smooth, pits roughest of all. Wide range on purpose.
     # Broad polished flanks interrupt chalk bloom.  Even the matte end stays
     # below fully rough so grazing highlights still identify bare metal.
-    rough = 92.0 + 100.0 * chalk - 38.0 * polish - 9.0 * (lines - .5) + 24.0 * pit
+    # v7: same shape, band lifted off the glossy end. A floor of 62 (0.24) is a
+    # semi-polished finish and mirrors the sky dome; 105 (0.41) is chalked oxide.
+    rough = 122.0 + 92.0 * chalk - 34.0 * polish - 9.0 * (lines - .5) + 24.0 * pit
     rough += 13.0 * (periodic_noise(45, ((34, .58), (105, .42))) - 0.5)
-    rough = np.clip(rough, 62, 208)
+    rough = np.clip(rough, 105, 214)
 
     save_rgb(name, "basecolor", base)
     save_rgb(name, "normal", normal_dx(height, 8.0))
@@ -174,8 +220,9 @@ def aluminium_oxidised() -> None:
     save_l(name, "ao", ao_from_height(height, 0.45))
 
     # metallic is uniform for bare metal, but shipped so the material graph can
-    # bind a texture rather than a constant and stay consistent with other sets
-    save_l(name, "metallic", np.full((N, N), 235, np.uint8))
+    # bind a texture rather than a constant and stay consistent with other sets.
+    # v7: 235 -> 255. Aluminium is a metal; the oxide film does not change that.
+    save_l(name, "metallic", np.full((N, N), 255, np.uint8))
 
     # ---- QA: 2x2 tile so seams are visible at a glance
     tile = Image.fromarray(seal(base.copy()), "RGB")
