@@ -172,6 +172,31 @@ python3 scripts/verify_climber_reference_sheets.py
 
 QA output is under `qa/climber_references/`.
 
+### Mature stem bark PBR
+
+The two mature-bark materials remain separate because their relief language is
+structurally different: heavier ropey Solandra cork versus finer, shallow-split
+Aristolochia bark. Each set contains aligned, seamless 2048×2048 base color,
+DirectX normal, roughness, and AO maps:
+
+- `textures/pbr/bark_solandra_mature_{basecolor,normal,roughness,ao}.png`
+- `textures/pbr/bark_aristolochia_mature_{basecolor,normal,roughness,ao}.png`
+
+Image Y/V follows the stem axis; X/U wraps the circumference. Bark is dielectric
+(`Metallic = 0`). Bearing flattening and contact polish are intentionally absent
+from the repeating textures and should come from mesh shape plus a local material
+mask. Base color contains pigment variation only, without baked lighting or AO.
+
+Regenerate and verify with:
+
+```bash
+python3 scripts/generate_climber_bark_pbr.py
+python3 scripts/verify_climber_bark_pbr.py
+```
+
+QA maps, 2×2 seam previews, lit previews, the contact sheet, and the machine
+report are under `qa/climber_bark_pbr/`.
+
 ## Environment concept references
 
 The west blast-door reveal fixes the first eastward view down Eden Prime's

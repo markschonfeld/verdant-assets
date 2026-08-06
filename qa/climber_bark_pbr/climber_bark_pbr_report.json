@@ -1,0 +1,280 @@
+{
+  "spec": {
+    "dimensions": [
+      2048,
+      2048
+    ],
+    "format": "PNG",
+    "maps": [
+      "basecolor",
+      "normal",
+      "roughness",
+      "ao"
+    ],
+    "normal_convention": "DirectX tangent-space; green-down",
+    "uv_orientation": "image Y/V follows stem axis; X/U wraps circumference",
+    "basecolor_policy": "pigment only; no baked lighting or AO",
+    "contact_policy": "bearing flattening/polish excluded from tile; use mesh/contact mask"
+  },
+  "materials": {
+    "bark_solandra_mature": {
+      "maps": {
+        "basecolor": {
+          "path": "textures/pbr/bark_solandra_mature_basecolor.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "RGB",
+          "exact_left_right": true,
+          "exact_top_bottom": true,
+          "bytes": 1423447,
+          "statistics": {
+            "min": 11,
+            "max": 99,
+            "mean": 77.15,
+            "stddev": 11.291,
+            "p05": 49.026,
+            "p95": 90.281,
+            "quadrant_spread": 1.78
+          },
+          "pass": true,
+          "edge_derivative_mae_lr": 4.927,
+          "edge_derivative_mae_tb": 0.749
+        },
+        "normal": {
+          "path": "textures/pbr/bark_solandra_mature_normal.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "RGB",
+          "exact_left_right": true,
+          "exact_top_bottom": true,
+          "bytes": 5544060,
+          "statistics": {
+            "min": 34,
+            "max": 222,
+            "mean": 135.143,
+            "stddev": 15.621,
+            "p05": 107.665,
+            "p95": 155.219,
+            "channels_rgb": [
+              {
+                "min": 1,
+                "max": 253,
+                "mean": 126.838,
+                "stddev": 48.589,
+                "p05": 22.0,
+                "p95": 232.0
+              },
+              {
+                "min": 1,
+                "max": 252,
+                "mean": 127.001,
+                "stddev": 16.155,
+                "p05": 113.0,
+                "p95": 141.0
+              },
+              {
+                "min": 143,
+                "max": 255,
+                "mean": 240.257,
+                "stddev": 28.161,
+                "p05": 158.0,
+                "p95": 254.0
+              }
+            ]
+          },
+          "pass": true,
+          "edge_derivative_mae_lr": 24.269,
+          "edge_derivative_mae_tb": 6.794
+        },
+        "roughness": {
+          "path": "textures/pbr/bark_solandra_mature_roughness.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "L",
+          "exact_left_right": true,
+          "exact_top_bottom": true,
+          "bytes": 1382467,
+          "statistics": {
+            "min": 158,
+            "max": 255,
+            "mean": 208.397,
+            "stddev": 17.41,
+            "p05": 182.0,
+            "p95": 240.0,
+            "p95_minus_p05": 58.0
+          },
+          "pass": true,
+          "edge_derivative_mae_lr": 5.752,
+          "edge_derivative_mae_tb": 2.101
+        },
+        "ao": {
+          "path": "textures/pbr/bark_solandra_mature_ao.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "L",
+          "exact_left_right": true,
+          "exact_top_bottom": true,
+          "bytes": 938992,
+          "statistics": {
+            "min": 61,
+            "max": 255,
+            "mean": 237.99,
+            "stddev": 39.954,
+            "p05": 119.0,
+            "p95": 255.0,
+            "p95_minus_p05": 136.0
+          },
+          "pass": true,
+          "edge_derivative_mae_lr": 17.79,
+          "edge_derivative_mae_tb": 2.686
+        }
+      },
+      "orientation": {
+        "mean_abs_u_red_gradient": 16.5899,
+        "mean_abs_v_green_gradient": 5.2222,
+        "u_dominates": true,
+        "pass": true
+      },
+      "alignment_pass": true,
+      "pass": true
+    },
+    "bark_aristolochia_mature": {
+      "maps": {
+        "basecolor": {
+          "path": "textures/pbr/bark_aristolochia_mature_basecolor.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "RGB",
+          "exact_left_right": true,
+          "exact_top_bottom": true,
+          "bytes": 985009,
+          "statistics": {
+            "min": 23,
+            "max": 91,
+            "mean": 74.201,
+            "stddev": 7.063,
+            "p05": 63.528,
+            "p95": 83.873,
+            "quadrant_spread": 2.75
+          },
+          "pass": true,
+          "edge_derivative_mae_lr": 2.447,
+          "edge_derivative_mae_tb": 0.387
+        },
+        "normal": {
+          "path": "textures/pbr/bark_aristolochia_mature_normal.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "RGB",
+          "exact_left_right": true,
+          "exact_top_bottom": true,
+          "bytes": 2651738,
+          "statistics": {
+            "min": 44,
+            "max": 217,
+            "mean": 135.894,
+            "stddev": 8.58,
+            "p05": 128.482,
+            "p95": 142.997,
+            "channels_rgb": [
+              {
+                "min": 7,
+                "max": 247,
+                "mean": 127.111,
+                "stddev": 28.856,
+                "p05": 104.0,
+                "p95": 150.0
+              },
+              {
+                "min": 12,
+                "max": 242,
+                "mean": 127.0,
+                "stddev": 8.302,
+                "p05": 123.0,
+                "p95": 131.0
+              },
+              {
+                "min": 164,
+                "max": 255,
+                "mean": 249.863,
+                "stddev": 14.717,
+                "p05": 225.0,
+                "p95": 254.0
+              }
+            ]
+          },
+          "pass": true,
+          "edge_derivative_mae_lr": 11.387,
+          "edge_derivative_mae_tb": 2.261
+        },
+        "roughness": {
+          "path": "textures/pbr/bark_aristolochia_mature_roughness.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "L",
+          "exact_left_right": true,
+          "exact_top_bottom": true,
+          "bytes": 1104625,
+          "statistics": {
+            "min": 128,
+            "max": 255,
+            "mean": 170.731,
+            "stddev": 15.893,
+            "p05": 148.0,
+            "p95": 197.0,
+            "p95_minus_p05": 49.0
+          },
+          "pass": true,
+          "edge_derivative_mae_lr": 4.868,
+          "edge_derivative_mae_tb": 1.373
+        },
+        "ao": {
+          "path": "textures/pbr/bark_aristolochia_mature_ao.png",
+          "size": [
+            2048,
+            2048
+          ],
+          "mode": "L",
+          "exact_left_right": true,
+          "exact_top_bottom": true,
+          "bytes": 709787,
+          "statistics": {
+            "min": 71,
+            "max": 255,
+            "mean": 244.085,
+            "stddev": 28.216,
+            "p05": 229.0,
+            "p95": 255.0,
+            "p95_minus_p05": 26.0
+          },
+          "pass": true,
+          "edge_derivative_mae_lr": 9.625,
+          "edge_derivative_mae_tb": 1.646
+        }
+      },
+      "orientation": {
+        "mean_abs_u_red_gradient": 8.1865,
+        "mean_abs_v_green_gradient": 1.7798,
+        "u_dominates": true,
+        "pass": true
+      },
+      "alignment_pass": true,
+      "pass": true
+    }
+  },
+  "pass": true
+}
