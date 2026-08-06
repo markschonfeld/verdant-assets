@@ -1,0 +1,30 @@
+# Semantic preview materials for VD_BlastDoorSurround
+newmtl M_BlastSurround_CastConcrete
+Kd 0.290 0.300 0.270
+Pr 0.880
+illum 2
+
+newmtl M_BlastSurround_AgedSteel
+Kd 0.180 0.230 0.220
+Pr 0.720
+illum 2
+
+newmtl M_BlastSurround_ShadowSteel
+Kd 0.055 0.065 0.062
+Pr 0.820
+illum 2
+
+newmtl M_BlastSurround_HandWear
+Kd 0.340 0.350 0.310
+Pr 0.560
+illum 2
+
+newmtl M_BlastSurround_WaterStain
+Kd 0.160 0.190 0.160
+Pr 0.940
+illum 2
+
+newmtl M_BlastSurround_BoltSteel
+Kd 0.380 0.390 0.340
+Pr 0.480
+illum 2

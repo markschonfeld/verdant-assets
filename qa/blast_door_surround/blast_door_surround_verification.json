@@ -1,0 +1,161 @@
+{
+  "all_pass": true,
+  "contract": {
+    "pass": true,
+    "failures": [],
+    "vertices": 1284,
+    "texture_coordinates": 3852,
+    "faces": 810,
+    "triangles": 2232,
+    "object_names": [
+      "VD_BlastDoorSurround"
+    ],
+    "group_records": 0,
+    "material_slots": [
+      "M_BlastSurround_AgedSteel",
+      "M_BlastSurround_BoltSteel",
+      "M_BlastSurround_CastConcrete",
+      "M_BlastSurround_HandWear",
+      "M_BlastSurround_ShadowSteel",
+      "M_BlastSurround_WaterStain"
+    ],
+    "invalid_uv_corners": 0,
+    "degenerate_regions": 0,
+    "edge_incidence": {
+      "total": 1926,
+      "non_two_face": 0
+    },
+    "bounds_cm": {
+      "min": [
+        -132.0,
+        -520.0,
+        -48.0
+      ],
+      "max": [
+        54.0,
+        520.0,
+        470.0
+      ],
+      "size": [
+        186.0,
+        1040.0,
+        518.0
+      ]
+    }
+  },
+  "gameplay": {
+    "pass": true,
+    "failures": [],
+    "placement_world_cm": [
+      -380,
+      0,
+      3500
+    ],
+    "origin_contract": "opening base-centre",
+    "door_leaf_ownership": "separate existing animated meshes; not included",
+    "clear_aperture_cm": {
+      "width": 800,
+      "height_below_track": 340,
+      "depth": 159
+    },
+    "required_side_return_world_bounds_cm": {
+      "south": {
+        "x": [
+          -509,
+          -350
+        ],
+        "y": [
+          -500,
+          -400
+        ]
+      },
+      "north": {
+        "x": [
+          -509,
+          -350
+        ],
+        "y": [
+          400,
+          500
+        ]
+      }
+    },
+    "return_face_evidence": {
+      "south": [
+        {
+          "material": "M_BlastSurround_CastConcrete",
+          "min": [
+            -129.0,
+            -400.0,
+            0.0
+          ],
+          "max": [
+            12.0,
+            -400.0,
+            450.0
+          ]
+        }
+      ],
+      "north": [
+        {
+          "material": "M_BlastSurround_CastConcrete",
+          "min": [
+            -129.0,
+            400.0,
+            0.0
+          ],
+          "max": [
+            12.0,
+            400.0,
+            450.0
+          ]
+        }
+      ]
+    },
+    "threshold_face_evidence": [
+      {
+        "material": "M_BlastSurround_HandWear",
+        "min": [
+          -129.0,
+          -400.0,
+          8.0
+        ],
+        "max": [
+          30.0,
+          400.0,
+          8.0
+        ]
+      }
+    ],
+    "head_face_evidence": [
+      {
+        "material": "M_BlastSurround_CastConcrete",
+        "min": [
+          -129.0,
+          -400.0,
+          392.0
+        ],
+        "max": [
+          12.0,
+          400.0,
+          392.0
+        ]
+      },
+      {
+        "material": "M_BlastSurround_CastConcrete",
+        "min": [
+          -129.0,
+          -400.0,
+          470.0
+        ],
+        "max": [
+          12.0,
+          400.0,
+          470.0
+        ]
+      }
+    ],
+    "central_volume_intrusions": [],
+    "collision_requirement": "CTF_USE_COMPLEX_AS_SIMPLE or authored aperture-safe primitives; never one auto convex hull"
+  }
+}
