@@ -479,6 +479,236 @@ def build_stones(name: str, seed: int) -> Mesh:
 
 
 # --------------------------------------------------------------------------- #
+#  Supporting specimens: aloe, philodendron, coleus
+# --------------------------------------------------------------------------- #
+
+def add_leaf_card(mesh: Mesh, origin: Vec3, x_axis: Vec3, y_axis: Vec3, z_axis: Vec3,
+                  width: float, leaf_length: float, material: str,
+                  slot: tuple[float, float, float, float], w_base: float, w_tip: float,
+                  curl: float, cup: float, lsegs: int, wsegs: int) -> int:
+    """A curved, subdivided alpha-cut leaf sheet (not a flat rectangle).
+
+    The blade droops along its length (`curl`) and cups across its width (`cup`),
+    so the silhouette comes from the RGBA alpha while the surface still catches
+    light like a real leaf. UVs address the atlas slot; wind stiffness rises from
+    `w_base` at the petiole to `w_tip` at the free tip. Returns the quad count.
+    """
+    u0, v0, u1, v1 = slot
+    grid: list[list[tuple[int, float, float]]] = []
+    for i in range(lsegs + 1):
+        t = i / lsegs
+        row = []
+        for j in range(wsegs + 1):
+            s = j / wsegs
+            droop = -curl * leaf_length * (t * t)
+            cupz = cup * width * (((s - 0.5) ** 2) - 0.25)
+            pos = add(add(add(origin, mul(y_axis, leaf_length * t)),
+                          mul(x_axis, width * (s - 0.5))),
+                      mul(z_axis, droop + cupz))
+            weight = min(1.0, w_base + (w_tip - w_base) * t)
+            row.append((mesh.vertex(pos, stiffness(weight)),
+                        u0 + (u1 - u0) * s, v0 + (v1 - v0) * t))
+        grid.append(row)
+    quads = 0
+    for i in range(lsegs):
+        for j in range(wsegs):
+            a, b = grid[i][j], grid[i + 1][j]
+            c, d = grid[i + 1][j + 1], grid[i][j + 1]
+            mesh.face(material, (a[0], b[0], c[0], d[0]),
+                      ((a[1], a[2]), (b[1], b[2]), (c[1], c[2]), (d[1], d[2])))
+            quads += 1
+    return quads
+
+
+def add_aloe_leaf(mesh: Mesh, base: Vec3, azimuth: float, up_angle: float,
+                  leaf_length: float, width0: float, thick0: float, w_tip: float) -> None:
+    """One genuinely 3-D succulent blade: a tapering diamond cross-section lofted
+    along an arching spine, with marginal teeth for a serrated silhouette."""
+    out = (math.cos(azimuth), math.sin(azimuth), 0.0)
+    rise = math.sin(up_angle)
+    reach = math.cos(up_angle)
+    p0 = base
+    p1 = add(base, (out[0] * leaf_length * 0.35 * reach, out[1] * leaf_length * 0.35 * reach,
+                    leaf_length * 0.55 * rise))
+    p2 = add(base, (out[0] * leaf_length * reach, out[1] * leaf_length * reach,
+                    leaf_length * rise - leaf_length * 0.14 * (1.0 - rise)))
+    default_side = (-math.sin(azimuth), math.cos(azimuth), 0.0)
+    segs = 8
+    ring_prev: list[int] | None = None
+    # Loft rings up to t=(segs-1)/segs only; the apex forms the pointed tip so
+    # the final cross-section never collapses to a degenerate zero-area ring.
+    for i in range(segs):
+        t = i / segs
+        c = bezier3(p0, p1, p2, t)
+        tangent = normalize(sub(bezier3(p0, p1, p2, min(1.0, t + 0.01)), c))
+        side = cross(tangent, (0.0, 0.0, 1.0))
+        side = normalize(side) if length(side) > 0.2 else default_side
+        upn = normalize(cross(side, tangent))
+        w = width0 * (1.0 - t) ** 0.65
+        th = thick0 * (1.0 - t) ** 0.7
+        col = stiffness(w_tip * (t ** 1.3))
+        ring = [mesh.vertex(add(c, mul(upn, th * 0.35)), col),   # channelled top
+                mesh.vertex(add(c, mul(side, w * 0.5)), col),    # right margin
+                mesh.vertex(add(c, mul(upn, -th * 0.65)), col),  # convex keel
+                mesh.vertex(add(c, mul(side, -w * 0.5)), col)]   # left margin
+        if ring_prev is not None:
+            for k in range(4):
+                mesh.face("M_Aloe_Leaf", (ring_prev[k], ring_prev[(k + 1) % 4],
+                                          ring[(k + 1) % 4], ring[k]))
+            if i % 2 == 0 and t < 0.9:
+                spike_l = mesh.vertex(add(c, mul(side, -(w * 0.5 + w * 0.4 + 0.6))), col)
+                mesh.face("M_Aloe_Leaf", (ring_prev[3], ring[3], spike_l))
+                spike_r = mesh.vertex(add(c, mul(side, w * 0.5 + w * 0.4 + 0.6)), col)
+                mesh.face("M_Aloe_Leaf", (ring[1], ring_prev[1], spike_r))
+        ring_prev = ring
+    tip_c = bezier3(p0, p1, p2, 1.0)
+    tip_dir = normalize(sub(tip_c, bezier3(p0, p1, p2, 0.985)))
+    apex = mesh.vertex(add(tip_c, mul(tip_dir, width0 * 0.35 + 1.5)), stiffness(w_tip))
+    assert ring_prev is not None
+    for k in range(4):
+        mesh.face("M_Aloe_Leaf", (ring_prev[k], ring_prev[(k + 1) % 4], apex))
+
+
+def build_aloe(name: str, seed: int) -> Mesh:
+    """Strong multi-tier aloe rosette (a composed display specimen)."""
+    rng = random.Random(seed)
+    mesh = Mesh(name)
+    base_r = 13.0
+    ring0 = mesh.ring((0, 0, 0), base_r, 16)
+    ring1 = mesh.ring((0, 0, 6.0), base_r * 0.72, 16)
+    mesh.bridge(ring0, ring1, "M_Aloe_Base")
+    crown = mesh.vertex((0, 0, 8.5))
+    mesh.cap(ring1, crown, "M_Aloe_Base")
+    base_centre = mesh.vertex((0, 0, 0))
+    mesh.cap(ring0, base_centre, "M_Aloe_Base", reverse=True)
+
+    # (count, length, up_angle, width0, thick0, w_tip, z_base)
+    tiers = [
+        (11, 60.0, math.radians(24), 7.6, 3.2, 0.60, 5.0),
+        (9, 66.0, math.radians(44), 6.8, 2.9, 0.70, 6.5),
+        (7, 70.0, math.radians(64), 5.8, 2.6, 0.80, 7.5),
+        (5, 72.0, math.radians(82), 4.6, 2.2, 0.85, 8.0),
+    ]
+    golden = math.radians(137.507)
+    index = 0
+    for count, leaf_length, angle, w0, th0, w_tip, z_base in tiers:
+        for _ in range(count):
+            azimuth = golden * index + rng.uniform(-0.08, 0.08)
+            index += 1
+            offset_r = base_r * 0.34
+            base = (math.cos(azimuth) * offset_r, math.sin(azimuth) * offset_r, z_base)
+            add_aloe_leaf(mesh, base, azimuth, angle + rng.uniform(-0.05, 0.05),
+                          leaf_length * rng.uniform(0.94, 1.06), w0, th0, w_tip)
+    return mesh
+
+
+SUPPORT_LEAF_SLOTS = [(0.0, 0.0, 0.5, 0.5), (0.5, 0.0, 1.0, 0.5),
+                      (0.0, 0.5, 0.5, 1.0), (0.5, 0.5, 1.0, 1.0)]
+
+
+def build_philodendron(name: str, seed: int) -> Mesh:
+    """Upright-to-spreading philodendron: real petioles carrying large lobed
+    alpha-cut leaf sheets on curved ribbons."""
+    rng = random.Random(seed)
+    mesh = Mesh(name)
+    crown_r = 16.0
+    r0 = mesh.ring((0, 0, 0), crown_r, 18)
+    r1 = mesh.ring((0, 0, 10.0), crown_r * 0.72, 18)
+    mesh.bridge(r0, r1, "M_Philodendron_Crown")
+    top = mesh.vertex((0, 0, 13.0))
+    mesh.cap(r1, top, "M_Philodendron_Crown")
+    base_centre = mesh.vertex((0, 0, 0))
+    mesh.cap(r0, base_centre, "M_Philodendron_Crown", reverse=True)
+
+    leaves = 11
+    golden = math.radians(137.507)
+    for k in range(leaves):
+        azimuth = golden * k + rng.uniform(-0.1, 0.1)
+        frac = k / (leaves - 1)
+        lean = math.radians(16.0 + frac * 48.0)
+        petiole_len = rng.uniform(74.0, 116.0) * (1.0 - 0.14 * frac)
+        out = (math.cos(azimuth), math.sin(azimuth), 0.0)
+        start = add((0.0, 0.0, 11.0), mul(out, crown_r * 0.4))
+        tip = add(start, (out[0] * petiole_len * math.sin(lean),
+                          out[1] * petiole_len * math.sin(lean),
+                          petiole_len * math.cos(lean)))
+        ctrl = add(start, (out[0] * petiole_len * 0.30, out[1] * petiole_len * 0.30,
+                           petiole_len * 0.74))
+        psegs = 6
+        last = start
+        for s in range(1, psegs + 1):
+            t = s / psegs
+            pt = bezier3(start, ctrl, tip, t)
+            mesh.cylinder(last, pt, 2.7 * (1 - 0.5 * (s - 1) / psegs), 2.7 * (1 - 0.5 * t),
+                          6, "M_Philodendron_Petiole",
+                          min(0.3, (s - 1) / psegs * 0.3), min(0.35, t * 0.35))
+            last = pt
+        ldir = normalize(sub(tip, ctrl))
+        xax = cross(ldir, (0.0, 0.0, 1.0))
+        xax = normalize(xax) if length(xax) > 0.2 else (-math.sin(azimuth), math.cos(azimuth), 0.0)
+        zax = normalize(cross(xax, ldir))
+        add_leaf_card(mesh, tip, xax, ldir, zax,
+                      rng.uniform(26.0, 34.0), rng.uniform(40.0, 52.0),
+                      "M_Philodendron_Leaf", SUPPORT_LEAF_SLOTS[k % 4],
+                      0.35, 1.0, 0.30, 0.55, 6, 4)
+    return mesh
+
+
+def build_coleus(name: str, seed: int) -> Mesh:
+    """Low dense coleus mound: branching real stems with opposite decussate
+    pairs of patterned alpha-cut leaves."""
+    rng = random.Random(seed)
+    mesh = Mesh(name)
+    base_r = 12.0
+    r0 = mesh.ring((0, 0, 0), base_r, 16)
+    r1 = mesh.ring((0, 0, 6.0), base_r * 0.7, 16)
+    mesh.bridge(r0, r1, "M_Coleus_Base")
+    top = mesh.vertex((0, 0, 8.0))
+    mesh.cap(r1, top, "M_Coleus_Base")
+    base_centre = mesh.vertex((0, 0, 0))
+    mesh.cap(r0, base_centre, "M_Coleus_Base", reverse=True)
+
+    stems = 6
+    nodes = 5
+    leaf_index = 0
+    for k in range(stems):
+        azimuth = 2 * math.pi * k / stems + rng.uniform(-0.2, 0.2)
+        lean = math.radians(rng.uniform(20.0, 34.0))
+        out = (math.cos(azimuth), math.sin(azimuth), 0.0)
+        base = (math.cos(azimuth) * base_r * 0.4, math.sin(azimuth) * base_r * 0.4, 5.0)
+        height = rng.uniform(46.0, 60.0)
+        top_pt = add(base, (out[0] * height * math.sin(lean), out[1] * height * math.sin(lean),
+                            height * math.cos(lean)))
+        ctrl = add(base, (out[0] * height * 0.15, out[1] * height * 0.15, height * 0.6))
+        prev = base
+        for n in range(1, nodes + 1):
+            t = n / nodes
+            pt = bezier3(base, ctrl, top_pt, t)
+            mesh.cylinder(prev, pt, 1.9 * (1 - 0.42 * (n - 1) / nodes), 1.9 * (1 - 0.42 * t),
+                          6, "M_Coleus_Stem", min(0.2, (n - 1) / nodes * 0.2),
+                          min(0.25, t * 0.25))
+            sdir = normalize(sub(pt, prev))
+            perp = cross(sdir, (0.0, 0.0, 1.0))
+            perp = normalize(perp) if length(perp) > 0.2 else (1.0, 0.0, 0.0)
+            if n % 2 == 0:  # decussate: alternate node pairs rotate 90 degrees
+                perp = normalize(cross(sdir, perp))
+            for sign in (-1.0, 1.0):
+                ldir = normalize(add(add(mul(perp, sign), mul(sdir, 0.35)), (0.0, 0.0, 0.28)))
+                xax = cross(ldir, (0.0, 0.0, 1.0))
+                xax = normalize(xax) if length(xax) > 0.2 else perp
+                zax = normalize(cross(xax, ldir))
+                scale = 1.0 - 0.45 * t
+                add_leaf_card(mesh, pt, xax, ldir, zax,
+                              rng.uniform(7.0, 10.0) * scale + 4.0,
+                              rng.uniform(10.0, 14.0) * scale + 5.0,
+                              "M_Coleus_Leaf", SUPPORT_LEAF_SLOTS[leaf_index % 4],
+                              0.30, 1.0, 0.24, 0.45, 3, 2)
+                leaf_index += 1
+            prev = pt
+    return mesh
+
+
+# --------------------------------------------------------------------------- #
 #  RGBA cutout atlases
 # --------------------------------------------------------------------------- #
 
@@ -548,8 +778,108 @@ def write_cutouts() -> None:
         slot(0, 512, small_leaf)
         slot(512, 512, twig)
 
+    def philodendron_leaves(draw: ImageDraw.ImageDraw, s: int) -> None:
+        # 2x2 atlas of deeply pinnatifid display-philodendron blades. Each side
+        # alternates broad outward lobes with deep sinuses toward the midrib;
+        # this must read as philodendron rather than a generic heart-shaped leaf.
+        greens = [(28, 82, 40, 255), (34, 92, 44, 255), (24, 74, 36, 255), (38, 98, 48, 255)]
+        vein_colours = [(112, 156, 88, 225), (126, 170, 96, 225),
+                        (104, 148, 82, 225), (132, 174, 100, 225)]
+        for slot in range(4):
+            ox, oy = (slot % 2) * 512, (slot // 2) * 512
+            cx = ox + 256
+            base_y, tip_y = oy + 472, oy + 42
+            lobe_count = 6
+            right: list[tuple[int, int]] = []
+            lobe_tips: list[tuple[int, int]] = []
+            span = 184 + slot * 4
+            samples = 96
+            for step in range(samples + 1):
+                f = step / samples
+                y = int(base_y + (tip_y - base_y) * f)
+                envelope = math.sin(math.pi * f) ** 0.52
+                lobe_wave = abs(math.sin(math.pi * lobe_count * f)) ** 0.72
+                width = span * envelope * (0.48 + 0.52 * lobe_wave)
+                right.append((int(cx + width), y))
+            for lobe in range(lobe_count):
+                f = (lobe + 0.5) / lobe_count
+                y = int(base_y + (tip_y - base_y) * f)
+                envelope = math.sin(math.pi * f) ** 0.52
+                width = int(span * envelope)
+                lobe_tips.append((cx + width, y))
+            outline = right + [(2 * cx - x, y) for x, y in reversed(right)]
+            draw.polygon([(x * s, y * s) for x, y in outline], fill=greens[slot])
+            vein = vein_colours[slot]
+            draw.line([(cx * s, (base_y - 8) * s), (cx * s, (tip_y + 12) * s)],
+                      fill=vein, width=7 * s)
+            for x, y in lobe_tips:
+                attach_y = int(y + (base_y - y) * 0.05)
+                draw.line([(cx * s, attach_y * s), ((x - 10) * s, y * s)],
+                          fill=vein, width=3 * s)
+                draw.line([(cx * s, attach_y * s), ((2 * cx - x + 10) * s, y * s)],
+                          fill=vein, width=3 * s)
+
+    def coleus_leaves(draw: ImageDraw.ImageDraw, s: int) -> None:
+        # 2x2 atlas: irregular burgundy field, chartreuse serrated margin,
+        # branching veins and small green islands. Avoid a clean central oval —
+        # real coleus patterning bleeds and feathers along the venation.
+        margins = [(150, 176, 46, 255), (128, 158, 40, 255), (162, 182, 58, 255), (120, 150, 38, 255)]
+        cores = [(122, 34, 52, 255), (104, 28, 46, 255), (134, 44, 60, 255), (96, 24, 42, 255)]
+        darks = [(82, 24, 42, 220), (74, 20, 38, 220), (94, 28, 46, 220), (68, 18, 34, 220)]
+        for slot in range(4):
+            ox, oy = (slot % 2) * 512, (slot // 2) * 512
+            cx, cy = ox + 256, oy + 256
+            half_w, half_h = 168, 210
+            teeth = 12
+            right: list[tuple[float, float]] = []
+            for step in range(teeth * 2 + 1):
+                f = step / (teeth * 2)
+                y = cy + half_h - 2 * half_h * f
+                body = math.sin(math.pi * f) ** 0.72
+                serr = 1.10 if step % 2 else 0.91
+                right.append((cx + half_w * body * serr, y))
+            outline = right + [(2 * cx - x, y) for x, y in reversed(right)]
+            draw.polygon([(int(x * s), int(y * s)) for x, y in outline], fill=margins[slot])
+
+            core_right: list[tuple[float, float]] = []
+            for step in range(25):
+                f = step / 24
+                y = cy + half_h * 0.78 - 2 * half_h * 0.78 * f
+                body = math.sin(math.pi * f) ** 0.76
+                wobble = 1.0 + 0.10 * math.sin((f * 7.0 + slot * 0.8) * math.pi)
+                core_right.append((cx + half_w * 0.66 * body * wobble, y))
+            core = core_right + [(2 * cx - x, y) for x, y in reversed(core_right)]
+            draw.polygon([(int(x * s), int(y * s)) for x, y in core], fill=cores[slot])
+
+            vein = (214, 211, 151, 225)
+            draw.line([(cx * s, (cy + half_h - 22) * s), (cx * s, (cy - half_h + 24) * s)],
+                      fill=vein, width=5 * s)
+            for branch in range(1, 7):
+                f = branch / 7
+                y = int(cy + half_h * 0.72 - 2 * half_h * 0.72 * f)
+                reach = half_w * 0.58 * math.sin(math.pi * f) ** 0.7
+                draw.line([(cx * s, y * s), (int((cx + reach) * s), int((y - 18) * s))],
+                          fill=darks[slot], width=3 * s)
+                draw.line([(cx * s, y * s), (int((cx - reach) * s), int((y - 18) * s))],
+                          fill=darks[slot], width=3 * s)
+            for blotch in range(8):
+                angle = 2 * math.pi * blotch / 8 + slot * 0.33
+                dx = math.cos(angle) * half_w * (0.30 + 0.04 * (blotch % 3))
+                dy = math.sin(angle) * half_h * 0.38
+                radius = 9 + (blotch % 3) * 3
+                points = []
+                for corner in range(7):
+                    a = 2 * math.pi * corner / 7 + angle * 0.35
+                    variation = 0.72 + 0.28 * math.sin(corner * 2.17 + blotch)
+                    points.append(((cx + dx + math.cos(a) * radius * 1.45 * variation) * s,
+                                   (cy + dy + math.sin(a) * radius * variation) * s))
+                draw.polygon(points,
+                             fill=(margins[slot][0], margins[slot][1], margins[slot][2], 175))
+
     supersampled_texture(palm_leaflets, CUTOUTS / "date_palm_leaflet_ribbon_rgba_1024.png")
     supersampled_texture(leaf_bark_litter, CUTOUTS / "leaf_bark_litter_rgba_1024.png")
+    supersampled_texture(philodendron_leaves, CUTOUTS / "philodendron_lobed_leaf_rgba_1024.png")
+    supersampled_texture(coleus_leaves, CUTOUTS / "coleus_leaf_rgba_1024.png")
 
 
 # --------------------------------------------------------------------------- #
@@ -568,6 +898,14 @@ MATERIALS = {
     "M_SoilDressing_Mound": ((0.13, 0.09, 0.055), 0.0, 0.95, None),
     "M_SoilDressing_Litter": ((0.42, 0.30, 0.16), 0.0, 0.72, "leaf_bark_litter_rgba_1024.png"),
     "M_SoilDressing_Stone": ((0.35, 0.35, 0.34), 0.0, 0.80, None),
+    "M_Aloe_Leaf": ((0.24, 0.42, 0.22), 0.0, 0.55, None),
+    "M_Aloe_Base": ((0.20, 0.16, 0.10), 0.0, 0.90, None),
+    "M_Philodendron_Crown": ((0.18, 0.14, 0.09), 0.0, 0.90, None),
+    "M_Philodendron_Petiole": ((0.28, 0.34, 0.16), 0.0, 0.60, None),
+    "M_Philodendron_Leaf": ((0.10, 0.26, 0.13), 0.0, 0.42, "philodendron_lobed_leaf_rgba_1024.png"),
+    "M_Coleus_Base": ((0.18, 0.13, 0.08), 0.0, 0.90, None),
+    "M_Coleus_Stem": ((0.34, 0.28, 0.20), 0.0, 0.60, None),
+    "M_Coleus_Leaf": ((0.36, 0.16, 0.20), 0.0, 0.50, "coleus_leaf_rgba_1024.png"),
 }
 
 
@@ -587,7 +925,7 @@ def write_mtl() -> None:
 #  Handoff
 # --------------------------------------------------------------------------- #
 
-HANDOFF = """# Entrance-Terrace Reveal Kit — Handoff (Slice 1)
+HANDOFF = """# Entrance-Terrace Reveal Kit — Handoff (Slice 1 base + Slice 2 supporting species)
 
 Source: `scripts/generate_entrance_terrace_reveal_kit.py`
 Verify: `scripts/verify_entrance_terrace_reveal_kit.py`
@@ -595,19 +933,27 @@ Units: Unreal centimetres, Z-up. Every OBJ is one object, no `g` records,
 named `usemtl` slots, indexed UVs on every corner, Z=0 / base-centred origin.
 Foliage vertex RGB encodes wind stiffness (0 = rigid root, 1 = free tip).
 
+Slice 2 adds three supporting display specimens: an aloe rosette, a
+philodendron, and a coleus mound. Each is a composed specimen, not a hedge
+module.
+
 MTL: `SourceMesh/entrance_terrace_reveal/VD_EntranceTerraceReveal.mtl`
-RGBA cutouts: `cutouts/entrance_terrace_reveal/` (referenced by both `map_Kd`
-and `map_d`).
+RGBA cutouts: `cutouts/entrance_terrace_reveal/` — four alpha sheets (date-palm
+leaflet, leaf/bark litter, philodendron lobed leaf, coleus patterned leaf),
+each referenced by both `map_Kd` and `map_d`.
 
 ## Import steps (Unreal)
 1. Import each OBJ as its own Static Mesh; keep "Combine Meshes" OFF (one object
    per file already).
-2. Import the two RGBA sheets as textures; connect RGB -> Base Color and A ->
-   Opacity Mask on the leaflet/litter masked materials.
-3. On the date palm, enable "Vertex Colors" import and drive a wind/pivot-sway
-   node from vertex-colour luminance (0 anchored, 1 free). Trunk vertices are 0.
+2. Import the RGBA sheets as textures; connect RGB -> Base Color and A ->
+   Opacity Mask on every masked leaf/leaflet/litter material.
+3. On every foliage mesh (date palm, aloe, philodendron, coleus) enable "Vertex
+   Colors" import and drive a wind/pivot-sway node from vertex-colour luminance
+   (0 anchored/rigid, 1 free tip). Trunks, stems, petioles and leaf attachments
+   are 0; free leaf tips approach 1.
 4. Author collision per the notes below; do NOT let Unreal auto-generate a
-   single convex hull on the planters — it seals the open mouth.
+   single convex hull on the planters — it seals the open mouth. Foliage leaves
+   generally take NO collision.
 
 {assets}
 
@@ -642,6 +988,18 @@ ASSET_DOCS = [
      "~80 cm spread of 6 faceted stones, ~10-16 cm each.",
      "M_SoilDressing_Stone.",
      "Per-stone simple convex collision, or none if purely decorative. Do not wrap the whole cluster in one hull across the gaps."),
+    ("VD_Aloe_Specimen", "Supporting specimen — aloe rosette",
+     "~80 cm tall x ~1.2 m spread; 32 thick 3-D succulent leaves in four tiers with serrated margins.",
+     "M_Aloe_Leaf (thick lofted diamond-section blades, no alpha), M_Aloe_Base (basal crown).",
+     "No leaf collision. If a physical blocker is wanted, one short vertical capsule (~10 cm radius x ~20 cm) over the basal crown only; never hull the spreading leaves."),
+    ("VD_Philodendron_Specimen", "Supporting specimen — philodendron",
+     "~1.1-1.7 m tall; 11 large lobed alpha-cut leaf sheets on real curved petioles rising from a crown clump.",
+     "M_Philodendron_Crown (rootball clump), M_Philodendron_Petiole (real petiole tubes), M_Philodendron_Leaf (lobed alpha-cut leaf sheets).",
+     "No leaf/petiole collision (overlap-only). If needed, a single small capsule (~12 cm radius) over the crown clump so visitors do not walk through the base; leaves stay non-colliding."),
+    ("VD_Coleus_Specimen", "Supporting specimen — coleus mound",
+     "~45-75 cm tall low dense mound, wider than tall; branching real stems with 60 opposite decussate patterned alpha-cut leaves (burgundy centre, chartreuse margin).",
+     "M_Coleus_Base (soil crown), M_Coleus_Stem (real branching stems), M_Coleus_Leaf (patterned alpha-cut leaves).",
+     "No leaf collision. Optionally one low box/capsule (~12 cm radius x ~12 cm) over the base crown; do not hull the mound of leaves."),
 ]
 
 
@@ -676,6 +1034,9 @@ def main() -> None:
         build_soil_mound("VD_SoilDressing_Mound", 55.0, 15.0, 7901),
         build_litter("VD_SoilDressing_Litter", 7902),
         build_stones("VD_SoilDressing_Stones", 7903),
+        build_aloe("VD_Aloe_Specimen", 8101),
+        build_philodendron("VD_Philodendron_Specimen", 8102),
+        build_coleus("VD_Coleus_Specimen", 8103),
     ]
     write_mtl()
     write_handoff()
@@ -692,13 +1053,30 @@ def main() -> None:
                                 "size_cm": [round(v, 2) for v in size]})
     manifest = {
         "units": "centimetres; Z-up",
-        "slice": "entrance-terrace reveal kit 1",
+        "slice": "entrance-terrace reveal kit (slice 1 base + slice 2 supporting species)",
         "mesh_count": len(meshes),
         "foliage_contract": {
-            "alpha_cut_rgba_sheets": 2,
+            "alpha_cut_rgba_sheets": 4,
             "wind_encoding": "OBJ vertex RGB grayscale; 0=root/rigid, 1=free tip",
             "palm_fronds": 16,
             "palm_leaflet_pairs_per_frond": 24,
+        },
+        "supporting_species": {
+            "VD_Aloe_Specimen": {
+                "form": "multi-tier succulent rosette; thick 3-D diamond-section leaves, serrated margins",
+                "leaves": 32,
+                "alpha_sheets": [],
+            },
+            "VD_Philodendron_Specimen": {
+                "form": "real petioles carrying large lobed alpha-cut leaf sheets on curved ribbons",
+                "leaves": 11,
+                "alpha_sheets": ["philodendron_lobed_leaf_rgba_1024.png"],
+            },
+            "VD_Coleus_Specimen": {
+                "form": "low dense mound; branching real stems, opposite decussate patterned alpha-cut leaves",
+                "leaves": 60,
+                "alpha_sheets": ["coleus_leaf_rgba_1024.png"],
+            },
         },
         "meshes": manifest_meshes,
     }

@@ -2,7 +2,7 @@
   "pass": true,
   "missing": [],
   "extra": [],
-  "mesh_count": 6,
+  "mesh_count": 9,
   "meshes": {
     "VD_SpecimenPlanter_Concrete": {
       "pass": true,
@@ -248,6 +248,145 @@
       },
       "invalid_uv_corners": 0,
       "degenerate_regions": 0
+    },
+    "VD_Aloe_Specimen": {
+      "pass": true,
+      "failures": [],
+      "vertices": 1282,
+      "texture_coordinates": 4704,
+      "faces": 1264,
+      "triangles": 2176,
+      "object_names": [
+        "VD_Aloe_Specimen"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_Aloe_Base",
+        "M_Aloe_Leaf"
+      ],
+      "material_face_counts": {
+        "M_Aloe_Base": 48,
+        "M_Aloe_Leaf": 1216
+      },
+      "wind_stiffness": {
+        "encoding": "vertex RGB grayscale",
+        "min": 0.0,
+        "max": 0.85,
+        "vertex_count": 1282
+      },
+      "bounds_cm": {
+        "min": [
+          -62.903993,
+          -63.720722,
+          0.0
+        ],
+        "max": [
+          62.903993,
+          63.720722,
+          86.371281
+        ],
+        "size": [
+          125.807986,
+          127.441444,
+          86.371281
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_Philodendron_Specimen": {
+      "pass": true,
+      "failures": [],
+      "vertices": 1215,
+      "texture_coordinates": 2820,
+      "faces": 714,
+      "triangles": 1392,
+      "object_names": [
+        "VD_Philodendron_Specimen"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_Philodendron_Crown",
+        "M_Philodendron_Leaf",
+        "M_Philodendron_Petiole"
+      ],
+      "material_face_counts": {
+        "M_Philodendron_Crown": 54,
+        "M_Philodendron_Leaf": 264,
+        "M_Philodendron_Petiole": 396
+      },
+      "wind_stiffness": {
+        "encoding": "vertex RGB grayscale",
+        "min": 0.0,
+        "max": 1.0,
+        "vertex_count": 1215
+      },
+      "bounds_cm": {
+        "min": [
+          -108.127247,
+          -108.564475,
+          0.0
+        ],
+        "max": [
+          108.127247,
+          108.564475,
+          143.460717
+        ],
+        "size": [
+          216.254494,
+          217.12895,
+          143.460717
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_Coleus_Specimen": {
+      "pass": true,
+      "failures": [],
+      "vertices": 1114,
+      "texture_coordinates": 2320,
+      "faces": 588,
+      "triangles": 1144,
+      "object_names": [
+        "VD_Coleus_Specimen"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_Coleus_Base",
+        "M_Coleus_Leaf",
+        "M_Coleus_Stem"
+      ],
+      "material_face_counts": {
+        "M_Coleus_Base": 48,
+        "M_Coleus_Leaf": 360,
+        "M_Coleus_Stem": 180
+      },
+      "wind_stiffness": {
+        "encoding": "vertex RGB grayscale",
+        "min": 0.0,
+        "max": 1.0,
+        "vertex_count": 1114
+      },
+      "bounds_cm": {
+        "min": [
+          -36.659828,
+          -34.277199,
+          0.0
+        ],
+        "max": [
+          36.659828,
+          34.277199,
+          61.653714
+        ],
+        "size": [
+          73.319656,
+          68.554398,
+          61.653714
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
     }
   },
   "textures": {
@@ -280,11 +419,42 @@
         255
       ],
       "opaque_fraction": 0.1757
+    },
+    "philodendron_leaf": {
+      "pass": true,
+      "failures": [],
+      "path": "cutouts/entrance_terrace_reveal/philodendron_lobed_leaf_rgba_1024.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "opaque_fraction": 0.3965
+    },
+    "coleus_leaf": {
+      "pass": true,
+      "failures": [],
+      "path": "cutouts/entrance_terrace_reveal/coleus_leaf_rgba_1024.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "opaque_fraction": 0.3777
     }
   },
   "visual_outputs": {
     "entrance_terrace_reveal_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_preview.png",
     "entrance_terrace_reveal_hero_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_hero_preview.png",
-    "entrance_terrace_reveal_alpha_sheets_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_alpha_sheets_preview.png"
+    "entrance_terrace_reveal_alpha_sheets_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_alpha_sheets_preview.png",
+    "entrance_terrace_reveal_supporting_species_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_supporting_species_preview.png"
   }
 }

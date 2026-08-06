@@ -1,12 +1,33 @@
 {
   "units": "centimetres; Z-up",
-  "slice": "entrance-terrace reveal kit 1",
-  "mesh_count": 6,
+  "slice": "entrance-terrace reveal kit (slice 1 base + slice 2 supporting species)",
+  "mesh_count": 9,
   "foliage_contract": {
-    "alpha_cut_rgba_sheets": 2,
+    "alpha_cut_rgba_sheets": 4,
     "wind_encoding": "OBJ vertex RGB grayscale; 0=root/rigid, 1=free tip",
     "palm_fronds": 16,
     "palm_leaflet_pairs_per_frond": 24
+  },
+  "supporting_species": {
+    "VD_Aloe_Specimen": {
+      "form": "multi-tier succulent rosette; thick 3-D diamond-section leaves, serrated margins",
+      "leaves": 32,
+      "alpha_sheets": []
+    },
+    "VD_Philodendron_Specimen": {
+      "form": "real petioles carrying large lobed alpha-cut leaf sheets on curved ribbons",
+      "leaves": 11,
+      "alpha_sheets": [
+        "philodendron_lobed_leaf_rgba_1024.png"
+      ]
+    },
+    "VD_Coleus_Specimen": {
+      "form": "low dense mound; branching real stems, opposite decussate patterned alpha-cut leaves",
+      "leaves": 60,
+      "alpha_sheets": [
+        "coleus_leaf_rgba_1024.png"
+      ]
+    }
   },
   "meshes": [
     {
@@ -67,6 +88,36 @@
         69.41,
         57.18,
         11.32
+      ]
+    },
+    {
+      "name": "VD_Aloe_Specimen",
+      "vertices": 1282,
+      "faces": 1264,
+      "size_cm": [
+        125.81,
+        127.44,
+        86.37
+      ]
+    },
+    {
+      "name": "VD_Philodendron_Specimen",
+      "vertices": 1215,
+      "faces": 714,
+      "size_cm": [
+        216.25,
+        217.13,
+        143.46
+      ]
+    },
+    {
+      "name": "VD_Coleus_Specimen",
+      "vertices": 1114,
+      "faces": 588,
+      "size_cm": [
+        73.32,
+        68.55,
+        61.65
       ]
     }
   ]

@@ -57,3 +57,47 @@ newmtl M_SoilDressing_Stone
 Kd 0.35 0.35 0.34
 Pm 0.0
 Pr 0.8
+
+newmtl M_Aloe_Leaf
+Kd 0.24 0.42 0.22
+Pm 0.0
+Pr 0.55
+
+newmtl M_Aloe_Base
+Kd 0.2 0.16 0.1
+Pm 0.0
+Pr 0.9
+
+newmtl M_Philodendron_Crown
+Kd 0.18 0.14 0.09
+Pm 0.0
+Pr 0.9
+
+newmtl M_Philodendron_Petiole
+Kd 0.28 0.34 0.16
+Pm 0.0
+Pr 0.6
+
+newmtl M_Philodendron_Leaf
+Kd 0.1 0.26 0.13
+Pm 0.0
+Pr 0.42
+map_Kd ../../cutouts/entrance_terrace_reveal/philodendron_lobed_leaf_rgba_1024.png
+map_d ../../cutouts/entrance_terrace_reveal/philodendron_lobed_leaf_rgba_1024.png
+
+newmtl M_Coleus_Base
+Kd 0.18 0.13 0.08
+Pm 0.0
+Pr 0.9
+
+newmtl M_Coleus_Stem
+Kd 0.34 0.28 0.2
+Pm 0.0
+Pr 0.6
+
+newmtl M_Coleus_Leaf
+Kd 0.36 0.16 0.2
+Pm 0.0
+Pr 0.5
+map_Kd ../../cutouts/entrance_terrace_reveal/coleus_leaf_rgba_1024.png
+map_d ../../cutouts/entrance_terrace_reveal/coleus_leaf_rgba_1024.png

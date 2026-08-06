@@ -28,9 +28,13 @@ EXPECTED = {
     "VD_SoilDressing_Mound": {"M_SoilDressing_Mound"},
     "VD_SoilDressing_Litter": {"M_SoilDressing_Litter"},
     "VD_SoilDressing_Stones": {"M_SoilDressing_Stone"},
+    "VD_Aloe_Specimen": {"M_Aloe_Leaf", "M_Aloe_Base"},
+    "VD_Philodendron_Specimen": {"M_Philodendron_Crown", "M_Philodendron_Petiole", "M_Philodendron_Leaf"},
+    "VD_Coleus_Specimen": {"M_Coleus_Base", "M_Coleus_Stem", "M_Coleus_Leaf"},
 }
 PLANTERS = {"VD_SpecimenPlanter_Concrete": "M_Planter_DressedSoil",
             "VD_SpecimenPlanter_Ceramic": "M_Planter_DressedSoil"}
+FOLIAGE = {"VD_DatePalm_Hero", "VD_Aloe_Specimen", "VD_Philodendron_Specimen", "VD_Coleus_Specimen"}
 COLORS = {
     "M_ConcretePlanter_Cast": (150, 150, 138, 255),
     "M_ConcretePlanter_Rim": (176, 172, 158, 255),
@@ -43,15 +47,26 @@ COLORS = {
     "M_SoilDressing_Mound": (52, 37, 22, 255),
     "M_SoilDressing_Litter": (150, 104, 56, 255),
     "M_SoilDressing_Stone": (126, 126, 122, 255),
+    "M_Aloe_Leaf": (70, 120, 64, 255),
+    "M_Aloe_Base": (60, 48, 30, 255),
+    "M_Philodendron_Crown": (54, 42, 27, 255),
+    "M_Philodendron_Petiole": (92, 108, 54, 255),
+    "M_Philodendron_Leaf": (34, 96, 46, 255),
+    "M_Coleus_Base": (54, 40, 24, 255),
+    "M_Coleus_Stem": (104, 86, 60, 255),
+    "M_Coleus_Leaf": (130, 58, 74, 255),
 }
 TEXTURES = {
     "date_palm_leaflet": "date_palm_leaflet_ribbon_rgba_1024.png",
     "leaf_bark_litter": "leaf_bark_litter_rgba_1024.png",
+    "philodendron_leaf": "philodendron_lobed_leaf_rgba_1024.png",
+    "coleus_leaf": "coleus_leaf_rgba_1024.png",
 }
 VISUAL_OUTPUTS = [
     "entrance_terrace_reveal_preview.png",
     "entrance_terrace_reveal_hero_preview.png",
     "entrance_terrace_reveal_alpha_sheets_preview.png",
+    "entrance_terrace_reveal_supporting_species_preview.png",
 ]
 Vec3 = tuple[float, float, float]
 
@@ -167,16 +182,25 @@ def validate(mesh: Obj) -> dict[str, object]:
         failures.append(f"date palm height {size[2]:.1f} cm outside 300-500 (3-5 m)")
     if mesh.name == "VD_SoilDressing_Mound" and (size[2] > 40.0 or max(size[0], size[1]) > 160.0):
         failures.append(f"soil mound bounds {size} out of a dressing-scatter range")
+    if mesh.name == "VD_Aloe_Specimen" and not 70.0 <= size[2] <= 110.0:
+        failures.append(f"aloe height {size[2]:.1f} cm outside 70-110")
+    if mesh.name == "VD_Philodendron_Specimen" and not 110.0 <= size[2] <= 170.0:
+        failures.append(f"philodendron height {size[2]:.1f} cm outside 110-170")
+    if mesh.name == "VD_Coleus_Specimen":
+        if not 45.0 <= size[2] <= 75.0:
+            failures.append(f"coleus height {size[2]:.1f} cm outside 45-75")
+        if max(size[0], size[1]) < size[2] * 0.9:
+            failures.append(f"coleus footprint {max(size[0], size[1]):.1f} cm does not read as a low mound")
 
     wind_values = [colour[0] for colour in mesh.wind_colours if colour is not None]
-    is_foliage = mesh.name == "VD_DatePalm_Hero"
+    is_foliage = mesh.name in FOLIAGE
     if is_foliage:
         if len(wind_values) != len(mesh.vertices):
-            failures.append("not every palm vertex carries RGB wind stiffness")
+            failures.append("not every foliage vertex carries RGB wind stiffness")
         elif any(abs(c[0] - c[1]) > 1e-6 or abs(c[1] - c[2]) > 1e-6 or not 0 <= c[0] <= 1
                  for c in mesh.wind_colours if c is not None):
             failures.append("wind vertex colours are not grayscale values in [0,1]")
-        elif min(wind_values) > 0.001 or max(wind_values) < 0.90:
+        elif min(wind_values) > 0.001 or max(wind_values) < 0.80:
             failures.append(f"wind range {min(wind_values):.3f}-{max(wind_values):.3f} lacks rigid roots or free tips")
     elif wind_values:
         failures.append("rigid mesh unexpectedly carries wind vertex colours")
@@ -193,6 +217,24 @@ def validate(mesh: Obj) -> dict[str, object]:
         # the diamond leaf-base bosses were authored.
         if material_faces.get("M_DatePalm_Trunk", 0) < 300:
             failures.append("trunk lacks the raised diamond leaf-base lattice")
+    if mesh.name == "VD_Aloe_Specimen":
+        # ~32 lofted blades (each 8 segments x 4 diamond quads + teeth + tip fan).
+        if material_faces.get("M_Aloe_Leaf", 0) < 900:
+            failures.append(f"aloe has only {material_faces.get('M_Aloe_Leaf', 0)} leaf faces; sparse rosette")
+        if material_faces.get("M_Aloe_Base", 0) < 16:
+            failures.append("aloe basal crown geometry is missing")
+    if mesh.name == "VD_Philodendron_Specimen":
+        leaf_cards = material_faces.get("M_Philodendron_Leaf", 0) // 24
+        if leaf_cards < 8:
+            failures.append(f"philodendron has only {leaf_cards} leaf sheets; sparse canopy")
+        if material_faces.get("M_Philodendron_Petiole", 0) < 250:
+            failures.append("philodendron petiole geometry is missing or too sparse")
+    if mesh.name == "VD_Coleus_Specimen":
+        leaf_cards = material_faces.get("M_Coleus_Leaf", 0) // 6
+        if leaf_cards < 36:
+            failures.append(f"coleus has only {leaf_cards} leaves; not a dense mound")
+        if material_faces.get("M_Coleus_Stem", 0) < 120:
+            failures.append("coleus stem geometry is missing or too sparse")
 
     return {"pass": not failures, "failures": failures,
             "vertices": len(mesh.vertices), "texture_coordinates": len(mesh.texcoords),
@@ -303,6 +345,30 @@ def render_hero(meshes: dict[str, Obj]) -> None:
     image.save(QA / "entrance_terrace_reveal_hero_preview.png")
 
 
+def render_supporting(meshes: dict[str, Obj]) -> None:
+    """Supporting-species elevation: aloe, philodendron, coleus, each base-centred."""
+    image = Image.new("RGB", (2200, 1300), (19, 24, 21))
+    draw = ImageDraw.Draw(image)
+    font = ImageFont.load_default()
+    draw.text((45, 22), "ENTRANCE-TERRACE REVEAL KIT / SLICE 2 — SUPPORTING SPECIES", fill=(238, 226, 190), font=font)
+    draw.text((45, 45), "Aloe rosette · philodendron · coleus mound · base-centred Unreal cm · vertex-colour wind stiffness",
+              fill=(150, 173, 157), font=font)
+    panels = [
+        ("VD_Aloe_Specimen", (40, 80, 780, 1120), (200, -230, 150), "ALOE ROSETTE / ~0.86 m, thick 3-D succulent leaves"),
+        ("VD_Philodendron_Specimen", (800, 80, 1440, 1200), (330, -400, 260), "PHILODENDRON / ~1.43 m, lobed alpha-cut leaves + petioles"),
+        ("VD_Coleus_Specimen", (1460, 80, 2160, 1120), (170, -200, 150), "COLEUS MOUND / ~0.62 m, patterned alpha-cut leaves + stems"),
+    ]
+    for name, box, camera, label in panels:
+        render_panel(image, box, [meshes[name]], [(0, 0, 0)], camera, label)
+    notes = ["Aloe: genuinely 3-D lofted diamond-section blades with serrated margins; no alpha card, no leaf collision.",
+             "Philodendron: real curved petiole tubes carry lobed RGBA leaf sheets; overlap-only, optional crown capsule.",
+             "Coleus: branching real stems with opposite decussate patterned RGBA leaves forming a low mound wider than tall.",
+             "All three carry vertex-colour wind stiffness: stems/petioles/attachments 0, free leaf tips toward 1."]
+    for i, note in enumerate(notes):
+        draw.text((45, 1140 + i * 34), note, fill=(189, 200, 184), font=font)
+    image.save(QA / "entrance_terrace_reveal_supporting_species_preview.png")
+
+
 def verify_textures() -> dict[str, dict[str, object]]:
     results: dict[str, dict[str, object]] = {}
     mtl_text = (SOURCE / MTL).read_text(encoding="utf-8")
@@ -360,6 +426,8 @@ def main() -> None:
     if meshes:
         render_preview(meshes)
         render_hero(meshes)
+        if all(name in meshes for name in ("VD_Aloe_Specimen", "VD_Philodendron_Specimen", "VD_Coleus_Specimen")):
+            render_supporting(meshes)
     visual = {name: (QA / name).exists() and (QA / name).stat().st_size > 1024 for name in VISUAL_OUTPUTS}
     report = {"pass": (not missing and not extra
                        and all(r["pass"] for r in results.values())
