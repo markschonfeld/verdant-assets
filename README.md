@@ -143,6 +143,9 @@ transition toward doorway warmth.
 
 - `references/botanical/solandra_maxima_trellis_reference_2400x1800.png`
 - `references/botanical/aristolochia_dutchmans_pipe_trellis_reference_2400x1800.png`
+- `references/botanical/climber_stem_bark_surface_reference_2400x1800.png`
+  (young-to-mature stem progression, relative bearing diameters, node/bud
+  treatment, compressed contact faces, bark grain, and surface response)
 - `references/botanical/SOURCES.md` (public botanical facts vs VERDANT interpretation)
 
 Flat-on alpha assets are 1024×1024 RGBA PNGs with true transparent alpha and

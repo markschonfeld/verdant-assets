@@ -40,6 +40,15 @@ source photograph is redistributed or embedded in the assets.
   chooses the opposite hand. The sheets do **not** claim that this hand is a
   species diagnostic.
 - Mature stems flatten and swell at bearing contacts for readable load transfer.
+- The relative diameter multipliers on Study 05 are modelling proportions, not
+  measured botanical dimensions. Solandra is deliberately the heavier bearing
+  runner; Aristolochia remains visibly slimmer and more cylindrical.
+- Solandra's ropey longitudinal cork, local contact polish, and exaggerated
+  bearing flattening are production treatments inferred from woody climber
+  behavior. They are not presented as diagnostic taxonomic characters.
+- Aristolochia's green-to-brown age transition, shallow vertical splitting, and
+  small woolly buds are source-grounded; the exact spacing and surface scale are
+  adapted for legibility at first-person game distance.
 - Growth follows the trellis around jamb and head, then biases toward doorway
   warmth rather than light.
 - Recognisable species morphology narrows or straightens only at distal growth,

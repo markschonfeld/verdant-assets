@@ -306,6 +306,115 @@ def draw_pipe_flower(d,x,y,scale=1.0,angle=0.0):
     for oy in (-20,0,20): line(d,[tr(15,oy),tr(92,52+oy*.25)],PURPLE,max(2,int(3*scale)))
 
 
+def draw_bark_sample(d, start, end, width, base, seed, fissures, young=False):
+    """Even-lit cylindrical stem close-up with deterministic longitudinal grain."""
+    x0,y0=start; x1,y1=end; dx=x1-x0; dy=y1-y0
+    length=(dx*dx+dy*dy)**.5; ux,uy=dx/length,dy/length; nx,ny=-uy,ux
+    line(d,[start,end],INK,width+8)
+    line(d,[start,end],base,width)
+    # Broad side bands describe roundness without directional cast shadow.
+    line(d,[(x0+nx*width*.23,y0+ny*width*.23),(x1+nx*width*.23,y1+ny*width*.23)],
+         tuple(min(255,c+28) for c in base),max(4,width//8))
+    line(d,[(x0-nx*width*.31,y0-ny*width*.31),(x1-nx*width*.31,y1-ny*width*.31)],
+         tuple(max(0,c-27) for c in base),max(4,width//7))
+    rng=random.Random(seed)
+    if not young:
+        for i in range(fissures):
+            lateral=rng.uniform(-.34,.34)*width
+            a=rng.uniform(.05,.28); b=rng.uniform(.58,.95)
+            pts=[]
+            for j in range(7):
+                t=a+(b-a)*j/6
+                wob=sin(t*18+i)*rng.uniform(2,7)
+                pts.append((x0+dx*t+nx*(lateral+wob),y0+dy*t+ny*(lateral+wob)))
+            line(d,pts,(64,53,35),rng.randint(2,max(3,width//18)))
+    else:
+        # Young epidermis: sparse lenticel-like marks, no mature plate texture.
+        for _ in range(max(5,fissures//2)):
+            t=rng.uniform(.12,.9); lateral=rng.uniform(-.27,.27)*width
+            cx=x0+dx*t+nx*lateral; cy=y0+dy*t+ny*lateral
+            line(d,[(cx-ux*8,cy-uy*8),(cx+ux*8,cy+uy*8)],(72,91,47),2)
+    # Cut end shows pith/cambium only as a modelling cue, not a material map.
+    ex,ey=x1,y1
+    ellipse(d,(ex-width*.48,ey-width*.34,ex+width*.48,ey+width*.34),
+            tuple(min(255,c+34) for c in base),(52,48,33),3)
+    ellipse(d,(ex-width*.14,ey-width*.10,ex+width*.14,ey+width*.10),(119,103,65),None,1)
+
+
+def bark_swatch(d, box, base, seed, split_count, polished=False):
+    x0,y0,x1,y1=box
+    d.rounded_rectangle(box,radius=14,fill=base,outline=INK,width=3)
+    rng=random.Random(seed)
+    for i in range(split_count):
+        x=rng.randint(x0+18,x1-18)
+        pts=[]
+        for j in range(7):
+            y=y0+18+(y1-y0-36)*j/6
+            pts.append((x+sin(j*1.4+i)*rng.uniform(2,9),y))
+        line(d,pts,(63,50,34),rng.randint(2,5))
+    if polished:
+        d.rounded_rectangle((x0+28,y0+44,x1-28,y1-42),radius=24,outline=(176,157,103),width=14)
+        d.text((x0+44,y1-70),"compressed contact face",font=font(16,mono=True),fill=WHITE)
+
+
+def make_stem_bark_sheet():
+    im=Image.new("RGB",(W,H),BG); d=ImageDraw.Draw(im)
+    title(d,"05","CLIMBER STEM + BARK SURFACES","Close modelling reference / age transition / bearing contact / texture scale")
+    d.rounded_rectangle((70,300,1640,1660),radius=26,fill=PANEL,outline=(150,151,141),width=3)
+    line(d,[(105,930),(1605,930)],(150,151,141),3)
+
+    # SOLANDRA — heavier, ropey, corking mature runner.
+    d.text((110,330),"A / SOLANDRA MAXIMA",font=font(25,bold=True,mono=True),fill=ACCENT)
+    d.text((110,368),"smooth green shoot → corking bearing runner",font=font(20),fill=MUTED)
+    d.text((145,430),"YOUNG / 1×",font=font(16,mono=True),fill=MUTED)
+    d.text((600,430),"MATURE / ~1.8×",font=font(16,mono=True),fill=MUTED)
+    d.text((1050,430),"BEARING / ~2.7×",font=font(16,mono=True),fill=MUTED)
+    d.text((1350,365),"RELATIVE, NOT MEASURED",font=font(15,mono=True),fill=MUTED)
+    draw_bark_sample(d,(150,520),(570,500),48,(75,104,51),7501,8,young=True)
+    draw_bark_sample(d,(600,520),(1030,505),88,(116,91,50),7502,14)
+    draw_bark_sample(d,(1050,520),(1530,500),132,(105,78,43),7503,23)
+    # Node swelling and flattened trellis-bearing face.
+    ellipse(d,(780,455,900,565),(128,96,49),INK,4)
+    line(d,[(840,455),(840,420)],STEM,18)
+    line(d,[(1215,390),(1215,655)],GALV_D,26)
+    ellipse(d,(1135,448,1295,566),(130,101,55),INK,4)
+    d.rounded_rectangle((1190,458,1250,556),radius=20,fill=(164,139,83),outline=INK,width=3)
+    bark_swatch(d,(180,650,660,860),(105,78,43),7510,28)
+    bark_swatch(d,(700,650,1180,860),(105,78,43),7511,17,polished=True)
+    d.text((200,875),"ropey longitudinal cork / no large plates",font=font(17,mono=True),fill=MUTED)
+    d.text((720,875),"bearing face: flatter, smoother, slightly lighter",font=font(17,mono=True),fill=MUTED)
+
+    # ARISTOLOCHIA — slim, smooth green to shallow-split brown.
+    d.text((110,965),"B / ARISTOLOCHIA MACROPHYLLA",font=font(25,bold=True,mono=True),fill=ACCENT)
+    d.text((110,1003),"slender green twiner → thin brown bark with shallow vertical splits",font=font(20),fill=MUTED)
+    d.text((145,1060),"YOUNG / 1×",font=font(16,mono=True),fill=MUTED)
+    d.text((630,1060),"MATURE / ~1.7×",font=font(16,mono=True),fill=MUTED)
+    d.text((1080,1060),"BEARING / ~2.2×",font=font(16,mono=True),fill=MUTED)
+    draw_bark_sample(d,(150,1140),(610,1120),28,(69,101,51),7601,8,young=True)
+    draw_bark_sample(d,(630,1140),(1060,1125),50,(100,82,50),7602,11)
+    draw_bark_sample(d,(1080,1140),(1530,1120),66,(91,72,45),7603,14)
+    # Modest node and woolly bud; never the Solandra-sized boss.
+    ellipse(d,(800,1090,868,1160),(111,88,49),INK,3)
+    line(d,[(834,1094),(850,1048)],STEM,10)
+    for ox,oy in [(850,1046),(856,1042),(845,1038),(862,1051)]:
+        ellipse(d,(ox-5,oy-5,ox+5,oy+5),(184,175,139),None,1)
+    line(d,[(1240,1045),(1240,1260)],GALV_D,18)
+    d.arc((1195,1065,1285,1225),65,300,fill=(89,72,45),width=18)
+    bark_swatch(d,(180,1280,660,1510),(91,72,45),7610,17)
+    bark_swatch(d,(700,1280,1180,1510),(88,78,54),7611,8,polished=True)
+    d.text((200,1525),"fine shallow splits / keep silhouette cylindrical",font=font(17,mono=True),fill=MUTED)
+    d.text((720,1525),"contact polish is local, not a full glossy band",font=font(17,mono=True),fill=MUTED)
+
+    callout(d,(1320,500),(1660,445),(1680,415),1,"Solandra age stack","Young stems are smooth olive green and relatively round. Mature bearing wood grows much thicker, browns, and develops ropey longitudinal cork. Avoid oak-like plates, deep furrows, or generic tree bark.")
+    callout(d,(1218,500),(1660,720),(1680,690),2,"Bearing deformation","At a trellis contact, widen the node, flatten only the loaded inner face, and polish the high-contact strip. Wet recesses remain darker and rougher; the whole circumference does not become smooth.")
+    callout(d,(1320,1125),(1660,1000),(1680,970),3,"Aristolochia scale","Keep the mature pipevine visibly slimmer than Solandra. Brown bark receives shallow vertical splitting but retains a cylindrical silhouette. Nodes swell modestly; woolly buds are small, pale accents.")
+    callout(d,(500,1390),(1660,1245),(1680,1215),4,"Texture orientation","All grain and fissures follow the stem axis, bending continuously through the helix. Break repetition at nodes and contacts. Do not project one straight bark tile across a turn without rotating its grain.")
+    note_box(d,(1665,1410,2310,1660),"Surface response","Young epidermis: moist satin, low micro-relief. Solandra mature cork: dry roughness with rounded ridges and darker damp seams. Aristolochia mature bark: finer and less deeply relieved. Bearing polish raises highlight response only on compressed faces. Story mutation changes directional growth and proportion first; bark should not become thorny, diseased, or fantasy-scaled.")
+    path=REF/"climber_stem_bark_surface_reference_2400x1800.png"
+    im.save(path,optimize=True)
+    return path
+
+
 def make_sheet(kind):
     im=Image.new("RGB",(W,H),BG); d=ImageDraw.Draw(im)
     if kind=="solandra":
@@ -369,7 +478,7 @@ def make_pipe_card():
 
 def main():
     paths=[make_sheet("solandra"),make_sheet("aristolochia"),make_leaf_card("solandra"),
-           make_leaf_card("aristolochia"),make_pipe_card()]
+           make_leaf_card("aristolochia"),make_pipe_card(),make_stem_bark_sheet()]
     for p in paths: print(p)
 
 
