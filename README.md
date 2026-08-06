@@ -146,6 +146,13 @@ transition toward doorway warmth.
 - `references/botanical/climber_stem_bark_surface_reference_2400x1800.png`
   (young-to-mature stem progression, relative bearing diameters, node/bud
   treatment, compressed contact faces, bark grain, and surface response)
+- `references/botanical/climber_branching_architecture_reference_2400x1800.png`
+  (axillary branching, primary/secondary/tertiary hierarchy, parallel and
+  crossing runs, multiple leaders, mature two-species canopy, and flower-density
+  distinction)
+- `references/botanical/CLIMBER_BRANCHING_PHOTO_REFERENCE.md`
+  (linked, attributed whole-habit photographs plus a procedural brief; external
+  photographs are not copied into this repository)
 - `references/botanical/SOURCES.md` (public botanical facts vs VERDANT interpretation)
 
 Flat-on alpha assets are 1024×1024 RGBA PNGs with true transparent alpha and
@@ -159,6 +166,7 @@ Regenerate and verify with:
 
 ```bash
 python3 scripts/generate_climber_reference_sheets.py
+python3 scripts/generate_climber_branching_reference.py
 python3 scripts/verify_climber_reference_sheets.py
 ```
 
