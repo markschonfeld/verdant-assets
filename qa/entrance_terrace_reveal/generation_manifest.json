@@ -1,0 +1,73 @@
+{
+  "units": "centimetres; Z-up",
+  "slice": "entrance-terrace reveal kit 1",
+  "mesh_count": 6,
+  "foliage_contract": {
+    "alpha_cut_rgba_sheets": 2,
+    "wind_encoding": "OBJ vertex RGB grayscale; 0=root/rigid, 1=free tip",
+    "palm_fronds": 16,
+    "palm_leaflet_pairs_per_frond": 24
+  },
+  "meshes": [
+    {
+      "name": "VD_SpecimenPlanter_Concrete",
+      "vertices": 674,
+      "faces": 720,
+      "size_cm": [
+        224.0,
+        224.0,
+        98.0
+      ]
+    },
+    {
+      "name": "VD_SpecimenPlanter_Ceramic",
+      "vertices": 674,
+      "faces": 720,
+      "size_cm": [
+        188.0,
+        188.0,
+        116.0
+      ]
+    },
+    {
+      "name": "VD_DatePalm_Hero",
+      "vertices": 6613,
+      "faces": 2772,
+      "size_cm": [
+        345.93,
+        346.95,
+        416.72
+      ]
+    },
+    {
+      "name": "VD_SoilDressing_Mound",
+      "vertices": 42,
+      "faces": 60,
+      "size_cm": [
+        103.84,
+        105.04,
+        15.0
+      ]
+    },
+    {
+      "name": "VD_SoilDressing_Litter",
+      "vertices": 60,
+      "faces": 15,
+      "size_cm": [
+        82.93,
+        85.45,
+        6.43
+      ]
+    },
+    {
+      "name": "VD_SoilDressing_Stones",
+      "vertices": 42,
+      "faces": 60,
+      "size_cm": [
+        69.41,
+        57.18,
+        11.32
+      ]
+    }
+  ]
+}

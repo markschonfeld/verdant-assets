@@ -1,0 +1,290 @@
+{
+  "pass": true,
+  "missing": [],
+  "extra": [],
+  "mesh_count": 6,
+  "meshes": {
+    "VD_SpecimenPlanter_Concrete": {
+      "pass": true,
+      "failures": [],
+      "vertices": 674,
+      "texture_coordinates": 2784,
+      "faces": 720,
+      "triangles": 1344,
+      "object_names": [
+        "VD_SpecimenPlanter_Concrete"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_ConcretePlanter_Cast",
+        "M_ConcretePlanter_Rim",
+        "M_Planter_DressedSoil"
+      ],
+      "material_face_counts": {
+        "M_ConcretePlanter_Cast": 528,
+        "M_ConcretePlanter_Rim": 48,
+        "M_Planter_DressedSoil": 144
+      },
+      "wind_stiffness": null,
+      "bounds_cm": {
+        "min": [
+          -112.0,
+          -112.0,
+          0.0
+        ],
+        "max": [
+          112.0,
+          112.0,
+          98.0
+        ],
+        "size": [
+          224.0,
+          224.0,
+          98.0
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_SpecimenPlanter_Ceramic": {
+      "pass": true,
+      "failures": [],
+      "vertices": 674,
+      "texture_coordinates": 2784,
+      "faces": 720,
+      "triangles": 1344,
+      "object_names": [
+        "VD_SpecimenPlanter_Ceramic"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_CeramicPlanter_Glaze",
+        "M_CeramicPlanter_Rim",
+        "M_Planter_DressedSoil"
+      ],
+      "material_face_counts": {
+        "M_CeramicPlanter_Glaze": 528,
+        "M_CeramicPlanter_Rim": 48,
+        "M_Planter_DressedSoil": 144
+      },
+      "wind_stiffness": null,
+      "bounds_cm": {
+        "min": [
+          -94.0,
+          -94.0,
+          0.0
+        ],
+        "max": [
+          94.0,
+          94.0,
+          116.0
+        ],
+        "size": [
+          188.0,
+          188.0,
+          116.0
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_DatePalm_Hero": {
+      "pass": true,
+      "failures": [],
+      "vertices": 6613,
+      "texture_coordinates": 10692,
+      "faces": 2772,
+      "triangles": 5148,
+      "object_names": [
+        "VD_DatePalm_Hero"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_DatePalm_Leaflet",
+        "M_DatePalm_Rachis",
+        "M_DatePalm_Trunk"
+      ],
+      "material_face_counts": {
+        "M_DatePalm_Leaflet": 1536,
+        "M_DatePalm_Rachis": 672,
+        "M_DatePalm_Trunk": 564
+      },
+      "wind_stiffness": {
+        "encoding": "vertex RGB grayscale",
+        "min": 0.0,
+        "max": 1.0,
+        "vertex_count": 6613
+      },
+      "bounds_cm": {
+        "min": [
+          -172.966361,
+          -173.476777,
+          0.0
+        ],
+        "max": [
+          172.966361,
+          173.476777,
+          416.721334
+        ],
+        "size": [
+          345.932722,
+          346.953554,
+          416.721334
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_SoilDressing_Mound": {
+      "pass": true,
+      "failures": [],
+      "vertices": 42,
+      "texture_coordinates": 200,
+      "faces": 60,
+      "triangles": 80,
+      "object_names": [
+        "VD_SoilDressing_Mound"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_SoilDressing_Mound"
+      ],
+      "material_face_counts": {
+        "M_SoilDressing_Mound": 60
+      },
+      "wind_stiffness": null,
+      "bounds_cm": {
+        "min": [
+          -51.920508,
+          -52.519551,
+          0.0
+        ],
+        "max": [
+          51.920508,
+          52.519551,
+          15.0
+        ],
+        "size": [
+          103.841016,
+          105.039102,
+          15.0
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_SoilDressing_Litter": {
+      "pass": true,
+      "failures": [],
+      "vertices": 60,
+      "texture_coordinates": 60,
+      "faces": 15,
+      "triangles": 30,
+      "object_names": [
+        "VD_SoilDressing_Litter"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_SoilDressing_Litter"
+      ],
+      "material_face_counts": {
+        "M_SoilDressing_Litter": 15
+      },
+      "wind_stiffness": null,
+      "bounds_cm": {
+        "min": [
+          -41.467112,
+          -42.726299,
+          0.0
+        ],
+        "max": [
+          41.467112,
+          42.726299,
+          6.431301
+        ],
+        "size": [
+          82.934224,
+          85.452598,
+          6.431301
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_SoilDressing_Stones": {
+      "pass": true,
+      "failures": [],
+      "vertices": 42,
+      "texture_coordinates": 180,
+      "faces": 60,
+      "triangles": 60,
+      "object_names": [
+        "VD_SoilDressing_Stones"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_SoilDressing_Stone"
+      ],
+      "material_face_counts": {
+        "M_SoilDressing_Stone": 60
+      },
+      "wind_stiffness": null,
+      "bounds_cm": {
+        "min": [
+          -34.706744,
+          -28.589801,
+          0.0
+        ],
+        "max": [
+          34.706744,
+          28.589801,
+          11.320861
+        ],
+        "size": [
+          69.413488,
+          57.179602,
+          11.320861
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    }
+  },
+  "textures": {
+    "date_palm_leaflet": {
+      "pass": true,
+      "failures": [],
+      "path": "cutouts/entrance_terrace_reveal/date_palm_leaflet_ribbon_rgba_1024.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "opaque_fraction": 0.4286
+    },
+    "leaf_bark_litter": {
+      "pass": true,
+      "failures": [],
+      "path": "cutouts/entrance_terrace_reveal/leaf_bark_litter_rgba_1024.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "opaque_fraction": 0.1757
+    }
+  },
+  "visual_outputs": {
+    "entrance_terrace_reveal_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_preview.png",
+    "entrance_terrace_reveal_hero_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_hero_preview.png",
+    "entrance_terrace_reveal_alpha_sheets_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_alpha_sheets_preview.png"
+  }
+}

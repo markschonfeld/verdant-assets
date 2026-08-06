@@ -1,0 +1,59 @@
+# Unreal material-slot placeholder library for the entrance-terrace reveal kit
+newmtl M_ConcretePlanter_Cast
+Kd 0.4 0.4 0.37
+Pm 0.0
+Pr 0.9
+
+newmtl M_ConcretePlanter_Rim
+Kd 0.47 0.46 0.42
+Pm 0.0
+Pr 0.84
+
+newmtl M_CeramicPlanter_Glaze
+Kd 0.12 0.34 0.33
+Pm 0.05
+Pr 0.22
+
+newmtl M_CeramicPlanter_Rim
+Kd 0.16 0.4 0.38
+Pm 0.05
+Pr 0.18
+
+newmtl M_Planter_DressedSoil
+Kd 0.11 0.08 0.05
+Pm 0.0
+Pr 0.95
+
+newmtl M_DatePalm_Trunk
+Kd 0.32 0.24 0.15
+Pm 0.0
+Pr 0.86
+
+newmtl M_DatePalm_Rachis
+Kd 0.3 0.33 0.16
+Pm 0.0
+Pr 0.62
+
+newmtl M_DatePalm_Leaflet
+Kd 0.2 0.36 0.17
+Pm 0.0
+Pr 0.46
+map_Kd ../../cutouts/entrance_terrace_reveal/date_palm_leaflet_ribbon_rgba_1024.png
+map_d ../../cutouts/entrance_terrace_reveal/date_palm_leaflet_ribbon_rgba_1024.png
+
+newmtl M_SoilDressing_Mound
+Kd 0.13 0.09 0.055
+Pm 0.0
+Pr 0.95
+
+newmtl M_SoilDressing_Litter
+Kd 0.42 0.3 0.16
+Pm 0.0
+Pr 0.72
+map_Kd ../../cutouts/entrance_terrace_reveal/leaf_bark_litter_rgba_1024.png
+map_d ../../cutouts/entrance_terrace_reveal/leaf_bark_litter_rgba_1024.png
+
+newmtl M_SoilDressing_Stone
+Kd 0.35 0.35 0.34
+Pm 0.0
+Pr 0.8
