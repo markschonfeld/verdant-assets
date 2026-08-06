@@ -1,4 +1,4 @@
-# Entrance-Terrace Reveal Kit — Handoff (Slice 1 base + Slice 2 supporting species + Slice 3 furniture)
+# Entrance-Terrace Reveal Kit — Handoff (Slice 1 base + Slice 2 supporting species + Slice 3 furniture + Slice 4 banners)
 
 Source: `scripts/generate_entrance_terrace_reveal_kit.py`
 Verify: `scripts/verify_entrance_terrace_reveal_kit.py`
@@ -17,27 +17,45 @@ All four are rigid props and carry **no vertex colour** -- the damaged bench
 shows its damage through bowed beam geometry and a distinct weathered
 material, never through paint-by-vertex.
 
+Slice 4 adds three tattered 1960s Institute promotional banners: an
+intact-but-faded vertical hanging banner, a torn/partially-detached banner
+with asymmetric sag, and a narrow wayfinding/promotional pennant. Every
+banner is a subdivided cloth grid (multi-wave attachment sag plus fine
+wrinkle creases baked into the geometry, not a flat quad); the torn banner
+uses alpha-cut ragged punctures and droops one lost top corner for a visibly
+asymmetric drape. All three carry **no vertex colour**
+-- this is rigid baked cloth for now, with wind physics deferred to a later
+runtime pass. Each banner is single-material, double-sided (front + a
+reversed-winding back face on the same vertices), and has its own 2048 RGBA
+graphic sheet with alpha-cut torn/frayed edges, fading/stains, and
+programmatically typeset Institute copy (PIL `ImageFont` on DejaVu Sans Bold/
+Regular and Liberation Sans Bold -- no diffusion-generated lettering).
+
 MTL: `SourceMesh/entrance_terrace_reveal/VD_EntranceTerraceReveal.mtl`
-RGBA cutouts: `cutouts/entrance_terrace_reveal/` — four alpha sheets (date-palm
-leaflet, leaf/bark litter, philodendron lobed leaf, coleus patterned leaf),
-each referenced by both `map_Kd` and `map_d`. Slice 3 reuses the leaf/bark
-litter sheet for the fountain's collected leaf debris rather than adding a
-fifth sheet.
+RGBA cutouts: `cutouts/entrance_terrace_reveal/` — four 1024 alpha sheets
+(date-palm leaflet, leaf/bark litter, philodendron lobed leaf, coleus
+patterned leaf) plus three Slice 4 2048 banner graphic sheets (Institute
+faded, Institute torn, Botanical Terrace pennant), each referenced by both
+`map_Kd` and `map_d`. Slice 3 reuses the leaf/bark litter sheet for the
+fountain's collected leaf debris rather than adding a fifth sheet.
 
 ## Import steps (Unreal)
 1. Import each OBJ as its own Static Mesh; keep "Combine Meshes" OFF (one object
    per file already).
 2. Import the RGBA sheets as textures; connect RGB -> Base Color and A ->
-   Opacity Mask on every masked leaf/leaflet/litter material.
+   Opacity Mask on every masked leaf/leaflet/litter/banner material.
 3. On every foliage mesh (date palm, aloe, philodendron, coleus) enable "Vertex
    Colors" import and drive a wind/pivot-sway node from vertex-colour luminance
    (0 anchored/rigid, 1 free tip). Trunks, stems, petioles and leaf attachments
    are 0; free leaf tips approach 1. The Slice 3 furniture (benches, brochure
-   stand, fountain) imports with no vertex colour at all -- do not wire a wind
-   node to it.
+   stand, fountain) and the Slice 4 banners/pennant import with no vertex
+   colour at all -- do not wire a wind node to any of them yet.
 4. Author collision per the notes below; do NOT let Unreal auto-generate a
    single convex hull on the planters or the fountain — it seals the open
-   mouth / basin. Foliage leaves generally take NO collision.
+   mouth / basin. Foliage leaves generally take NO collision. The Slice 4
+   banners/pennant take **NO COLLISION** at all (decorative cloth only) --
+   do not auto-hull them either; a hull across baked sag/tears would be both
+   wrong-shaped and pointless for a walk-through decorative prop.
 
 ## Assets
 
@@ -132,6 +150,27 @@ fifth sheet.
 - Material slots: M_Fountain_BasinWall (outer wall + rim lip + inner drop), M_Fountain_BasinFloor (dry floor annulus), M_Fountain_Pedestal (stained pedestal/nozzle stub), M_Fountain_LeafLitter (collected leaf-litter cards, reuses the Slice 1 leaf/bark litter sheet). No vertex colour.
 - Collision: Segmented ring collision: 8 convex wall segments (one per octagon face) + a separate floor-annulus disc + a short cylinder/capsule for the pedestal. NEVER one convex hull across the whole prop -- that seals the dry basin and hides/blocks the recessed floor.
 
+### VD_Banner_Institute_Faded
+**Slice 4 — intact-but-faded vertical hanging Institute banner**
+
+- Dimensions: ~1.70 m wide x ~3.20 m tall; 16x24 subdivided cloth grid, multi-wave attachment sag + fine wrinkle creases baked in, front + reversed-winding back faces, no vertex colour.
+- Material slots: M_Banner_Institute_Faded (single 2048 RGBA graphic sheet: 'EDEN PRIME / A GARDEN FOR THE ATOMIC AGE', sun-bleached, alpha-cut frayed hem).
+- Collision: NO COLLISION -- decorative cloth only; do not auto-hull.
+
+### VD_Banner_Institute_Torn
+**Slice 4 — torn/partially-detached Institute banner, asymmetric sag**
+
+- Dimensions: ~1.60 m wide x ~3.00 m tall; a denser 24x36 cloth grid with a lost top-right corner (droops + pulls inward), restrained alpha-cut ragged punctures, and a tattered lower hem.
+- Material slots: M_Banner_Institute_Torn (single 2048 RGBA graphic sheet: 'THE INSTITUTE / SCIENCE IN SERVICE OF ABUNDANCE', heavy stains and alpha-cut ragged punctures).
+- Collision: NO COLLISION -- decorative cloth only; do not auto-hull.
+
+### VD_Pennant_BotanicalTerrace
+**Slice 4 — narrow wayfinding/promotional pennant**
+
+- Dimensions: ~1.30 m wide at the header tapering to ~0.10 m at the foot x ~2.80 m tall; 10x22 subdivided cloth grid, lighter sag/creases, no torn geometry.
+- Material slots: M_Pennant_BotanicalTerrace (single 2048 RGBA graphic sheet: 'BOTANICAL TERRACE / PUBLIC EXHIBITION' with a wayfinding chevron mark, light fading + minor pinholes).
+- Collision: NO COLLISION -- decorative cloth only; do not auto-hull.
+
 ## Scatter usage
 The three `VD_SoilDressing_*` meshes are base-centred at Z=0 and sized to drop
 into both these planters and the existing `SourceMesh/terrace_botanical`
@@ -144,3 +183,14 @@ a walkway) without visually mismatching in scale. Mix them freely; the damaged
 variant reads as a single neglected bench in an otherwise-maintained row, not
 a different bench type. `VD_BrochureStand_Institutional` and
 `VD_Fountain_DryBasin` are each single freestanding props.
+
+## Slice 4 banner usage
+`VD_Banner_Institute_Faded`, `VD_Banner_Institute_Torn`, and
+`VD_Pennant_BotanicalTerrace` are each single freestanding decorative cloth
+props, base-centred at Z=0 like every other mesh in this kit; mounting them
+against a wall, truss, or frame is left to the level/placement pass (out of
+scope here). Mix the faded and torn banners freely along the same hanging
+line for a maintained-vs-neglected read, the way the two benches pair up in
+Slice 3. The pennant is narrower and tapers toward its foot, reads at a
+smaller wayfinding scale, and is not meant to hang alongside the two full
+banners.

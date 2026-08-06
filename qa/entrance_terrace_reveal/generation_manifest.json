@@ -1,7 +1,7 @@
 {
   "units": "centimetres; Z-up",
-  "slice": "entrance-terrace reveal kit (slice 1 base + slice 2 supporting species + slice 3 furniture)",
-  "mesh_count": 13,
+  "slice": "entrance-terrace reveal kit (slice 1 base + slice 2 supporting species + slice 3 furniture + slice 4 banners)",
+  "mesh_count": 16,
   "foliage_contract": {
     "alpha_cut_rgba_sheets": 4,
     "wind_encoding": "OBJ vertex RGB grayscale; 0=root/rigid, 1=free tip",
@@ -53,6 +53,30 @@
       "sides": 8,
       "leaf_litter_cards": 10,
       "rim_to_floor_drop_cm": 66.0
+    }
+  },
+  "banner_kit": {
+    "contract": "rigid baked cloth; zero vertex colour; wind runtime deferred; NO COLLISION on every banner/pennant",
+    "graphic_sheets": "one 2048 RGBA sheet per banner, alpha-cut torn/frayed edges, PIL-typeset copy (DejaVu Sans Bold/Regular, Liberation Sans Bold)",
+    "VD_Banner_Institute_Faded": {
+      "form": "16x24 subdivided cloth grid, multi-wave attachment sag + fine creases, intact silhouette",
+      "message": "EDEN PRIME / A GARDEN FOR THE ATOMIC AGE",
+      "torn": false,
+      "hole_count": 0
+    },
+    "VD_Banner_Institute_Torn": {
+      "form": "24x36 subdivided cloth grid, lost top-right corner droop/pull, alpha-cut ragged punctures, tattered hem",
+      "message": "THE INSTITUTE / SCIENCE IN SERVICE OF ABUNDANCE",
+      "torn": true,
+      "alpha_puncture_count": 3,
+      "torn_side": "right",
+      "corner_drop_cm": 75.0
+    },
+    "VD_Pennant_BotanicalTerrace": {
+      "form": "10x22 subdivided cloth grid tapering from 130 cm header to a 10 cm foot",
+      "message": "BOTANICAL TERRACE / PUBLIC EXHIBITION",
+      "torn": false,
+      "hole_count": 0
     }
   },
   "meshes": [
@@ -184,6 +208,36 @@
         380.0,
         380.0,
         112.0
+      ]
+    },
+    {
+      "name": "VD_Banner_Institute_Faded",
+      "vertices": 425,
+      "faces": 768,
+      "size_cm": [
+        170.0,
+        15.14,
+        320.0
+      ]
+    },
+    {
+      "name": "VD_Banner_Institute_Torn",
+      "vertices": 925,
+      "faces": 1728,
+      "size_cm": [
+        158.61,
+        26.38,
+        321.16
+      ]
+    },
+    {
+      "name": "VD_Pennant_BotanicalTerrace",
+      "vertices": 253,
+      "faces": 440,
+      "size_cm": [
+        130.0,
+        10.78,
+        280.0
       ]
     }
   ]

@@ -35,6 +35,9 @@ EXPECTED = {
     "VD_Bench_Municipal_Damaged": {"M_Bench_CastFrame_Damaged", "M_Bench_SeatSlat_Damaged", "M_Bench_BackSlat_Damaged"},
     "VD_BrochureStand_Institutional": {"M_BrochureStand_Frame", "M_BrochureStand_Pocket", "M_BrochureStand_Paper"},
     "VD_Fountain_DryBasin": {"M_Fountain_BasinWall", "M_Fountain_BasinFloor", "M_Fountain_Pedestal", "M_Fountain_LeafLitter"},
+    "VD_Banner_Institute_Faded": {"M_Banner_Institute_Faded"},
+    "VD_Banner_Institute_Torn": {"M_Banner_Institute_Torn"},
+    "VD_Pennant_BotanicalTerrace": {"M_Pennant_BotanicalTerrace"},
 }
 PLANTERS = {"VD_SpecimenPlanter_Concrete": "M_Planter_DressedSoil",
             "VD_SpecimenPlanter_Ceramic": "M_Planter_DressedSoil"}
@@ -42,6 +45,9 @@ FOLIAGE = {"VD_DatePalm_Hero", "VD_Aloe_Specimen", "VD_Philodendron_Specimen", "
 FURNITURE = {"VD_Bench_Municipal_Intact", "VD_Bench_Municipal_Damaged",
             "VD_BrochureStand_Institutional", "VD_Fountain_DryBasin"}
 BENCHES = {"VD_Bench_Municipal_Intact": ("Intact", False), "VD_Bench_Municipal_Damaged": ("Damaged", True)}
+BANNERS = {"VD_Banner_Institute_Faded": "M_Banner_Institute_Faded",
+          "VD_Banner_Institute_Torn": "M_Banner_Institute_Torn",
+          "VD_Pennant_BotanicalTerrace": "M_Pennant_BotanicalTerrace"}
 COLORS = {
     "M_ConcretePlanter_Cast": (150, 150, 138, 255),
     "M_ConcretePlanter_Rim": (176, 172, 158, 255),
@@ -75,6 +81,9 @@ COLORS = {
     "M_Fountain_BasinFloor": (76, 71, 59, 255),
     "M_Fountain_Pedestal": (61, 56, 48, 255),
     "M_Fountain_LeafLitter": (107, 77, 41, 255),
+    "M_Banner_Institute_Faded": (194, 181, 156, 255),
+    "M_Banner_Institute_Torn": (143, 125, 89, 255),
+    "M_Pennant_BotanicalTerrace": (161, 168, 148, 255),
 }
 TEXTURES = {
     "date_palm_leaflet": "date_palm_leaflet_ribbon_rgba_1024.png",
@@ -82,12 +91,19 @@ TEXTURES = {
     "philodendron_leaf": "philodendron_lobed_leaf_rgba_1024.png",
     "coleus_leaf": "coleus_leaf_rgba_1024.png",
 }
+BANNER_TEXTURES = {
+    "VD_Banner_Institute_Faded": "banner_institute_faded_rgba_2048.png",
+    "VD_Banner_Institute_Torn": "banner_institute_torn_rgba_2048.png",
+    "VD_Pennant_BotanicalTerrace": "pennant_botanical_terrace_rgba_2048.png",
+}
 VISUAL_OUTPUTS = [
     "entrance_terrace_reveal_preview.png",
     "entrance_terrace_reveal_hero_preview.png",
     "entrance_terrace_reveal_alpha_sheets_preview.png",
     "entrance_terrace_reveal_supporting_species_preview.png",
     "entrance_terrace_reveal_furniture_preview.png",
+    "entrance_terrace_reveal_banner_preview.png",
+    "entrance_terrace_reveal_banner_graphics_preview.png",
 ]
 Vec3 = tuple[float, float, float]
 
@@ -229,6 +245,11 @@ def validate(mesh: Obj) -> dict[str, object]:
             failures.append(f"fountain diameter {size[0]:.1f}x{size[1]:.1f} cm outside 300-450")
         if not 80.0 <= size[2] <= 140.0:
             failures.append(f"fountain height {size[2]:.1f} cm outside 80-140")
+    if mesh.name in BANNERS:
+        if not 120.0 <= size[0] <= 200.0:
+            failures.append(f"banner width {size[0]:.1f} cm outside 120-200")
+        if not 240.0 <= size[2] <= 360.0:
+            failures.append(f"banner height {size[2]:.1f} cm outside 240-360")
 
     wind_values = [colour[0] for colour in mesh.wind_colours if colour is not None]
     is_foliage = mesh.name in FOLIAGE
@@ -273,6 +294,10 @@ def validate(mesh: Obj) -> dict[str, object]:
             failures.append(f"coleus has only {leaf_cards} leaves; not a dense mound")
         if material_faces.get("M_Coleus_Stem", 0) < 120:
             failures.append("coleus stem geometry is missing or too sparse")
+    if mesh.name in BANNERS:
+        cloth_faces = material_faces.get(BANNERS[mesh.name], 0)
+        if cloth_faces < 350:
+            failures.append(f"banner has only {cloth_faces} cloth faces; not a subdivided grid")
 
     def material_z_range(material: str) -> float:
         ids = {i for m, face, _ in mesh.faces if m == material for i in face}
@@ -535,6 +560,81 @@ def verify_textures() -> dict[str, dict[str, object]]:
     return results
 
 
+def verify_banner_textures() -> dict[str, dict[str, object]]:
+    """Validate the three 2048 banner/pennant graphic sheets and render a
+    deterministic contact sheet of them (fixed layout, no randomness)."""
+    results: dict[str, dict[str, object]] = {}
+    mtl_text = (SOURCE / MTL).read_text(encoding="utf-8")
+    sheet = Image.new("RGB", (1900, 720), (36, 40, 36))
+    draw = ImageDraw.Draw(sheet)
+    for key, (mesh_name, filename) in enumerate(BANNER_TEXTURES.items()):
+        path = CUTOUTS / filename
+        failures: list[str] = []
+        if not path.exists():
+            results[mesh_name] = {"pass": False, "failures": ["missing texture"]}
+            continue
+        image = Image.open(path)
+        if image.size != (2048, 2048):
+            failures.append(f"size is {image.size}, expected 2048x2048")
+        if image.mode != "RGBA":
+            failures.append(f"mode is {image.mode}, expected RGBA")
+        rgba = image.convert("RGBA")
+        alpha = rgba.getchannel("A")
+        extrema = alpha.getextrema()
+        histogram = alpha.histogram()
+        opaque_fraction = sum(histogram[128:]) / (2048 * 2048)
+        if extrema != (0, 255):
+            failures.append(f"alpha extrema are {extrema}, expected (0,255) -- needs real transparency")
+        if not 0.55 <= opaque_fraction <= 0.999:
+            failures.append(f"opaque coverage {opaque_fraction:.3f} outside 0.55-0.999")
+        if mtl_text.count(filename) < 2:
+            failures.append("MTL does not reference the RGBA sheet for both map_Kd and map_d")
+        results[mesh_name] = {"pass": not failures, "failures": failures,
+                              "path": str(path.relative_to(ROOT)), "size": image.size,
+                              "mode": image.mode, "alpha_extrema": extrema,
+                              "opaque_fraction": round(opaque_fraction, 4)}
+        x0 = 30 + key * 630
+        tile = 40
+        for yy in range(30, 630, tile):
+            for xx in range(x0, x0 + 580, tile):
+                shade = 86 if ((xx - x0) // tile + (yy - 30) // tile) % 2 else 134
+                draw.rectangle((xx, yy, min(xx + tile, x0 + 580), min(yy + tile, 630)), fill=(shade,) * 3)
+        preview = rgba.resize((580, 580), Image.Resampling.LANCZOS)
+        sheet.paste(preview, (x0, 30), preview)
+        draw.text((x0, 645), f"{mesh_name} / {filename}", fill=(232, 226, 202))
+        draw.text((x0, 665), f"opaque={round(opaque_fraction, 3)} extrema={extrema}", fill=(150, 173, 157))
+    sheet.save(QA / "entrance_terrace_reveal_banner_graphics_preview.png")
+    return results
+
+
+def render_banners(meshes: dict[str, Obj]) -> None:
+    """Slice 4 elevation: the two hanging Institute banners plus the pennant,
+    each shown base-centred and standing free of collision like the handoff
+    describes."""
+    image = Image.new("RGB", (2200, 1300), (19, 24, 21))
+    draw = ImageDraw.Draw(image)
+    font = ImageFont.load_default()
+    draw.text((45, 22), "ENTRANCE-TERRACE REVEAL KIT / SLICE 4 — INSTITUTE BANNERS", fill=(238, 226, 190), font=font)
+    draw.text((45, 45), "Faded hanging banner · torn hanging banner · wayfinding pennant · subdivided baked cloth, no vertex colour",
+              fill=(150, 173, 157), font=font)
+    panels = [
+        ("VD_Banner_Institute_Faded", (40, 80, 760, 1180), (280, -340, 170),
+         "INSTITUTE BANNER / FADED / ~1.70 m x 3.20 m"),
+        ("VD_Banner_Institute_Torn", (780, 80, 1500, 1180), (280, -340, 170),
+         "INSTITUTE BANNER / TORN / lost corner + alpha-cut punctures"),
+        ("VD_Pennant_BotanicalTerrace", (1520, 80, 2160, 1180), (240, -290, 150),
+         "PENNANT / BOTANICAL TERRACE / tapered wayfinding"),
+    ]
+    for name, box, camera, label in panels:
+        render_panel(image, box, [meshes[name]], [(0, 0, 0)], camera, label)
+    notes = ["All three are rigid baked cloth (multi-wave sag + wrinkle creases), single-material, double-sided front/back faces.",
+             "Torn banner uses irregular alpha-cut punctures and droops its lost top-right corner asymmetrically.",
+             "NO COLLISION on any banner/pennant -- decorative cloth only, do not auto-hull."]
+    for i, note in enumerate(notes):
+        draw.text((45, 1210 + i * 26), note, fill=(189, 200, 184), font=font)
+    image.save(QA / "entrance_terrace_reveal_banner_preview.png")
+
+
 def main() -> None:
     QA.mkdir(parents=True, exist_ok=True)
     actual = {path.stem for path in SOURCE.glob("*.obj")}
@@ -542,6 +642,7 @@ def main() -> None:
     meshes = {name: parse(SOURCE / f"{name}.obj") for name in EXPECTED if name in actual}
     results = {name: validate(mesh) for name, mesh in meshes.items()}
     texture_results = verify_textures()
+    banner_texture_results = verify_banner_textures()
     if meshes:
         render_preview(meshes)
         render_hero(meshes)
@@ -549,13 +650,17 @@ def main() -> None:
             render_supporting(meshes)
         if all(name in meshes for name in FURNITURE):
             render_furniture(meshes)
+        if all(name in meshes for name in BANNERS):
+            render_banners(meshes)
     visual = {name: (QA / name).exists() and (QA / name).stat().st_size > 1024 for name in VISUAL_OUTPUTS}
     report = {"pass": (not missing and not extra
                        and all(r["pass"] for r in results.values())
                        and all(r["pass"] for r in texture_results.values())
+                       and all(r["pass"] for r in banner_texture_results.values())
                        and all(visual.values())),
               "missing": missing, "extra": extra, "mesh_count": len(meshes),
               "meshes": results, "textures": texture_results,
+              "banner_textures": banner_texture_results,
               "visual_outputs": {name: str((QA / name).relative_to(ROOT)) if ok else "MISSING"
                                  for name, ok in visual.items()}}
     (QA / "entrance_terrace_reveal_verification.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

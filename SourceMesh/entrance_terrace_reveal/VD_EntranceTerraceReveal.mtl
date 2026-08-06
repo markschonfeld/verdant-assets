@@ -168,3 +168,24 @@ Pm 0.0
 Pr 0.72
 map_Kd ../../cutouts/entrance_terrace_reveal/leaf_bark_litter_rgba_1024.png
 map_d ../../cutouts/entrance_terrace_reveal/leaf_bark_litter_rgba_1024.png
+
+newmtl M_Banner_Institute_Faded
+Kd 0.76 0.71 0.61
+Pm 0.0
+Pr 0.8
+map_Kd ../../cutouts/entrance_terrace_reveal/banner_institute_faded_rgba_2048.png
+map_d ../../cutouts/entrance_terrace_reveal/banner_institute_faded_rgba_2048.png
+
+newmtl M_Banner_Institute_Torn
+Kd 0.56 0.49 0.35
+Pm 0.0
+Pr 0.84
+map_Kd ../../cutouts/entrance_terrace_reveal/banner_institute_torn_rgba_2048.png
+map_d ../../cutouts/entrance_terrace_reveal/banner_institute_torn_rgba_2048.png
+
+newmtl M_Pennant_BotanicalTerrace
+Kd 0.63 0.66 0.58
+Pm 0.0
+Pr 0.78
+map_Kd ../../cutouts/entrance_terrace_reveal/pennant_botanical_terrace_rgba_2048.png
+map_d ../../cutouts/entrance_terrace_reveal/pennant_botanical_terrace_rgba_2048.png

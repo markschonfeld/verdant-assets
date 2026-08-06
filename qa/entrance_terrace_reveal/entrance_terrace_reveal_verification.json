@@ -2,7 +2,7 @@
   "pass": true,
   "missing": [],
   "extra": [],
-  "mesh_count": 13,
+  "mesh_count": 16,
   "meshes": {
     "VD_SpecimenPlanter_Concrete": {
       "pass": true,
@@ -557,6 +557,120 @@
       },
       "invalid_uv_corners": 0,
       "degenerate_regions": 0
+    },
+    "VD_Banner_Institute_Faded": {
+      "pass": true,
+      "failures": [],
+      "vertices": 425,
+      "texture_coordinates": 3072,
+      "faces": 768,
+      "triangles": 1536,
+      "object_names": [
+        "VD_Banner_Institute_Faded"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_Banner_Institute_Faded"
+      ],
+      "material_face_counts": {
+        "M_Banner_Institute_Faded": 768
+      },
+      "wind_stiffness": null,
+      "bounds_cm": {
+        "min": [
+          -85.0,
+          -7.571556,
+          0.0
+        ],
+        "max": [
+          85.0,
+          7.571556,
+          320.0
+        ],
+        "size": [
+          170.0,
+          15.143112,
+          320.0
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_Banner_Institute_Torn": {
+      "pass": true,
+      "failures": [],
+      "vertices": 925,
+      "texture_coordinates": 6912,
+      "faces": 1728,
+      "triangles": 3456,
+      "object_names": [
+        "VD_Banner_Institute_Torn"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_Banner_Institute_Torn"
+      ],
+      "material_face_counts": {
+        "M_Banner_Institute_Torn": 1728
+      },
+      "wind_stiffness": null,
+      "bounds_cm": {
+        "min": [
+          -79.305556,
+          -13.191807,
+          0.0
+        ],
+        "max": [
+          79.305556,
+          13.191807,
+          321.164382
+        ],
+        "size": [
+          158.611112,
+          26.383614,
+          321.164382
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_Pennant_BotanicalTerrace": {
+      "pass": true,
+      "failures": [],
+      "vertices": 253,
+      "texture_coordinates": 1760,
+      "faces": 440,
+      "triangles": 880,
+      "object_names": [
+        "VD_Pennant_BotanicalTerrace"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_Pennant_BotanicalTerrace"
+      ],
+      "material_face_counts": {
+        "M_Pennant_BotanicalTerrace": 440
+      },
+      "wind_stiffness": null,
+      "bounds_cm": {
+        "min": [
+          -65.0,
+          -5.391157,
+          0.0
+        ],
+        "max": [
+          65.0,
+          5.391157,
+          280.0
+        ],
+        "size": [
+          130.0,
+          10.782314,
+          280.0
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
     }
   },
   "textures": {
@@ -621,11 +735,60 @@
       "opaque_fraction": 0.3777
     }
   },
+  "banner_textures": {
+    "VD_Banner_Institute_Faded": {
+      "pass": true,
+      "failures": [],
+      "path": "cutouts/entrance_terrace_reveal/banner_institute_faded_rgba_2048.png",
+      "size": [
+        2048,
+        2048
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "opaque_fraction": 0.9855
+    },
+    "VD_Banner_Institute_Torn": {
+      "pass": true,
+      "failures": [],
+      "path": "cutouts/entrance_terrace_reveal/banner_institute_torn_rgba_2048.png",
+      "size": [
+        2048,
+        2048
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "opaque_fraction": 0.9182
+    },
+    "VD_Pennant_BotanicalTerrace": {
+      "pass": true,
+      "failures": [],
+      "path": "cutouts/entrance_terrace_reveal/pennant_botanical_terrace_rgba_2048.png",
+      "size": [
+        2048,
+        2048
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "opaque_fraction": 0.9831
+    }
+  },
   "visual_outputs": {
     "entrance_terrace_reveal_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_preview.png",
     "entrance_terrace_reveal_hero_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_hero_preview.png",
     "entrance_terrace_reveal_alpha_sheets_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_alpha_sheets_preview.png",
     "entrance_terrace_reveal_supporting_species_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_supporting_species_preview.png",
-    "entrance_terrace_reveal_furniture_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_furniture_preview.png"
+    "entrance_terrace_reveal_furniture_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_furniture_preview.png",
+    "entrance_terrace_reveal_banner_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_banner_preview.png",
+    "entrance_terrace_reveal_banner_graphics_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_banner_graphics_preview.png"
   }
 }

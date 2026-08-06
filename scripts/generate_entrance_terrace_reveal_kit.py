@@ -25,7 +25,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Iterable
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "SourceMesh" / "entrance_terrace_reveal"
@@ -922,6 +922,98 @@ def build_fountain(name: str, seed: int) -> Mesh:
 
 
 # --------------------------------------------------------------------------- #
+#  Vertical slice 4: tattered 1960s Institute promotional banners
+# --------------------------------------------------------------------------- #
+
+def corner_influence(s: float, side: str) -> float:
+    """0..1 ramp that peaks at the named torn top corner and fades inward."""
+    raw = (s - 0.35) / 0.65 if side == "right" else (0.65 - s) / 0.65
+    return max(0.0, min(1.0, raw)) ** 1.6
+
+
+def build_cloth_banner(name: str, width_top: float, width_bottom: float, height: float,
+                       segs_x: int, segs_z: int, material: str, sag_amp: float,
+                       wave_count: int, crease_amp: float, crease_freq: float, seed: int,
+                       lean: float = 5.0, torn_side: str | None = None,
+                       corner_drop: float = 0.0, corner_pull: float = 0.0,
+                       hole_specs: list[tuple[float, float, float, float]] | None = None,
+                       hem_tatter: float = 0.0) -> Mesh:
+    """Subdivided rigid-baked cloth banner (rigid geometry -- no wind runtime yet).
+
+    A multi-wave attachment sag (fabric bellying between top grommet points)
+    plus finer wrinkle creases replace a single flat quad. An optional
+    lost-corner droop/pull produces an asymmetric torn drape, and optional
+    elliptical `hole_specs` (u-fraction, v-fraction, u-radius, v-radius) are
+    carved straight through the grid with a ragged per-quad boundary for
+    physically torn holes, not just alpha cutouts. Every quad is emitted twice
+    (front + reversed-winding back, same vertices) so the cloth reads from
+    both sides. UV: u = width fraction, v = 0 at the top hem to 1 at the free
+    bottom edge, matching the graphic-sheet layout in write_banner_atlases().
+    """
+    rng = random.Random(seed)
+    mesh = Mesh(name)
+    phase_a = rng.uniform(0.0, 2 * math.pi)
+    phase_b = rng.uniform(0.0, 2 * math.pi)
+    grid: list[list[int]] = []
+    uv_grid: list[list[UV]] = []
+    for k in range(segs_z + 1):
+        t = k / segs_z  # 0 = top hem, 1 = free bottom edge
+        z_flat = height * (1.0 - t)
+        half_w = 0.5 * (width_top + (width_bottom - width_top) * t)
+        amp_scale = t ** 1.4  # taut near the top, loosest at the free bottom
+        row: list[int] = []
+        uv_row: list[UV] = []
+        for j in range(segs_x + 1):
+            s = j / segs_x
+            x = -half_w + 2.0 * half_w * s
+            wave_u = s * wave_count
+            frac = wave_u - math.floor(wave_u)
+            dip = 4.0 * frac * (1.0 - frac)  # 0 at each attachment point, 1 mid-bay
+            depth = amp_scale * sag_amp * dip
+            depth += crease_amp * (0.35 + 0.65 * amp_scale) * (
+                math.sin(s * crease_freq * 2 * math.pi + phase_a) * 0.6 +
+                math.sin(s * crease_freq * 3.7 * math.pi + phase_b) * 0.4)
+            depth += lean * t
+            z = z_flat
+            x_off = 0.0
+            if torn_side is not None and t <= 0.55:
+                influence = corner_influence(s, torn_side)
+                fade = max(0.0, 1.0 - t / 0.55)
+                pull = corner_pull * influence * fade
+                z -= corner_drop * influence * fade
+                x_off -= pull if torn_side == "right" else -pull
+                depth += corner_drop * 0.35 * influence * fade  # loose flap kicks forward
+            if hem_tatter > 0.0 and t > 0.85:
+                bottom_fade = (t - 0.85) / 0.15
+                z -= rng.uniform(0.0, hem_tatter) * bottom_fade
+            row.append(mesh.vertex((x + x_off, depth, z)))
+            uv_row.append((s, t))
+        grid.append(row)
+        uv_grid.append(uv_row)
+
+    for k in range(segs_z):
+        t_c = (k + 0.5) / segs_z
+        for j in range(segs_x):
+            s_c = (j + 0.5) / segs_x
+            if hole_specs:
+                punched = False
+                for sc, tc, sr, tr in hole_specs:
+                    dx, dy = (s_c - sc) / sr, (t_c - tc) / tr
+                    if dx * dx + dy * dy < rng.uniform(0.70, 1.15):
+                        punched = True
+                        break
+                if punched:
+                    continue
+            a, b = grid[k][j], grid[k][j + 1]
+            c, d = grid[k + 1][j + 1], grid[k + 1][j]
+            ua, ub = uv_grid[k][j], uv_grid[k][j + 1]
+            uc, ud = uv_grid[k + 1][j + 1], uv_grid[k + 1][j]
+            mesh.face(material, (a, b, c, d), (ua, ub, uc, ud))
+            mesh.face(material, (d, c, b, a), (ud, uc, ub, ua))
+    return mesh
+
+
+# --------------------------------------------------------------------------- #
 #  RGBA cutout atlases
 # --------------------------------------------------------------------------- #
 
@@ -1096,6 +1188,287 @@ def write_cutouts() -> None:
 
 
 # --------------------------------------------------------------------------- #
+#  Slice 4 banner graphic sheets -- typeset 1960s Institute promotional art
+# --------------------------------------------------------------------------- #
+
+BANNER_CREAM = (233, 224, 200, 255)
+BANNER_CREAM_DIRTY = (219, 207, 179, 255)
+BANNER_INK = (35, 40, 36, 255)
+BANNER_TURQ = (44, 120, 116, 255)
+BANNER_MUSTARD = (196, 152, 58, 255)
+BANNER_ORANGE = (188, 96, 47, 255)
+FONT_BOLD = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+FONT_REGULAR = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+FONT_NARROW_BOLD = "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf"
+
+
+def banner_font(path: str, size_px: float) -> ImageFont.FreeTypeFont:
+    return ImageFont.truetype(path, max(1, int(size_px)))
+
+
+def fit_banner_font(draw: ImageDraw.ImageDraw, text: str, max_w: float, path: str,
+                    start: float, minsize: float = 24) -> ImageFont.FreeTypeFont:
+    size = start
+    while size > minsize:
+        f = banner_font(path, size)
+        if draw.textbbox((0, 0), text, font=f)[2] <= max_w:
+            return f
+        size -= max(1.0, start * 0.01)
+    return banner_font(path, minsize)
+
+
+def banner_text(draw: ImageDraw.ImageDraw, text: str, cx: float, y: float, max_w: float,
+                path: str, start: float, fill: tuple[int, int, int, int]) -> ImageFont.FreeTypeFont:
+    """Centred, width-fit typeset text; returns the resolved font for layout math."""
+    f = fit_banner_font(draw, text, max_w, path, start)
+    draw.text((cx, y), text, font=f, fill=fill, anchor="ma")
+    return f
+
+
+def starburst(draw: ImageDraw.ImageDraw, cx: float, cy: float, r1: float, r2: float,
+             n: int, fill: tuple[int, int, int, int]) -> None:
+    points = []
+    for i in range(n * 2):
+        angle = -math.pi / 2 + i * math.pi / n
+        radius = r1 if i % 2 == 0 else r2
+        points.append((cx + math.cos(angle) * radius, cy + math.sin(angle) * radius))
+    draw.polygon(points, fill=fill)
+
+
+def chevron_stack(draw: ImageDraw.ImageDraw, cx: float, top: float, width: float,
+                  rows: int, row_h: float, gap: float, fill: tuple[int, int, int, int]) -> None:
+    """A stack of downward wayfinding chevrons (arrow bar)."""
+    for row in range(rows):
+        y = top + row * (row_h + gap)
+        draw.polygon([(cx - width / 2, y), (cx + width / 2, y),
+                     (cx, y + row_h), ], fill=fill)
+
+
+def add_fabric_weave(image: Image.Image, s: int, base: int, rng: random.Random,
+                     colour: tuple[int, int, int]) -> None:
+    """Faint diagonal hatch so the base field reads as woven cloth, not flat card."""
+    draw = ImageDraw.Draw(image, "RGBA")
+    step = base * 0.018
+    y = -base
+    while y < base * 2:
+        draw.line([(0, y * s), (base * s, (y + base) * s)],
+                  fill=(colour[0], colour[1], colour[2], 14), width=max(1, int(s)))
+        y += step
+
+
+def add_stains(image: Image.Image, s: int, base: int, rng: random.Random, count: int,
+               colours: list[tuple[int, int, int]], max_r: float, blur: float) -> None:
+    """Soft blurred water/mildew blotches discolouring the fabric (RGB only)."""
+    layer = Image.new("RGBA", image.size, (0, 0, 0, 0))
+    ld = ImageDraw.Draw(layer, "RGBA")
+    for _ in range(count):
+        cx, cy = rng.uniform(0.05, 0.95) * base, rng.uniform(0.05, 0.95) * base
+        rx = rng.uniform(max_r * 0.4, max_r)
+        ry = rng.uniform(max_r * 0.4, max_r)
+        colour = rng.choice(colours)
+        alpha = rng.randint(45, 105)
+        ld.ellipse(((cx - rx) * s, (cy - ry) * s, (cx + rx) * s, (cy + ry) * s),
+                  fill=(colour[0], colour[1], colour[2], alpha))
+    layer = layer.filter(ImageFilter.GaussianBlur(blur * s))
+    image.alpha_composite(layer)
+
+
+def fade_wash(image: Image.Image, s: int, base: int, amount: float, top_bias: float = 0.0) -> None:
+    """Sun-bleach the whole sheet toward white; `top_bias` fades the top harder."""
+    wash = Image.new("RGBA", image.size, (0, 0, 0, 0))
+    wd = ImageDraw.Draw(wash)
+    if top_bias > 0.0:
+        for row in range(0, base, 4):
+            frac = 1.0 - row / base
+            alpha = int(255 * (amount + top_bias * frac))
+            wd.rectangle((0, row * s, base * s, (row + 4) * s), fill=(255, 252, 244, min(255, alpha)))
+    else:
+        wd.rectangle((0, 0, base * s, base * s), fill=(255, 252, 244, int(255 * amount)))
+    image.alpha_composite(wash)
+
+
+def carve_edge_fray(alpha: Image.Image, s: int, base: int, rng: random.Random,
+                    notches: int, margin_frac: float = 0.014) -> None:
+    """Small ragged notches biting into the outer border for a frayed hem."""
+    draw = ImageDraw.Draw(alpha)
+    margin = base * margin_frac
+    for _ in range(notches):
+        edge = rng.choice(("top", "bottom", "left", "right"))
+        depth = rng.uniform(margin * 0.5, margin * 2.6)
+        half_w = rng.uniform(base * 0.004, base * 0.016)
+        if edge in ("top", "bottom"):
+            cx = rng.uniform(0, base)
+            cy = 0.0 if edge == "top" else base
+            dz = depth if edge == "top" else -depth
+            pts = [(cx - half_w, cy), (cx + half_w, cy), (cx, cy + dz)]
+        else:
+            cy = rng.uniform(0, base)
+            cx = 0.0 if edge == "left" else base
+            dz = depth if edge == "left" else -depth
+            pts = [(cx, cy - half_w), (cx, cy + half_w), (cx + dz, cy)]
+        draw.polygon([(x * s, y * s) for x, y in pts], fill=0)
+
+
+def carve_pinholes(alpha: Image.Image, s: int, base: int, rng: random.Random,
+                   count: int, max_r: float) -> None:
+    draw = ImageDraw.Draw(alpha)
+    for _ in range(count):
+        cx, cy = rng.uniform(0.08, 0.92) * base, rng.uniform(0.08, 0.92) * base
+        r = rng.uniform(max_r * 0.35, max_r)
+        draw.ellipse(((cx - r) * s, (cy - r) * s, (cx + r) * s, (cy + r) * s), fill=0)
+
+
+def carve_rip(alpha: Image.Image, s: int, base: int, rng: random.Random,
+             cx_frac: float, cy_frac: float, r_frac: float) -> None:
+    """One large ragged torn hole -- a jagged radial polygon, not a clean circle."""
+    draw = ImageDraw.Draw(alpha)
+    cx, cy, r = cx_frac * base, cy_frac * base, r_frac * base
+    spokes = 18
+    points = []
+    for i in range(spokes):
+        angle = 2 * math.pi * i / spokes
+        radius = r * rng.uniform(0.55, 1.15)
+        points.append(((cx + math.cos(angle) * radius) * s, (cy + math.sin(angle) * radius) * s))
+    draw.polygon(points, fill=0)
+
+
+def write_banner_atlas(build_rgb, build_alpha, path: Path, seed: int,
+                       base: int = 2048, scale: int = 2) -> None:
+    """Compose an opaque typeset RGB layer, then punch true transparency into
+    a separate alpha mask last, so torn/frayed edges never leave dark
+    premultiplied-alpha fringing after the final Lanczos downsample."""
+    size = base * scale
+    rgb = Image.new("RGBA", (size, size), (0, 0, 0, 255))
+    draw = ImageDraw.Draw(rgb, "RGBA")
+    rng = random.Random(seed)
+    build_rgb(draw, rgb, scale, base, rng)
+    alpha = Image.new("L", (size, size), 255)
+    build_alpha(alpha, scale, base, rng)
+    rgb.putalpha(alpha)
+    rgb.resize((base, base), Image.Resampling.LANCZOS).save(path)
+
+
+def banner_institute_faded_rgb(draw: ImageDraw.ImageDraw, image: Image.Image, s: int,
+                               base: int, rng: random.Random) -> None:
+    draw.rectangle((0, 0, base * s, base * s), fill=BANNER_CREAM)
+    add_fabric_weave(image, s, base, rng, (140, 130, 100))
+    band_h = base * 0.176
+    draw.rectangle((0, 0, base * s, band_h * s), fill=BANNER_TURQ)
+    draw.rectangle((0, band_h * s, base * s, (band_h + base * 0.012) * s), fill=BANNER_MUSTARD)
+    banner_text(draw, "EDEN PRIME", base * 0.5, base * 0.045, base * 0.92,
+               FONT_BOLD, base * 0.135, BANNER_CREAM)
+    starburst(draw, base * 0.5, base * 0.365, base * 0.125, base * 0.078, 14, BANNER_ORANGE)
+    starburst(draw, base * 0.5, base * 0.365, base * 0.052, base * 0.052, 1, BANNER_CREAM)
+    banner_text(draw, "A GARDEN FOR THE", base * 0.5, base * 0.515, base * 0.86,
+               FONT_BOLD, base * 0.072, BANNER_INK)
+    banner_text(draw, "ATOMIC AGE", base * 0.5, base * 0.585, base * 0.90,
+               FONT_BOLD, base * 0.100, BANNER_TURQ)
+    draw.rectangle((base * 0.14 * s, base * 0.695 * s, base * 0.86 * s, base * 0.703 * s), fill=BANNER_MUSTARD)
+    banner_text(draw, "THE INSTITUTE  ·  BOTANICAL TERRACE", base * 0.5, base * 0.725, base * 0.84,
+               FONT_REGULAR, base * 0.032, BANNER_INK)
+    draw.rectangle((0, base * 0.927 * s, base * s, base * s), fill=BANNER_MUSTARD)
+    draw.text((base * 0.05 * s, base * 0.955 * s), "PUBLIC EXHIBITION — EDEN PRIME",
+             font=banner_font(FONT_REGULAR, base * 0.026), fill=BANNER_CREAM, anchor="lm")
+    draw.text((base * 0.95 * s, base * 0.955 * s), "B-04",
+             font=banner_font(FONT_BOLD, base * 0.030), fill=BANNER_CREAM, anchor="rm")
+    add_stains(image, s, base, rng, count=7, colours=[(96, 88, 60), (70, 92, 84)],
+              max_r=base * 0.09, blur=base * 0.02)
+    fade_wash(image, s, base, amount=0.16, top_bias=0.14)
+
+
+def banner_institute_faded_alpha(alpha: Image.Image, s: int, base: int, rng: random.Random) -> None:
+    carve_edge_fray(alpha, s, base, rng, notches=70)
+    carve_pinholes(alpha, s, base, rng, count=8, max_r=base * 0.006)
+
+
+def banner_institute_torn_rgb(draw: ImageDraw.ImageDraw, image: Image.Image, s: int,
+                              base: int, rng: random.Random) -> None:
+    draw.rectangle((0, 0, base * s, base * s), fill=BANNER_CREAM_DIRTY)
+    add_fabric_weave(image, s, base, rng, (110, 92, 60))
+    band_h = base * 0.166
+    draw.rectangle((0, 0, base * s, band_h * s), fill=BANNER_MUSTARD)
+    draw.rectangle((0, band_h * s, base * s, (band_h + base * 0.012) * s), fill=BANNER_TURQ)
+    banner_text(draw, "THE INSTITUTE", base * 0.5, base * 0.040, base * 0.92,
+               FONT_BOLD, base * 0.118, BANNER_CREAM)
+    bar_y0, bar_y1 = base * 0.205, base * 0.300
+    thirds = [(base * 0.06, base * 0.35, BANNER_TURQ), (base * 0.35, base * 0.65, BANNER_MUSTARD),
+             (base * 0.65, base * 0.94, BANNER_ORANGE)]
+    for x0, x1, colour in thirds:
+        draw.rectangle((x0 * s, bar_y0 * s, x1 * s, bar_y1 * s), fill=colour)
+    banner_text(draw, "SCIENCE IN SERVICE", base * 0.5, base * 0.365, base * 0.90,
+               FONT_BOLD, base * 0.068, BANNER_INK)
+    banner_text(draw, "OF ABUNDANCE", base * 0.5, base * 0.435, base * 0.90,
+               FONT_BOLD, base * 0.092, BANNER_ORANGE)
+    draw.rectangle((base * 0.14 * s, base * 0.535 * s, base * 0.86 * s, base * 0.543 * s), fill=BANNER_TURQ)
+    banner_text(draw, "BOTANICAL TERRACE — PUBLIC EXHIBITION", base * 0.5, base * 0.560, base * 0.84,
+               FONT_REGULAR, base * 0.030, BANNER_INK)
+    draw.rectangle((0, base * 0.927 * s, base * s, base * s), fill=BANNER_TURQ)
+    draw.text((base * 0.05 * s, base * 0.955 * s), "THE INSTITUTE",
+             font=banner_font(FONT_REGULAR, base * 0.026), fill=BANNER_CREAM, anchor="lm")
+    draw.text((base * 0.95 * s, base * 0.955 * s), "B-05",
+             font=banner_font(FONT_BOLD, base * 0.030), fill=BANNER_CREAM, anchor="rm")
+    add_stains(image, s, base, rng, count=15, colours=[(70, 58, 34), (52, 68, 60), (90, 70, 40)],
+              max_r=base * 0.11, blur=base * 0.024)
+    # Grime gradient pooling toward the torn top-right corner, where the loose
+    # flap has been dragging and dirtying itself against the frame.
+    grime = Image.new("RGBA", image.size, (0, 0, 0, 0))
+    gd = ImageDraw.Draw(grime)
+    gd.ellipse(((base * 0.55) * s, (-base * 0.15) * s, (base * 1.35) * s, (base * 0.65) * s),
+              fill=(46, 38, 26, 95))
+    grime = grime.filter(ImageFilter.GaussianBlur(base * 0.05 * s))
+    image.alpha_composite(grime)
+    fade_wash(image, s, base, amount=0.08)
+
+
+def banner_institute_torn_alpha(alpha: Image.Image, s: int, base: int, rng: random.Random) -> None:
+    carve_edge_fray(alpha, s, base, rng, notches=190, margin_frac=0.02)
+    # Restrained, irregular punctures: large square-ish voids read as missing
+    # mesh tiles rather than aged cloth once the sheet is masked in Unreal.
+    carve_rip(alpha, s, base, rng, cx_frac=0.62, cy_frac=0.55, r_frac=0.082)
+    carve_rip(alpha, s, base, rng, cx_frac=0.30, cy_frac=0.78, r_frac=0.050)
+    carve_rip(alpha, s, base, rng, cx_frac=0.90, cy_frac=0.05, r_frac=0.070)
+    carve_pinholes(alpha, s, base, rng, count=16, max_r=base * 0.009)
+
+
+def pennant_botanical_terrace_rgb(draw: ImageDraw.ImageDraw, image: Image.Image, s: int,
+                                  base: int, rng: random.Random) -> None:
+    draw.rectangle((0, 0, base * s, base * s), fill=BANNER_CREAM)
+    add_fabric_weave(image, s, base, rng, (130, 122, 92))
+    band_h = base * 0.150
+    draw.rectangle((0, 0, base * s, band_h * s), fill=BANNER_TURQ)
+    banner_text(draw, "BOTANICAL", base * 0.5, base * 0.030, base * 0.92,
+               FONT_NARROW_BOLD, base * 0.105, BANNER_CREAM)
+    banner_text(draw, "TERRACE", base * 0.5, base * 0.108, base * 0.92,
+               FONT_NARROW_BOLD, base * 0.105, BANNER_CREAM)
+    draw.rectangle((0, band_h * s, base * s, (band_h + base * 0.014) * s), fill=BANNER_MUSTARD)
+    banner_text(draw, "PUBLIC", base * 0.5, base * 0.205, base * 0.80,
+               FONT_NARROW_BOLD, base * 0.068, BANNER_INK)
+    banner_text(draw, "EXHIBITION", base * 0.5, base * 0.278, base * 0.80,
+               FONT_NARROW_BOLD, base * 0.068, BANNER_ORANGE)
+    chevron_stack(draw, base * 0.5, base * 0.44, base * 0.30, 3, base * 0.075, base * 0.028, BANNER_ORANGE)
+    banner_text(draw, "THE INSTITUTE", base * 0.5, base * 0.735, base * 0.72,
+               FONT_REGULAR, base * 0.030, BANNER_TURQ)
+    banner_text(draw, "EDEN PRIME", base * 0.5, base * 0.780, base * 0.72,
+               FONT_REGULAR, base * 0.030, BANNER_INK)
+    add_stains(image, s, base, rng, count=5, colours=[(96, 88, 60)], max_r=base * 0.06, blur=base * 0.018)
+    fade_wash(image, s, base, amount=0.10)
+
+
+def pennant_botanical_terrace_alpha(alpha: Image.Image, s: int, base: int, rng: random.Random) -> None:
+    carve_edge_fray(alpha, s, base, rng, notches=90)
+    carve_pinholes(alpha, s, base, rng, count=5, max_r=base * 0.005)
+
+
+def write_banner_atlases() -> None:
+    write_banner_atlas(banner_institute_faded_rgb, banner_institute_faded_alpha,
+                       CUTOUTS / "banner_institute_faded_rgba_2048.png", seed=9451)
+    write_banner_atlas(banner_institute_torn_rgb, banner_institute_torn_alpha,
+                       CUTOUTS / "banner_institute_torn_rgba_2048.png", seed=9452)
+    write_banner_atlas(pennant_botanical_terrace_rgb, pennant_botanical_terrace_alpha,
+                       CUTOUTS / "pennant_botanical_terrace_rgba_2048.png", seed=9453)
+
+
+# --------------------------------------------------------------------------- #
 #  Material library
 # --------------------------------------------------------------------------- #
 
@@ -1132,6 +1505,9 @@ MATERIALS = {
     "M_Fountain_BasinFloor": ((0.30, 0.28, 0.23), 0.0, 0.92, None),
     "M_Fountain_Pedestal": ((0.24, 0.22, 0.19), 0.0, 0.88, None),
     "M_Fountain_LeafLitter": ((0.42, 0.30, 0.16), 0.0, 0.72, "leaf_bark_litter_rgba_1024.png"),
+    "M_Banner_Institute_Faded": ((0.76, 0.71, 0.61), 0.0, 0.80, "banner_institute_faded_rgba_2048.png"),
+    "M_Banner_Institute_Torn": ((0.56, 0.49, 0.35), 0.0, 0.84, "banner_institute_torn_rgba_2048.png"),
+    "M_Pennant_BotanicalTerrace": ((0.63, 0.66, 0.58), 0.0, 0.78, "pennant_botanical_terrace_rgba_2048.png"),
 }
 
 
@@ -1151,7 +1527,7 @@ def write_mtl() -> None:
 #  Handoff
 # --------------------------------------------------------------------------- #
 
-HANDOFF = """# Entrance-Terrace Reveal Kit — Handoff (Slice 1 base + Slice 2 supporting species + Slice 3 furniture)
+HANDOFF = """# Entrance-Terrace Reveal Kit — Handoff (Slice 1 base + Slice 2 supporting species + Slice 3 furniture + Slice 4 banners)
 
 Source: `scripts/generate_entrance_terrace_reveal_kit.py`
 Verify: `scripts/verify_entrance_terrace_reveal_kit.py`
@@ -1170,27 +1546,45 @@ All four are rigid props and carry **no vertex colour** -- the damaged bench
 shows its damage through bowed beam geometry and a distinct weathered
 material, never through paint-by-vertex.
 
+Slice 4 adds three tattered 1960s Institute promotional banners: an
+intact-but-faded vertical hanging banner, a torn/partially-detached banner
+with asymmetric sag, and a narrow wayfinding/promotional pennant. Every
+banner is a subdivided cloth grid (multi-wave attachment sag plus fine
+wrinkle creases baked into the geometry, not a flat quad); the torn banner
+uses alpha-cut ragged punctures and droops one lost top corner for a visibly
+asymmetric drape. All three carry **no vertex colour**
+-- this is rigid baked cloth for now, with wind physics deferred to a later
+runtime pass. Each banner is single-material, double-sided (front + a
+reversed-winding back face on the same vertices), and has its own 2048 RGBA
+graphic sheet with alpha-cut torn/frayed edges, fading/stains, and
+programmatically typeset Institute copy (PIL `ImageFont` on DejaVu Sans Bold/
+Regular and Liberation Sans Bold -- no diffusion-generated lettering).
+
 MTL: `SourceMesh/entrance_terrace_reveal/VD_EntranceTerraceReveal.mtl`
-RGBA cutouts: `cutouts/entrance_terrace_reveal/` — four alpha sheets (date-palm
-leaflet, leaf/bark litter, philodendron lobed leaf, coleus patterned leaf),
-each referenced by both `map_Kd` and `map_d`. Slice 3 reuses the leaf/bark
-litter sheet for the fountain's collected leaf debris rather than adding a
-fifth sheet.
+RGBA cutouts: `cutouts/entrance_terrace_reveal/` — four 1024 alpha sheets
+(date-palm leaflet, leaf/bark litter, philodendron lobed leaf, coleus
+patterned leaf) plus three Slice 4 2048 banner graphic sheets (Institute
+faded, Institute torn, Botanical Terrace pennant), each referenced by both
+`map_Kd` and `map_d`. Slice 3 reuses the leaf/bark litter sheet for the
+fountain's collected leaf debris rather than adding a fifth sheet.
 
 ## Import steps (Unreal)
 1. Import each OBJ as its own Static Mesh; keep "Combine Meshes" OFF (one object
    per file already).
 2. Import the RGBA sheets as textures; connect RGB -> Base Color and A ->
-   Opacity Mask on every masked leaf/leaflet/litter material.
+   Opacity Mask on every masked leaf/leaflet/litter/banner material.
 3. On every foliage mesh (date palm, aloe, philodendron, coleus) enable "Vertex
    Colors" import and drive a wind/pivot-sway node from vertex-colour luminance
    (0 anchored/rigid, 1 free tip). Trunks, stems, petioles and leaf attachments
    are 0; free leaf tips approach 1. The Slice 3 furniture (benches, brochure
-   stand, fountain) imports with no vertex colour at all -- do not wire a wind
-   node to it.
+   stand, fountain) and the Slice 4 banners/pennant import with no vertex
+   colour at all -- do not wire a wind node to any of them yet.
 4. Author collision per the notes below; do NOT let Unreal auto-generate a
    single convex hull on the planters or the fountain — it seals the open
-   mouth / basin. Foliage leaves generally take NO collision.
+   mouth / basin. Foliage leaves generally take NO collision. The Slice 4
+   banners/pennant take **NO COLLISION** at all (decorative cloth only) --
+   do not auto-hull them either; a hull across baked sag/tears would be both
+   wrong-shaped and pointless for a walk-through decorative prop.
 
 {assets}
 
@@ -1206,6 +1600,17 @@ a walkway) without visually mismatching in scale. Mix them freely; the damaged
 variant reads as a single neglected bench in an otherwise-maintained row, not
 a different bench type. `VD_BrochureStand_Institutional` and
 `VD_Fountain_DryBasin` are each single freestanding props.
+
+## Slice 4 banner usage
+`VD_Banner_Institute_Faded`, `VD_Banner_Institute_Torn`, and
+`VD_Pennant_BotanicalTerrace` are each single freestanding decorative cloth
+props, base-centred at Z=0 like every other mesh in this kit; mounting them
+against a wall, truss, or frame is left to the level/placement pass (out of
+scope here). Mix the faded and torn banners freely along the same hanging
+line for a maintained-vs-neglected read, the way the two benches pair up in
+Slice 3. The pennant is narrower and tapers toward its foot, reads at a
+smaller wayfinding scale, and is not meant to hang alongside the two full
+banners.
 """
 
 ASSET_DOCS = [
@@ -1261,6 +1666,18 @@ ASSET_DOCS = [
      "~380 cm across x 112 cm tall; octagonal basin, dry recessed floor at 46 cm (well below the rim), stained central pedestal/nozzle stub to ~86 cm, 10 leaf-litter cards collected on the floor. No water material.",
      "M_Fountain_BasinWall (outer wall + rim lip + inner drop), M_Fountain_BasinFloor (dry floor annulus), M_Fountain_Pedestal (stained pedestal/nozzle stub), M_Fountain_LeafLitter (collected leaf-litter cards, reuses the Slice 1 leaf/bark litter sheet). No vertex colour.",
      "Segmented ring collision: 8 convex wall segments (one per octagon face) + a separate floor-annulus disc + a short cylinder/capsule for the pedestal. NEVER one convex hull across the whole prop -- that seals the dry basin and hides/blocks the recessed floor."),
+    ("VD_Banner_Institute_Faded", "Slice 4 — intact-but-faded vertical hanging Institute banner",
+     "~1.70 m wide x ~3.20 m tall; 16x24 subdivided cloth grid, multi-wave attachment sag + fine wrinkle creases baked in, front + reversed-winding back faces, no vertex colour.",
+     "M_Banner_Institute_Faded (single 2048 RGBA graphic sheet: 'EDEN PRIME / A GARDEN FOR THE ATOMIC AGE', sun-bleached, alpha-cut frayed hem).",
+     "NO COLLISION -- decorative cloth only; do not auto-hull."),
+    ("VD_Banner_Institute_Torn", "Slice 4 — torn/partially-detached Institute banner, asymmetric sag",
+     "~1.60 m wide x ~3.00 m tall; a denser 24x36 cloth grid with a lost top-right corner (droops + pulls inward), restrained alpha-cut ragged punctures, and a tattered lower hem.",
+     "M_Banner_Institute_Torn (single 2048 RGBA graphic sheet: 'THE INSTITUTE / SCIENCE IN SERVICE OF ABUNDANCE', heavy stains and alpha-cut ragged punctures).",
+     "NO COLLISION -- decorative cloth only; do not auto-hull."),
+    ("VD_Pennant_BotanicalTerrace", "Slice 4 — narrow wayfinding/promotional pennant",
+     "~1.30 m wide at the header tapering to ~0.10 m at the foot x ~2.80 m tall; 10x22 subdivided cloth grid, lighter sag/creases, no torn geometry.",
+     "M_Pennant_BotanicalTerrace (single 2048 RGBA graphic sheet: 'BOTANICAL TERRACE / PUBLIC EXHIBITION' with a wayfinding chevron mark, light fading + minor pinholes).",
+     "NO COLLISION -- decorative cloth only; do not auto-hull."),
 ]
 
 
@@ -1284,6 +1701,7 @@ def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
     QA.mkdir(parents=True, exist_ok=True)
     write_cutouts()
+    write_banner_atlases()
     meshes = [
         build_round_planter("VD_SpecimenPlanter_Concrete", 224.0, 98.0,
                             "M_ConcretePlanter_Cast", "M_ConcretePlanter_Rim",
@@ -1302,6 +1720,17 @@ def main() -> None:
         build_bench("VD_Bench_Municipal_Damaged", True, 8302),
         build_brochure_stand("VD_BrochureStand_Institutional", 8401),
         build_fountain("VD_Fountain_DryBasin", 8501),
+        build_cloth_banner("VD_Banner_Institute_Faded", 170.0, 170.0, 320.0, 16, 24,
+                           "M_Banner_Institute_Faded", sag_amp=8.0, wave_count=4,
+                           crease_amp=2.2, crease_freq=9.0, seed=9401, lean=5.0),
+        build_cloth_banner("VD_Banner_Institute_Torn", 160.0, 155.0, 300.0, 24, 36,
+                           "M_Banner_Institute_Torn", sag_amp=15.0, wave_count=3,
+                           crease_amp=4.0, crease_freq=7.0, seed=9402, lean=7.0,
+                           torn_side="right", corner_drop=75.0, corner_pull=20.0,
+                           hem_tatter=22.0),
+        build_cloth_banner("VD_Pennant_BotanicalTerrace", 130.0, 10.0, 280.0, 10, 22,
+                           "M_Pennant_BotanicalTerrace", sag_amp=5.0, wave_count=2,
+                           crease_amp=1.6, crease_freq=6.0, seed=9403, lean=4.0),
     ]
     write_mtl()
     write_handoff()
@@ -1318,7 +1747,7 @@ def main() -> None:
                                 "size_cm": [round(v, 2) for v in size]})
     manifest = {
         "units": "centimetres; Z-up",
-        "slice": "entrance-terrace reveal kit (slice 1 base + slice 2 supporting species + slice 3 furniture)",
+        "slice": "entrance-terrace reveal kit (slice 1 base + slice 2 supporting species + slice 3 furniture + slice 4 banners)",
         "mesh_count": len(meshes),
         "foliage_contract": {
             "alpha_cut_rgba_sheets": 4,
@@ -1361,6 +1790,26 @@ def main() -> None:
                 "form": "dry octagonal basin, recessed floor well below the rim, stained pedestal stub, no water material",
                 "sides": 8, "leaf_litter_cards": 10,
                 "rim_to_floor_drop_cm": 66.0,
+            },
+        },
+        "banner_kit": {
+            "contract": "rigid baked cloth; zero vertex colour; wind runtime deferred; NO COLLISION on every banner/pennant",
+            "graphic_sheets": "one 2048 RGBA sheet per banner, alpha-cut torn/frayed edges, "
+                              "PIL-typeset copy (DejaVu Sans Bold/Regular, Liberation Sans Bold)",
+            "VD_Banner_Institute_Faded": {
+                "form": "16x24 subdivided cloth grid, multi-wave attachment sag + fine creases, intact silhouette",
+                "message": "EDEN PRIME / A GARDEN FOR THE ATOMIC AGE",
+                "torn": False, "hole_count": 0,
+            },
+            "VD_Banner_Institute_Torn": {
+                "form": "24x36 subdivided cloth grid, lost top-right corner droop/pull, alpha-cut ragged punctures, tattered hem",
+                "message": "THE INSTITUTE / SCIENCE IN SERVICE OF ABUNDANCE",
+                "torn": True, "alpha_puncture_count": 3, "torn_side": "right", "corner_drop_cm": 75.0,
+            },
+            "VD_Pennant_BotanicalTerrace": {
+                "form": "10x22 subdivided cloth grid tapering from 130 cm header to a 10 cm foot",
+                "message": "BOTANICAL TERRACE / PUBLIC EXHIBITION",
+                "torn": False, "hole_count": 0,
             },
         },
         "meshes": manifest_meshes,
