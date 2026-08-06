@@ -11,6 +11,7 @@ A true plant–animal hybrid organism has not been made. There is no credible ro
 The frightening part is that several pieces of the idea already exist separately:
 
 - Mammalian cells have taken up isolated chloroplasts in culture. In 2024, chloroplasts inside Chinese hamster ovary cells retained measurable photosystem-II electron transport for at least two days, though activity declined by day four.
+- Researchers have forcibly fused wall-stripped plant cells with animal cells in culture. A later human–*Arabidopsis* cell line retained reorganized plant chromosome fragments in a human genetic background for hundreds of days. These were unstable laboratory cells, not mixed tissues or organisms.
 - Some sea slugs retain chloroplasts stolen from algae inside their own cells for months. A 2025 study found that the slugs house them in host-made compartments called **kleptosomes**, which regulate the chloroplast environment and later digest the chloroplasts as stored food.
 - Green algae naturally enter tissues and cells of developing spotted-salamander embryos. This is a real vertebrate–alga intracellular association, although evidence that the algae supply meaningful photosynthetic energy to the salamander is weak.
 - Corals, anemones, hydra, giant clams, and other animals maintain living photosynthetic microbes within or among their tissues.
@@ -31,7 +32,7 @@ The one-sentence horror hook is:
 
 Aoki and colleagues isolated chloroplasts from the extremophilic red alga *Cyanidioschyzon merolae* and co-cultured them with Chinese hamster ovary (CHO-K1) cells. A minority of the animal cells incorporated chloroplasts. Electron microscopy showed chloroplasts in intracellular vesicles, often near the nucleus and surrounded by mitochondria.
 
-The important result was narrow but real: incorporated chloroplasts retained photosystem-II electron-transport activity for **at least two days**. By day four, activity had declined significantly and chloroplast structure showed deterioration. The experiment did not create a photosynthetic hamster, a self-sustaining animal cell lineage, or an organism able to inherit chloroplasts.
+The important result was narrow but real: incorporated chloroplasts retained photosystem-II electron-transport activity for **at least two days after a two-day co-culture period**. By post-wash day four, activity had declined significantly and chloroplast structure showed deterioration. The experiment did not directly demonstrate carbon fixation, net oxygen production, ATP or sugar transfer to the host, light-dependent growth, or chloroplast inheritance. It did not create a photosynthetic hamster or a self-sustaining animal cell lineage.
 
 This study has a useful historical precursor. In 1969, Margaret Nass reported uptake of isolated plant chloroplasts by cultured mouse fibroblasts. The organelles could enter animal cells, but the study did not establish durable photosynthetic function. VERDANT can therefore place crude “green animal cell” experiments within its atomic-age research program without importing modern CRISPR-era technology.
 
@@ -42,7 +43,37 @@ program or be acknowledged as an alternate-history acceleration far beyond the
 period's public science. The cover-up begins with an anomalous dish, not a
 monster.
 
-### 1.2 Kleptoplasty: animals that steal chloroplasts
+### 1.2 Plant–animal cell fusion and chimerism in a dish
+
+Researchers have gone beyond merely placing chloroplasts in animal cells, but
+only at the level of forced cell culture. Plant cells can be stripped of their
+walls to make **protoplasts** and fused with animal cells. Work summarized by
+Cocking in 1984 produced plant–animal **heterokaryons**: single fused cells whose
+shared cytoplasm contained genetically distinct nuclei. Investigators studied
+whether the cells survived and which partner dominated; they did not obtain a
+developing hybrid body.
+
+A striking later example fused *Arabidopsis thaliana* protoplasts with human
+HT1080 cells. Analysis of the resulting line found plant DNA from several
+*Arabidopsis* chromosomes reorganized within a neo-chromosome attached to human
+chromosome 15. Some plant-derived regions persisted through 300 days of culture,
+but most of the introduced plant DNA was eliminated, copy numbers changed, and
+the plant centromere was not functional.
+
+These experiments demonstrate compatibility at a limited biochemical level:
+plant and animal membranes can be forced to merge, and an animal cell can copy
+and retain fragments of plant DNA. They do **not** demonstrate coordinated
+plant–animal development, stable plant tissue inside an animal, a unified
+germline, or a viable organism. “Hybrid cell line” is a laboratory term, not
+evidence of a human–plant creature.
+
+**Lore value:** The Institute can truthfully label dishes as interkingdom
+hybrids while concealing that the useful lines remain abnormal cells at risk of
+losing one partner's chromosomes rather than becoming mixed tissues. Such work
+belongs to later decades of the program unless Eden Prime is explicitly ahead
+of public cell-fusion science.
+
+### 1.3 Kleptoplasty: animals that steal chloroplasts
 
 Sacoglossan sea slugs feed on algae and retain chloroplasts in cells lining their digestive system. The chloroplasts remain structurally intact and photosynthetically active for periods ranging from days to months, depending on species. They are acquired during feeding rather than inherited as normal animal organelles.
 
@@ -54,7 +85,7 @@ It does **not** prove that chloroplasts can power a large, active animal. Nor do
 
 **Lore value:** The crucial fictional organ is not a leaf. It is a host-made containment vesicle that keeps foreign photosynthetic machinery alive.
 
-### 1.3 Whole photosynthetic cells living with animals
+### 1.4 Whole photosynthetic cells living with animals
 
 Keeping an intact alga is easier than keeping only its chloroplast because the alga retains its nucleus and the genes required to maintain and repair photosynthesis.
 
@@ -65,11 +96,11 @@ Real examples include:
 - Giant clams and other marine animals arranging photosymbionts in light-exposed tissues.
 - The spotted salamander *Ambystoma maculatum*, whose embryos share an association with the green alga *Oophila amblystomatis*. Algal cells enter embryonic tissues and individual host cells.
 
-The salamander example is especially valuable because it is a vertebrate and the association begins during development, before a mature adaptive immune system would be expected to reject foreign cells aggressively. However, later work found no convincing bulk evidence that photosynthetically fixed carbon supplies significant energy to the salamander embryo. The symbiosis is real; the “solar-powered salamander” interpretation is overstated.
+The salamander example is especially valuable because it is a vertebrate and the association begins during development, before a mature adaptive immune system would be expected to reject foreign cells aggressively. Tracer experiments detected algal-fixed carbon in embryonic tissues, but later work showed that host tissues can also fix carbon heterotrophically. Intracellular algae experience a dark, low-oxygen environment and downregulate photosynthesis. Carbon transfer is therefore real at the egg-association level, while its magnitude, energetic importance, and attribution to algae physically inside host cells remain uncertain. The “solar-powered salamander” interpretation is overstated.
 
 **Lore value:** Institute personnel learn that the timing of exposure matters. Adult tissues reject or digest the inoculum; embryos accept it as part of the developmental environment.
 
-### 1.4 An animal can make a “plant” structural material
+### 1.5 An animal can make a “plant” structural material
 
 Tunicates are chordate animals that synthesize cellulose and incorporate it into an external tunic. A functional cellulose-synthase gene was characterized in *Ciona* and resembles microbial cellulose synthases. This is a strong example of a conspicuously plant-associated material becoming part of an animal body plan through evolutionary gene transfer and developmental integration.
 
@@ -77,7 +108,7 @@ Cellulose alone does not produce wood, bark, roots, or leaves. Wood also depends
 
 **Lore value:** The creatures' bark-like armor need not be literal bark. It can be a cellulose–protein composite secreted by an animal epidermis, mineralized and stained with phenolic compounds. Close inspection should reveal that it is anatomically wrong for both wood and skin.
 
-### 1.5 Photosynthesis can support tissue locally without powering the whole animal
+### 1.6 Photosynthesis can support tissue locally without powering the whole animal
 
 In a 2021 experiment, microalgae and cyanobacteria distributed through the vasculature of *Xenopus* tadpoles produced oxygen under light and restored activity in oxygen-deprived neural tissue. This was an acute experimental preparation, not a stable photosynthetic vertebrate, but it shows that photosynthetic partners can alter local animal physiology.
 
@@ -135,6 +166,14 @@ The organism has four cooperating layers:
 
 The visible “plant” is therefore a combination of green symbiotic cells, animal-grown structural polymer, and branching regenerative tissue. There are no ordinary plant cells distributed through the muscles or brain.
 
+This animal-chassis architecture is the less implausible choice for mobile,
+neurologically complex antagonists and minions. A stationary nursery, nest, or
+territorial growth can invert it: a real plant-derived meristematic scaffold
+containing segregated animal sensory, digestive, or contractile pockets joined
+through exchange membranes. That slower graft-colony model is more credible for
+the environment than for a pursuing humanoid body. In either form, keep the cell
+lineages compartmentalized rather than randomly intermingled.
+
 ### 3.2 The single major fictional leap
 
 The Institute succeeds in making the association **developmentally self-renewing**.
@@ -165,10 +204,11 @@ The period-plausible route is empirical selection, not precision editing:
 
 1. **Mutation-breeding program:** crop, algal, fungal, and animal cell cultures are exposed to graded radiation and chemical mutagens. Most die or become useless. The Institute keeps rare lines with unusual organelle retention, stress tolerance, pigmentation, or extracellular fibers.
 2. **Cell-culture screening:** researchers test which animal cells engulf algae or chloroplasts without immediately digesting them. Green persistence becomes the first crude success metric.
-3. **Embryonic passage:** surviving associations are introduced progressively earlier in development. Embryonic tolerance allows foreign cells to become part of the organism's expected biological environment.
-4. **Serial selection:** each generation or tissue passage is selected for longer retention, lower inflammation, better partitioning during cell division, and survival under light/dark cycles.
-5. **Regenerative fixation:** selected tissues are coupled to wound-healing and stem-cell niches. Regrowth reproduces the composite architecture more reliably than sexual reproduction.
-6. **Closed-system evolution:** after Eden Prime is sealed, decades of escape, grafting, predation, and selection finish what the researchers began. The present organisms are not identical to the Institute specimens.
+3. **Somatic fusion and transfer:** in later decades, protoplast fusion and chromosome-transfer experiments create unstable interkingdom cell lines. These are screens for small useful traits, not miniature versions of the final body.
+4. **Embryonic passage:** surviving associations are introduced progressively earlier in development. Embryonic tolerance allows foreign cells to become part of the organism's expected biological environment.
+5. **Serial selection:** each generation or tissue passage is selected for longer retention, lower inflammation, better partitioning during cell division, and survival under light/dark cycles.
+6. **Regenerative fixation:** selected tissues are coupled to wound-healing and stem-cell niches. Regrowth reproduces the composite architecture more reliably than sexual reproduction.
+7. **Closed-system evolution:** after Eden Prime is sealed, decades of escape, grafting, predation, and selection finish what the researchers began. The present organisms are not identical to the Institute specimens.
 
 This route lets the 1961 facility begin with techniques consistent with its era while allowing the mature horror to emerge over roughly sixty years. It also preserves the project's existing gamma-garden logic: radiation creates a broad field of damage and variation; selection, husbandry, and containment failure create the lineage.
 
@@ -212,7 +252,7 @@ The armor is secreted in layers. New material remains flexible and wet near the 
 
 ### Photosynthesis creates liabilities
 
-Light-driven chemistry produces reactive oxygen species when the system is stressed or oversaturated. Real photosynthetic organisms require photoprotection and repair. This supports:
+Light-driven chemistry produces reactive oxygen species when the system is stressed or oversaturated. In a 2025 culture study, illumination increased reactive oxygen species and cell death in artificial animal-cell/chloroplast mixtures, while naturally kleptoplastic sea-slug cells suffered far less damage. Real photosynthetic organisms require photoprotection and repair. This supports:
 
 - mottled bleaching around wounds;
 - dark pigments over overloaded green tissue;
@@ -232,13 +272,14 @@ The composites should not breed as a stable new species. They propagate through 
 
 The explanation will be more effective if the player encounters real facts before the final fictional leap.
 
-1. **Early laboratory note:** animal cells remained green for forty-eight hours after chloroplast uptake.
-2. **Comparative-biology card:** sea slugs retain stolen chloroplasts; salamander embryos contain algae.
-3. **Materials report:** cellulose detected in an animal-derived epidermal culture, compared with tunicates.
-4. **Failure report:** irradiated specimens mostly died, became sterile, or formed tumors; useful traits required serial selection.
-5. **Containment report:** adult inoculation failed, while embryonic exposure produced immune tolerance.
-6. **Pathology report:** photosynthetic tissue supplies local oxygen but does not meet whole-body energy demand; specimens consume protein aggressively after exertion or darkness.
-7. **Final revelation:** the antagonist is not half plant and half animal. It is an animal intelligence that turned multiple organisms and organelles into inheritable body parts.
+1. **Early laboratory note:** mouse cells engulfed green organelles, but researchers could not show that the organelles fed the cells.
+2. **Later cell-line report:** a human-derived culture retained fragments of plant chromosomes while steadily losing and rearranging the foreign DNA.
+3. **Comparative-biology card:** sea slugs retain stolen chloroplasts; salamander embryos contain algae.
+4. **Materials report:** cellulose detected in an animal-derived epidermal culture, compared with tunicates.
+5. **Failure report:** irradiated specimens mostly died, became sterile, or formed tumors; useful traits required serial selection.
+6. **Containment report:** adult inoculation failed, while embryonic exposure produced immune tolerance.
+7. **Pathology report:** photosynthetic tissue supplies local oxygen but does not meet whole-body energy demand; specimens consume protein aggressively after exertion or darkness.
+8. **Final revelation:** the antagonist is not half plant and half animal. It is an animal intelligence that turned multiple organisms and organelles into inheritable body parts.
 
 A concise in-world line:
 
@@ -251,6 +292,7 @@ A concise in-world line:
 Avoid these explanations because they weaken the science-horror effect:
 
 - **“Radiation fused plant and animal DNA.”** Radiation is random damage, not an intelligent splicing tool.
+- **“A human–plant hybrid cell line proves a hybrid body is possible.”** Forced cell fusion can preserve plant DNA in an animal cell without reconciling two developmental programs.
 - **“Chlorophyll lets them live entirely on sunlight.”** Their energy budget is far too large.
 - **“Plant cells became neurons.”** Preserve animal nervous tissue.
 - **“A single plant gene produced leaves, roots, and wood.”** Complex morphology requires developmental systems, not one trait gene.
@@ -265,11 +307,13 @@ Avoid these explanations because they weaken the science-horror effect:
 | Element | Scientific status | VERDANT use |
 | --- | --- | --- |
 | Chloroplast uptake by mammalian cells | Demonstrated in culture | Institute's first repeatable green-cell result |
-| Photosystem-II activity in those cells | Demonstrated for at least two days; declining by day four | Starting point, not final organism |
+| Photosystem-II activity in those cells | Demonstrated after co-culture; declining by post-wash day four, without proof of carbon or energy transfer to the host | Starting point, not final organism |
+| Forced plant–animal cell fusion | Demonstrated as cultured heterokaryons and hybrid cell lines | Unstable screening material, not a body plan |
+| Plant chromosome fragments in a human cell line | Maintained and reorganized over hundreds of days; much plant DNA was lost | Evidence that foreign DNA can persist, not that plant tissues can develop |
 | Months-long chloroplast retention in animals | Demonstrated in certain sea slugs | Model for host-controlled plastid bodies |
 | Host-made chloroplast compartment | Demonstrated as the sea-slug kleptosome | Direct inspiration for fictional plastid body |
 | Intracellular algae in a vertebrate embryo | Demonstrated in spotted salamanders | Model for embryonic tolerance |
-| Major photosynthetic energy transfer to salamander | Not demonstrated | Do not claim |
+| Algal-fixed carbon in salamander embryos | Detected, but amount, energetic importance, and intracellular source remain uncertain | Keep the benefit limited and ambiguous |
 | Animal synthesis of cellulose | Demonstrated in tunicates | False bark and fibrous armor |
 | Local photosynthetic oxygen support in vertebrate tissue | Demonstrated experimentally in tadpoles | Supports dormancy and local tissue survival |
 | Whole self-renewing vertebrate composite | Not achieved | Principal fictional breakthrough |
@@ -285,20 +329,24 @@ Avoid these explanations because they weaken the science-horror effect:
 
 1. Aoki R, et al. “Incorporation of photosynthetically active algal chloroplasts in cultured mammalian cells towards photosynthesis in animals.” *Proceedings of the Japan Academy, Series B* 100 (2024). DOI: [10.2183/pjab.100.035](https://doi.org/10.2183/pjab.100.035). [PubMed/PMC full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC11635087/).
 2. Nass MM. “Uptake of isolated chloroplasts by mammalian cells.” *Science* 165 (1969). DOI: [10.1126/science.165.3898.1128](https://doi.org/10.1126/science.165.3898.1128). [PubMed](https://pubmed.ncbi.nlm.nih.gov/5801593/).
-3. Allard CAH, et al. “A host organelle integrates stolen chloroplasts for animal photosynthesis.” *Cell* 188 (2025). DOI: [10.1016/j.cell.2025.06.003](https://doi.org/10.1016/j.cell.2025.06.003). [PMC full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC12240476/).
-4. Serôdio J, Cruz S, Cartaxana P, Calado R. “Photophysiology of kleptoplasts: photosynthetic use of light by chloroplasts living in animal cells.” *Philosophical Transactions of the Royal Society B* 369 (2014). DOI: [10.1098/rstb.2013.0242](https://doi.org/10.1098/rstb.2013.0242). [PMC full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC3949400/).
-5. Bhattacharya D, et al. “Genome analysis of *Elysia chlorotica* egg DNA provides no evidence for horizontal gene transfer into the germ line of this kleptoplastic mollusc.” *Molecular Biology and Evolution* 30 (2013). DOI: [10.1093/molbev/mst084](https://doi.org/10.1093/molbev/mst084). [PMC full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC3708498/).
-6. Kerney R, et al. “Intracellular invasion of green algae in a salamander host.” *PNAS* 108 (2011). DOI: [10.1073/pnas.1018259108](https://doi.org/10.1073/pnas.1018259108). [PMC full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC3080989/).
-7. Burns JA, Kerney R, Duhamel S. “Heterotrophic Carbon Fixation in a Salamander-Alga Symbiosis.” *Frontiers in Microbiology* 11 (2020). DOI: [10.3389/fmicb.2020.01815](https://doi.org/10.3389/fmicb.2020.01815). [PMC full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC7417444/).
-8. Hamada M, et al. “Metabolic co-dependence drives the evolutionarily ancient *Hydra–Chlorella* symbiosis.” *eLife* 7 (2018). DOI: [10.7554/eLife.35122](https://doi.org/10.7554/eLife.35122). [PMC full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC6019070/).
-9. Matthysse AG, et al. “A functional cellulose synthase from ascidian epidermis.” *PNAS* 101 (2004). DOI: [10.1073/pnas.0303623101](https://doi.org/10.1073/pnas.0303623101). [PMC full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC327129/).
-10. Özugur S, et al. “Green oxygen power plants in the brain rescue neuronal activity.” *iScience* 24 (2021). DOI: [10.1016/j.isci.2021.103158](https://doi.org/10.1016/j.isci.2021.103158). [PMC full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC8560625/).
-11. Sjuts I, Soll J, Bölter B. “Import of Soluble Proteins into Chloroplasts and Potential Regulatory Mechanisms.” *Frontiers in Plant Science* 8 (2017). DOI: [10.3389/fpls.2017.00168](https://doi.org/10.3389/fpls.2017.00168). [PMC full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC5296341/).
+3. Liu Y, et al. “Molecular organization of recombinant human-*Arabidopsis* chromosomes in hybrid cell lines.” *Scientific Reports* 11 (2021). DOI: [10.1038/s41598-021-86130-4](https://doi.org/10.1038/s41598-021-86130-4). [PMC full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC8009911/).
+4. Cocking EC. “Plant-animal cell fusions.” *Ciba Foundation Symposium* 103 (1984). DOI: [10.1002/9780470720844.ch8](https://doi.org/10.1002/9780470720844.ch8). [PubMed abstract](https://pubmed.ncbi.nlm.nih.gov/6561132/).
+5. Allard CAH, et al. “A host organelle integrates stolen chloroplasts for animal photosynthesis.” *Cell* 188 (2025). DOI: [10.1016/j.cell.2025.06.003](https://doi.org/10.1016/j.cell.2025.06.003). [PMC full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC12240476/).
+6. Serôdio J, Cruz S, Cartaxana P, Calado R. “Photophysiology of kleptoplasts: photosynthetic use of light by chloroplasts living in animal cells.” *Philosophical Transactions of the Royal Society B* 369 (2014). DOI: [10.1098/rstb.2013.0242](https://doi.org/10.1098/rstb.2013.0242). [PMC full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC3949400/).
+7. Bhattacharya D, et al. “Genome analysis of *Elysia chlorotica* egg DNA provides no evidence for horizontal gene transfer into the germ line of this kleptoplastic mollusc.” *Molecular Biology and Evolution* 30 (2013). DOI: [10.1093/molbev/mst084](https://doi.org/10.1093/molbev/mst084). [PMC full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC3708498/).
+8. Kerney R, et al. “Intracellular invasion of green algae in a salamander host.” *PNAS* 108 (2011). DOI: [10.1073/pnas.1018259108](https://doi.org/10.1073/pnas.1018259108). [PMC full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC3080989/).
+9. Graham ER, Fay SA, Davey A, Sanders RW. “Intracapsular algae provide fixed carbon to developing embryos of the spotted salamander *Ambystoma maculatum*.” *Journal of Experimental Biology* 216 (2013). DOI: [10.1242/jeb.076711](https://doi.org/10.1242/jeb.076711). [PubMed](https://pubmed.ncbi.nlm.nih.gov/23038736/).
+10. Burns JA, Kerney R, Duhamel S. “Heterotrophic Carbon Fixation in a Salamander-Alga Symbiosis.” *Frontiers in Microbiology* 11 (2020). DOI: [10.3389/fmicb.2020.01815](https://doi.org/10.3389/fmicb.2020.01815). [PMC full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC7417444/).
+11. Hamada M, et al. “Metabolic co-dependence drives the evolutionarily ancient *Hydra–Chlorella* symbiosis.” *eLife* 7 (2018). DOI: [10.7554/eLife.35122](https://doi.org/10.7554/eLife.35122). [PMC full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC6019070/).
+12. Matthysse AG, et al. “A functional cellulose synthase from ascidian epidermis.” *PNAS* 101 (2004). DOI: [10.1073/pnas.0303623101](https://doi.org/10.1073/pnas.0303623101). [PMC full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC327129/).
+13. Özugur S, et al. “Green oxygen power plants in the brain rescue neuronal activity.” *iScience* 24 (2021). DOI: [10.1016/j.isci.2021.103158](https://doi.org/10.1016/j.isci.2021.103158). [PMC full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC8560625/).
+14. Hamashima K, et al. “Examining interactions of animal cells with chloroplasts and their light-induced responses in in vitro cell culture systems.” *Biochemical and Biophysical Research Communications* 758 (2025). DOI: [10.1016/j.bbrc.2025.151622](https://doi.org/10.1016/j.bbrc.2025.151622). [PubMed](https://pubmed.ncbi.nlm.nih.gov/40117974/).
+15. Sjuts I, Soll J, Bölter B. “Import of Soluble Proteins into Chloroplasts and Potential Regulatory Mechanisms.” *Frontiers in Plant Science* 8 (2017). DOI: [10.3389/fpls.2017.00168](https://doi.org/10.3389/fpls.2017.00168). [PMC full text](https://pmc.ncbi.nlm.nih.gov/articles/PMC5296341/).
 
 ### Authoritative background
 
-12. International Atomic Energy Agency. [“Mutation breeding.”](https://www.iaea.org/topics/mutation-breeding) Radiation and chemical mutagens generate random variation that must be selected; they do not direct a desired body plan.
-13. NCBI Bookshelf, Cooper GM. [“Chloroplasts and Other Plastids,” *The Cell: A Molecular Approach*.](https://www.ncbi.nlm.nih.gov/books/NBK9905/) Overview of chloroplast origin, genome reduction, and dependence on nuclear-encoded proteins.
+16. International Atomic Energy Agency. [“Mutation breeding.”](https://www.iaea.org/topics/mutation-breeding) Radiation and chemical mutagens generate random variation that must be selected; they do not direct a desired body plan.
+17. NCBI Bookshelf, Cooper GM. [“Chloroplasts and Other Plastids,” *The Cell: A Molecular Approach*.](https://www.ncbi.nlm.nih.gov/books/NBK9905/) Overview of chloroplast origin, genome reduction, and dependence on nuclear-encoded proteins.
 
 ## Bottom line
 
