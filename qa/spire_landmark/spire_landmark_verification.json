@@ -14,6 +14,12 @@
       "pass": true,
       "failures": [],
       "vertices": 736,
+      "texture_coordinates": 2208,
+      "uv_indexed_face_corners": 2208,
+      "object_names": [
+        "VD_SpireBase"
+      ],
+      "group_records": 0,
       "faces": 456,
       "triangles": 1296,
       "bounds_cm": {
@@ -49,6 +55,12 @@
       "pass": true,
       "failures": [],
       "vertices": 7832,
+      "texture_coordinates": 23496,
+      "uv_indexed_face_corners": 23496,
+      "object_names": [
+        "VD_Spire"
+      ],
+      "group_records": 0,
       "faces": 4858,
       "triangles": 13780,
       "bounds_cm": {
@@ -84,6 +96,12 @@
       "pass": true,
       "failures": [],
       "vertices": 288,
+      "texture_coordinates": 864,
+      "uv_indexed_face_corners": 864,
+      "object_names": [
+        "VD_SpireLights"
+      ],
+      "group_records": 0,
       "faces": 168,
       "triangles": 528,
       "bounds_cm": {

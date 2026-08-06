@@ -130,6 +130,8 @@ The verifier checks:
 
 - exact authored bounds and shared-origin placement;
 - material assignment and MTL linkage;
+- one named object per OBJ, no `g` group records, and `usemtl`-driven slots;
+- a valid UV0 texture-coordinate index on every face corner;
 - valid face indices and non-degenerate faces;
 - closed two-face edge incidence for every generated solid;
 - separate translucent warning-light geometry;

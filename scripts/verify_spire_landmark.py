@@ -22,14 +22,18 @@ EXPECTED = {
 }
 
 Vec3 = tuple[float, float, float]
-Face = tuple[str, tuple[int, ...]]
+Vec2 = tuple[float, float]
+Face = tuple[str, tuple[int, ...], tuple[int, ...]]
 
 
 @dataclass
 class ObjMesh:
     vertices: list[Vec3]
+    texcoords: list[Vec2]
     faces: list[Face]
     mtllib: str | None
+    object_names: list[str]
+    group_count: int
 
 COLORS = {
     "M_Spire_Concrete": (82, 78, 68),
@@ -45,22 +49,37 @@ COLORS = {
 
 def parse_obj(path: Path) -> ObjMesh:
     vertices: list[Vec3] = []
+    texcoords: list[Vec2] = []
     faces: list[Face] = []
     material = ""
     mtllib = None
+    object_names: list[str] = []
+    group_count = 0
     for raw in path.read_text(encoding="utf-8").splitlines():
         parts = raw.split()
         if not parts:
             continue
         if parts[0] == "v":
             vertices.append((float(parts[1]), float(parts[2]), float(parts[3])))
+        elif parts[0] == "vt":
+            texcoords.append((float(parts[1]), float(parts[2])))
+        elif parts[0] == "o":
+            object_names.append(parts[1])
+        elif parts[0] == "g":
+            group_count += 1
         elif parts[0] == "usemtl":
             material = parts[1]
         elif parts[0] == "mtllib":
             mtllib = parts[1]
         elif parts[0] == "f":
-            faces.append((material, tuple(int(token.split("/")[0]) - 1 for token in parts[1:])))
-    return ObjMesh(vertices, faces, mtllib)
+            corners = [token.split("/") for token in parts[1:]]
+            vertex_indices = tuple(int(corner[0]) - 1 for corner in corners)
+            uv_indices = tuple(
+                int(corner[1]) - 1 if len(corner) > 1 and corner[1] else -1
+                for corner in corners
+            )
+            faces.append((material, vertex_indices, uv_indices))
+    return ObjMesh(vertices, texcoords, faces, mtllib, object_names, group_count)
 
 
 def triangle_area(a, b, c) -> float:
@@ -79,19 +98,30 @@ def validate(name: str, data: ObjMesh) -> dict[str, object]:
     if not vertices or not faces:
         failures.append("mesh is empty")
         return {"pass": False, "failures": failures}
-    for material, face in faces:
+    if data.object_names != [name]:
+        failures.append(f"expected exactly one object named {name}, got {data.object_names}")
+    if data.group_count:
+        failures.append(f"OBJ contains {data.group_count} forbidden g group records")
+    if not data.texcoords:
+        failures.append("OBJ contains no vt texture-coordinate records")
+    uv_corner_count = 0
+    for material, face, uv_indices in faces:
         if not material:
             failures.append("face without material")
         if len(face) < 3 or any(i < 0 or i >= len(vertices) for i in face):
             failures.append("invalid face indices")
             continue
+        if len(uv_indices) != len(face) or any(i < 0 or i >= len(data.texcoords) for i in uv_indices):
+            failures.append("face corner without a valid UV index")
+        else:
+            uv_corner_count += len(uv_indices)
         for i in range(1, len(face) - 1):
             if triangle_area(vertices[face[0]], vertices[face[i]], vertices[face[i + 1]]) < 1e-5:
                 failures.append("degenerate face")
                 break
 
     edges = Counter()
-    for _, face in faces:
+    for _, face, _ in faces:
         for i, a in enumerate(face):
             b = face[(i + 1) % len(face)]
             edges[tuple(sorted((a, b)))] += 1
@@ -114,10 +144,14 @@ def validate(name: str, data: ObjMesh) -> dict[str, object]:
         "pass": not failures,
         "failures": failures,
         "vertices": len(vertices),
+        "texture_coordinates": len(data.texcoords),
+        "uv_indexed_face_corners": uv_corner_count,
+        "object_names": data.object_names,
+        "group_records": data.group_count,
         "faces": len(faces),
-        "triangles": sum(len(face) - 2 for _, face in faces),
+        "triangles": sum(len(face) - 2 for _, face, _ in faces),
         "bounds_cm": {"min": mins, "max": maxs, "size": size},
-        "material_slots": sorted({material for material, _ in faces}),
+        "material_slots": sorted({material for material, _, _ in faces}),
         "edge_incidence": {"total": len(edges), "nonmanifold": nonmanifold},
     }
 
@@ -132,7 +166,7 @@ def render_preview(meshes: dict[str, ObjMesh], output: Path) -> None:
                        z_max: float | None = None) -> None:
         assembled = []
         for data in meshes.values():
-            for material, face in data.faces:
+            for material, face, _ in data.faces:
                 points = [data.vertices[i] for i in face]
                 if z_max is not None and max(p[2] for p in points) > z_max:
                     continue
@@ -202,8 +236,8 @@ def main() -> None:
     opaque_names = ("VD_SpireBase", "VD_Spire")
     lens_material = "M_Spire_WarningLens"
     separation_pass = (
-        {material for material, _ in meshes["VD_SpireLights"].faces} == {lens_material}
-        and all(lens_material not in {material for material, _ in meshes[name].faces}
+        {material for material, _, _ in meshes["VD_SpireLights"].faces} == {lens_material}
+        and all(lens_material not in {material for material, _, _ in meshes[name].faces}
                 for name in opaque_names)
     )
     report = {
