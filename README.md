@@ -153,6 +153,12 @@ transition toward doorway warmth.
 - `references/botanical/CLIMBER_BRANCHING_PHOTO_REFERENCE.md`
   (linked, attributed whole-habit photographs plus a procedural brief; external
   photographs are not copied into this repository)
+- `references/botanical/vine_weight_wind_bloom_reference_2400x1800.png`
+  (support-state curves, branch-order sag, coherent wind weights, doorway
+  clearance, and production bloom targets)
+- `references/botanical/VINE_GROWTH_DYNAMICS_CORRECTION_BRIEF.md`
+  (screenshot diagnosis, gravity/support algorithm, wind hierarchy, flower
+  placement, implementation gates, and next-pass acceptance test)
 - `references/botanical/SOURCES.md` (public botanical facts vs VERDANT interpretation)
 
 Flat-on alpha assets are 1024×1024 RGBA PNGs with true transparent alpha and
@@ -161,16 +167,21 @@ premultiplied-alpha downsampling:
 - `cutouts/solandra_maxima_leaf_flat_1024.png`
 - `cutouts/aristolochia_leaf_flat_1024.png`
 - `cutouts/aristolochia_pipe_flower_1024.png`
+- `cutouts/solandra_maxima_flower_open_1024.png`
+- `cutouts/solandra_maxima_flower_bud_1024.png`
 
 Regenerate and verify with:
 
 ```bash
 python3 scripts/generate_climber_reference_sheets.py
 python3 scripts/generate_climber_branching_reference.py
+python3 scripts/generate_vine_dynamics_reference.py
+python3 scripts/annotate_vine_growth_review.py
 python3 scripts/verify_climber_reference_sheets.py
 ```
 
-QA output is under `qa/climber_references/`.
+QA output is under `qa/climber_references/` and
+`qa/vine_growth_review_2026-08-06/`.
 
 ### Mature stem bark PBR
 

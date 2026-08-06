@@ -476,9 +476,71 @@ def make_pipe_card():
     return CUT/"aristolochia_pipe_flower_1024.png"
 
 
+def _vertical_gradient(size,top,bottom):
+    """RGBA vertical gradient used by original flower-card artwork."""
+    w,h=size; grad=Image.new("RGBA",size); gd=ImageDraw.Draw(grad,"RGBA")
+    for y in range(h):
+        t=y/max(1,h-1); c=tuple(round(top[i]*(1-t)+bottom[i]*t) for i in range(4))
+        gd.line((0,y,w,y),fill=c,width=1)
+    return grad
+
+
+def make_solandra_flower_card():
+    """Soft-shaded three-quarter cup for mid-distance cards and mesh guidance."""
+    S=2048; im=Image.new("RGBA",(S,S),(0,0,0,0))
+    d=ImageDraw.Draw(im,"RGBA")
+    # Pedicel and five-point calyx remain visibly connected to the flower throat.
+    d.line([(170,1080),(520,1035)],fill=(63,87,40,255),width=48)
+    d.polygon([(455,875),(675,805),(760,930),(720,1040),(770,1150),(665,1270),(450,1190)],fill=(70,100,46,255))
+    # Bell silhouette: tube expands into a five-lobed, three-quarter cup.
+    mask=Image.new("L",(S,S),0); md=ImageDraw.Draw(mask)
+    body=[(630,855),(965,760),(1320,555),(1540,445),(1710,520),(1815,690),(1760,850),
+          (1870,1010),(1780,1170),(1600,1340),(1340,1430),(965,1280),(630,1165)]
+    md.polygon(body,fill=255)
+    for box in [(1450,385,1785,705),(1600,535,1925,850),(1645,790,1970,1115),
+                (1560,1040,1895,1360),(1370,1210,1720,1515)]:
+        md.ellipse(box,fill=255)
+    body_rgba=_vertical_gradient((S,S),(247,219,132,255),(211,151,57,255))
+    im=Image.composite(body_rgba,im,mask)
+    d=ImageDraw.Draw(im,"RGBA")
+    # Recessed cup opening and waxy rim highlights create depth without photo copying.
+    mouth=Image.new("RGBA",(S,S),(0,0,0,0)); mm=ImageDraw.Draw(mouth,"RGBA")
+    mm.ellipse((1450,560,1875,1290),fill=(69,28,42,220))
+    mouth=mouth.filter(ImageFilter.GaussianBlur(20)); im.alpha_composite(mouth)
+    d=ImageDraw.Draw(im,"RGBA")
+    for yy,alpha in [(690,175),(805,150),(925,140),(1050,125),(1175,105)]:
+        d.line([(820,1000+(yy-925)*.16),(1405,935+(yy-925)*.42),(1710,yy)],fill=(102,43,53,alpha),width=18)
+    d.arc((1430,510,1900,1325),72,288,fill=(255,232,155,220),width=34)
+    d.line([(720,900),(1180,690),(1510,520)],fill=(255,241,183,130),width=28)
+    alpha_downsample(im,CUT/"solandra_maxima_flower_open_1024.png")
+    return CUT/"solandra_maxima_flower_open_1024.png"
+
+
+def make_solandra_bud_card():
+    """Weighted mature bud: soft-shaded original artwork, not a photo trace."""
+    S=2048; im=Image.new("RGBA",(S,S),(0,0,0,0)); d=ImageDraw.Draw(im,"RGBA")
+    d.line([(190,1120),(535,1055)],fill=(63,87,40,255),width=48)
+    d.polygon([(475,900),(705,825),(785,980),(735,1185),(470,1210)],fill=(72,103,47,255))
+    mask=Image.new("L",(S,S),0); md=ImageDraw.Draw(mask)
+    bud=[(670,845),(1030,690),(1420,670),(1750,805),(1890,970),(1780,1160),
+         (1430,1300),(1010,1265),(690,1160)]
+    md.polygon(bud,fill=255)
+    md.ellipse((1680,790,1940,1130),fill=255)
+    body=_vertical_gradient((S,S),(248,221,132,255),(206,151,60,255))
+    im=Image.composite(body,im,mask); d=ImageDraw.Draw(im,"RGBA")
+    # Axial folds converge toward the closed rim; highlight establishes waxy volume.
+    for oy,alpha in [(-115,150),(-50,130),(15,120),(75,105)]:
+        d.line([(800,1020+oy*.25),(1390,965+oy*.55),(1810,970+oy)],fill=(104,46,52,alpha),width=16)
+    d.line([(760,880),(1110,760),(1510,735)],fill=(255,240,178,135),width=30)
+    d.polygon([(1800,820),(1950,905),(1865,980),(1950,1055),(1775,1170),(1830,990)],fill=(239,203,106,240))
+    alpha_downsample(im,CUT/"solandra_maxima_flower_bud_1024.png")
+    return CUT/"solandra_maxima_flower_bud_1024.png"
+
+
 def main():
     paths=[make_sheet("solandra"),make_sheet("aristolochia"),make_leaf_card("solandra"),
-           make_leaf_card("aristolochia"),make_pipe_card(),make_stem_bark_sheet()]
+           make_leaf_card("aristolochia"),make_pipe_card(),make_solandra_flower_card(),
+           make_solandra_bud_card(),make_stem_bark_sheet()]
     for p in paths: print(p)
 
 
