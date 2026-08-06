@@ -159,6 +159,10 @@ transition toward doorway warmth.
 - `references/botanical/VINE_GROWTH_DYNAMICS_CORRECTION_BRIEF.md`
   (screenshot diagnosis, gravity/support algorithm, wind hierarchy, flower
   placement, implementation gates, and next-pass acceptance test)
+- `references/botanical/climber_flower_scale_reference_2400x1800.png`
+- `references/botanical/CLIMBER_FLOWER_SCALE_REFERENCE.md`
+  (source-grounded flower-body dimensions, same-scale leaf comparison, and exact
+  Unreal transforms for the committed alpha cards)
 - `references/botanical/SOURCES.md` (public botanical facts vs VERDANT interpretation)
 
 Flat-on alpha assets are 1024×1024 RGBA PNGs with true transparent alpha and
@@ -176,6 +180,7 @@ Regenerate and verify with:
 python3 scripts/generate_climber_reference_sheets.py
 python3 scripts/generate_climber_branching_reference.py
 python3 scripts/generate_vine_dynamics_reference.py
+python3 scripts/generate_climber_flower_scale_reference.py
 python3 scripts/annotate_vine_growth_review.py
 python3 scripts/verify_climber_reference_sheets.py
 ```
@@ -207,6 +212,29 @@ python3 scripts/verify_climber_bark_pbr.py
 
 QA maps, 2×2 seam previews, lit previews, the contact sheet, and the machine
 report are under `qa/climber_bark_pbr/`.
+
+### Improvised seal-plate sheet PBR
+
+`seal_plate_sheet_*` is a separate unpainted mill/light-galvanised material for
+later sheets fixed over failed gable panes. It deliberately shares no pigment or
+wear field with the painted blast door or trellis:
+
+- `textures/pbr/seal_plate_sheet_basecolor.png`
+- `textures/pbr/seal_plate_sheet_normal.png`
+- `textures/pbr/seal_plate_sheet_roughness.png`
+- `textures/pbr/seal_plate_sheet_ao.png`
+
+The set is seamless 2048×2048, uses DirectX tangent normals (green-down), and
+expects `Metallic = 1`. Edge dimple rows require pane-local 0–1 UVs. Under
+world/triplanar projection, use the bulk sheet maps but place edge fasteners from
+pane barycentrics or geometry instead.
+
+```bash
+python3 scripts/generate_seal_plate_sheet_pbr.py
+python3 scripts/verify_seal_plate_sheet_pbr.py
+```
+
+QA previews and the machine report are under `qa/seal_plate_sheet/`.
 
 ## Environment concept references
 

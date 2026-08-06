@@ -39,6 +39,14 @@
       ],
       "mode": "RGB",
       "pass": true
+    },
+    "climber_flower_scale_reference_2400x1800.png": {
+      "size": [
+        2400,
+        1800
+      ],
+      "mode": "RGB",
+      "pass": true
     }
   },
   "cards": {
