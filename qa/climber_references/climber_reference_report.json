@@ -1,0 +1,77 @@
+{
+  "sheets": {
+    "solandra_maxima_trellis_reference_2400x1800.png": {
+      "size": [
+        2400,
+        1800
+      ],
+      "mode": "RGB",
+      "pass": true
+    },
+    "aristolochia_dutchmans_pipe_trellis_reference_2400x1800.png": {
+      "size": [
+        2400,
+        1800
+      ],
+      "mode": "RGB",
+      "pass": true
+    }
+  },
+  "cards": {
+    "solandra_maxima_leaf_flat_1024.png": {
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "alpha_levels": 96,
+      "transparent_rgb_max": 0,
+      "content_bbox": [
+        345,
+        51,
+        684,
+        962
+      ],
+      "pass": true
+    },
+    "aristolochia_leaf_flat_1024.png": {
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "alpha_levels": 110,
+      "transparent_rgb_max": 0,
+      "content_bbox": [
+        246,
+        102,
+        773,
+        955
+      ],
+      "pass": true
+    },
+    "aristolochia_pipe_flower_1024.png": {
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "alpha_levels": 115,
+      "transparent_rgb_max": 0,
+      "content_bbox": [
+        51,
+        317,
+        985,
+        733
+      ],
+      "pass": true
+    }
+  },
+  "all_pass": true
+}

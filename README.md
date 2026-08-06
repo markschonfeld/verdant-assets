@@ -134,6 +134,33 @@ Regenerate both sheets with:
 python3 scripts/generate_structure_reference_sheets.py
 ```
 
+## Climber modelling references
+
+Species-specific design-intent sheets for the three-sided blast-door trellis.
+Each sheet shows trellis grip, bearing thickening, one-bay bridging, the combined
+corner knot/hanging skirt, a fixed production helix, and the story-directed
+transition toward doorway warmth.
+
+- `references/botanical/solandra_maxima_trellis_reference_2400x1800.png`
+- `references/botanical/aristolochia_dutchmans_pipe_trellis_reference_2400x1800.png`
+- `references/botanical/SOURCES.md` (public botanical facts vs VERDANT interpretation)
+
+Flat-on alpha assets are 1024×1024 RGBA PNGs with true transparent alpha and
+premultiplied-alpha downsampling:
+
+- `cutouts/solandra_maxima_leaf_flat_1024.png`
+- `cutouts/aristolochia_leaf_flat_1024.png`
+- `cutouts/aristolochia_pipe_flower_1024.png`
+
+Regenerate and verify with:
+
+```bash
+python3 scripts/generate_climber_reference_sheets.py
+python3 scripts/verify_climber_reference_sheets.py
+```
+
+QA output is under `qa/climber_references/`.
+
 ## Environment concept references
 
 The west blast-door reveal fixes the first eastward view down Eden Prime's
