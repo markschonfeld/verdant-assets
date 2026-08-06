@@ -13,14 +13,15 @@ from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "SourceMesh" / "terrace_botanical"
+CUTOUTS = ROOT / "cutouts" / "terrace_botanical"
 QA = ROOT / "qa" / "terrace_planter_botanical"
 MTL = "VD_TerraceBotanical.mtl"
 EXPECTED = {
     "VD_TerracePlanter": {"M_Planter_AgedConcrete", "M_Planter_CastRepair", "M_Planter_Soil"},
     "VD_TerracePlanter_EndCap": {"M_Planter_AgedConcrete", "M_Planter_CastRepair"},
-    "VD_Dracaena_A": {"M_Dracaena_Cane", "M_Dracaena_Leaf", "M_Dracaena_LeafScar"},
-    "VD_Dracaena_B": {"M_Dracaena_Cane", "M_Dracaena_Leaf", "M_Dracaena_LeafScar"},
-    "VD_Dracaena_C": {"M_Dracaena_Cane", "M_Dracaena_Leaf", "M_Dracaena_LeafScar"},
+    "VD_Dracaena_A": {"M_Dracaena_Cane", "M_Dracaena_Leaf"},
+    "VD_Dracaena_B": {"M_Dracaena_Cane", "M_Dracaena_Leaf"},
+    "VD_Dracaena_C": {"M_Dracaena_Cane", "M_Dracaena_Leaf"},
     "VD_ZZPlant_A": {"M_ZZ_Stem", "M_ZZ_Leaf"},
     "VD_ZZPlant_B": {"M_ZZ_Stem", "M_ZZ_Leaf"},
     "VD_ZZPlant_C": {"M_ZZ_Stem", "M_ZZ_Leaf"},
@@ -33,13 +34,18 @@ COLORS = {
     "M_Planter_CastRepair": (126, 114, 85, 255),
     "M_Planter_Soil": (38, 27, 16, 255),
     "M_Dracaena_Cane": (106, 78, 45, 255),
-    "M_Dracaena_LeafScar": (67, 48, 28, 255),
+
     "M_Dracaena_Leaf": (53, 105, 48, 255),
     "M_ZZ_Stem": (75, 126, 51, 255),
     "M_ZZ_Leaf": (36, 101, 43, 255),
     "M_MorningGlory_Stem": (66, 120, 49, 255),
     "M_MorningGlory_Leaf": (72, 145, 67, 255),
     "M_MorningGlory_Flower": (89, 111, 219, 255),
+}
+TEXTURES = {
+    "dracaena": "dracaena_marginata_leaf_rgba_1024.png",
+    "zz": "zz_leaflet_pair_rgba_1024.png",
+    "morning_glory": "morning_glory_leaf_flower_rgba_1024.png",
 }
 Vec3 = tuple[float, float, float]
 
@@ -48,6 +54,7 @@ Vec3 = tuple[float, float, float]
 class Obj:
     name: str
     vertices: list[Vec3]
+    wind_colours: list[tuple[float, float, float] | None]
     texcoords: list[tuple[float, float]]
     faces: list[tuple[str, tuple[int, ...], tuple[int, ...]]]
     objects: list[str]
@@ -56,7 +63,7 @@ class Obj:
 
 
 def parse(path: Path) -> Obj:
-    vertices, texcoords, faces, objects = [], [], [], []
+    vertices, wind_colours, texcoords, faces, objects = [], [], [], [], []
     groups = 0
     material = ""
     mtllib = None
@@ -66,6 +73,7 @@ def parse(path: Path) -> Obj:
             continue
         if parts[0] == "v":
             vertices.append(tuple(map(float, parts[1:4])))
+            wind_colours.append(tuple(map(float, parts[4:7])) if len(parts) >= 7 else None)
         elif parts[0] == "vt":
             texcoords.append(tuple(map(float, parts[1:3])))
         elif parts[0] == "o":
@@ -81,7 +89,7 @@ def parse(path: Path) -> Obj:
             faces.append((material,
                           tuple(int(c[0]) - 1 for c in corners),
                           tuple(int(c[1]) - 1 if len(c) > 1 and c[1] else -1 for c in corners)))
-    return Obj(path.stem, vertices, texcoords, faces, objects, groups, mtllib)
+    return Obj(path.stem, vertices, wind_colours, texcoords, faces, objects, groups, mtllib)
 
 
 def triangle_area(a: Vec3, b: Vec3, c: Vec3) -> float:
@@ -135,11 +143,56 @@ def validate(mesh: Obj) -> dict[str, object]:
         failures.append(f"ZZ height {size[2]:.1f} cm outside 60-95 cm")
     if mesh.name.startswith("VD_DwarfMorningGlory") and size[2] < 80:
         failures.append(f"morning-glory curtain is too short at {size[2]:.1f} cm")
+
+    wind_values = [colour[0] for colour in mesh.wind_colours if colour is not None]
+    is_foliage = mesh.name.startswith(("VD_Dracaena", "VD_ZZPlant", "VD_DwarfMorningGlory"))
+    if is_foliage:
+        if len(wind_values) != len(mesh.vertices):
+            failures.append("not every foliage vertex carries RGB wind stiffness")
+        elif any(abs(colour[0] - colour[1]) > 1e-6 or
+                 abs(colour[1] - colour[2]) > 1e-6 or not 0 <= colour[0] <= 1
+                 for colour in mesh.wind_colours if colour is not None):
+            failures.append("wind vertex colours are not grayscale values in [0,1]")
+        elif min(wind_values) > 0.001 or max(wind_values) < 0.90:
+            failures.append(f"wind range {min(wind_values):.3f}-{max(wind_values):.3f} lacks rigid roots or free tips")
+    elif wind_values:
+        failures.append("rigid planter mesh unexpectedly carries wind vertex colours")
+
+    material_faces = {material: sum(1 for m, _, _ in mesh.faces if m == material)
+                      for material in sorted(materials)}
+    dracaena_contract = {
+        "VD_Dracaena_A": (2, 52), "VD_Dracaena_B": (3, 58), "VD_Dracaena_C": (3, 64)}
+    zz_contract = {"VD_ZZPlant_A": 7, "VD_ZZPlant_B": 9, "VD_ZZPlant_C": 11}
+    morning_contract = {
+        "VD_DwarfMorningGlory_A": 6, "VD_DwarfMorningGlory_B": 8,
+        "VD_DwarfMorningGlory_C": 10}
+    if mesh.name in dracaena_contract:
+        heads, leaves = dracaena_contract[mesh.name]
+        authored = material_faces.get("M_Dracaena_Leaf", 0) // 3
+        if authored != heads * leaves:
+            failures.append(f"dracaena cards {authored} != {heads} heads x {leaves} leaves")
+    if mesh.name in zz_contract:
+        fronds = zz_contract[mesh.name]
+        leaflets = material_faces.get("M_ZZ_Leaf", 0)
+        if not fronds * 10 <= leaflets <= fronds * 16:
+            failures.append(f"ZZ leaflet count {leaflets} outside {fronds} fronds x 10-16")
+    if mesh.name in morning_contract:
+        strands = morning_contract[mesh.name]
+        leaves = material_faces.get("M_MorningGlory_Leaf", 0) // 6
+        flowers = material_faces.get("M_MorningGlory_Flower", 0) // 8
+        if not strands * 7 <= leaves <= strands * 9:
+            failures.append(f"morning-glory leaf count {leaves} outside {strands} strands x 7-9")
+        if not strands * 2 <= flowers <= strands * 4:
+            failures.append(f"morning-glory flower count {flowers} outside {strands} strands x 2-4")
     return {"pass": not failures, "failures": failures,
             "vertices": len(mesh.vertices), "texture_coordinates": len(mesh.texcoords),
             "faces": len(mesh.faces), "triangles": sum(len(face) - 2 for _, face, _ in mesh.faces),
             "object_names": mesh.objects, "group_records": mesh.groups,
             "material_slots": sorted(materials),
+            "material_face_counts": material_faces,
+            "wind_stiffness": ({"encoding": "vertex RGB grayscale", "min": min(wind_values),
+                                  "max": max(wind_values), "vertex_count": len(wind_values)}
+                                 if wind_values else None),
             "bounds_cm": {"min": mins, "max": maxs, "size": size},
             "invalid_uv_corners": invalid_uv_corners, "degenerate_regions": degenerate}
 
@@ -203,7 +256,7 @@ def compose_scene(meshes: dict[str, Obj], instances: Iterable[tuple[str, float, 
                       tuple(index + vertex_offset for index in face),
                       tuple(index + uv_offset for index in uv_indices))
                      for material, face, uv_indices in source.faces)
-    return Obj("TerracePlantingAssembly", vertices, texcoords, faces,
+    return Obj("TerracePlantingAssembly", vertices, [None] * len(vertices), texcoords, faces,
                ["TerracePlantingAssembly"], 0, MTL)
 
 
@@ -248,22 +301,71 @@ def render_preview(meshes: dict[str, Obj]) -> None:
     panels = [
         ("VD_TerracePlanter", (40, 80, 2360, 520), (650, -900, 520), "TILEABLE MID MODULE / OPEN ENDS + SOIL"),
         ("VD_TerracePlanter_EndCap", (40, 550, 570, 900), (520, -520, 310), "BOLTED END CAP"),
-        ("VD_Dracaena_A", (600, 550, 1160, 1160), (520, -700, 330), "DRACAENA A / 1.51 m"),
-        ("VD_Dracaena_B", (1190, 550, 1750, 1160), (520, -700, 360), "DRACAENA B / 1.65 m"),
-        ("VD_Dracaena_C", (1780, 550, 2360, 1160), (520, -700, 400), "DRACAENA C / 1.97 m"),
-        ("VD_ZZPlant_A", (40, 1190, 570, 1480), (310, -420, 170), "ZZ A / 0.66 m"),
-        ("VD_ZZPlant_B", (600, 1190, 1130, 1480), (310, -420, 190), "ZZ B / 0.82 m"),
-        ("VD_ZZPlant_C", (1160, 1190, 1690, 1480), (310, -420, 210), "ZZ C / 0.92 m"),
+        ("VD_Dracaena_A", (600, 550, 1160, 1160), (520, -700, 330), "DRACAENA A / 1.67 m"),
+        ("VD_Dracaena_B", (1190, 550, 1750, 1160), (520, -700, 360), "DRACAENA B / 1.93 m"),
+        ("VD_Dracaena_C", (1780, 550, 2360, 1160), (520, -700, 400), "DRACAENA C / 2.08 m"),
+        ("VD_ZZPlant_A", (40, 1190, 570, 1480), (310, -420, 170), "ZZ A / 0.61 m"),
+        ("VD_ZZPlant_B", (600, 1190, 1130, 1480), (310, -420, 190), "ZZ B / 0.73 m"),
+        ("VD_ZZPlant_C", (1160, 1190, 1690, 1480), (310, -420, 210), "ZZ C / 0.82 m"),
         ("VD_DwarfMorningGlory_B", (1720, 1190, 2360, 1745), (380, -500, 220), "DWARF MORNING GLORY / RIM-TO-DECK DRAPE"),
     ]
     for name, box, camera, label in panels:
         render_panel(image, box, meshes[name], camera, label)
     notes = ["Separate instancing meshes: 3 Dracaena, 3 ZZ, 3 morning-glory variants.",
-             "Dracaena canes are closed 10-sided geometry; foliage is curved V-folded blade geometry.",
-             "Morning-glory origin is the curtain bottom: place Z at deck, move X to vessel face; top meets rim."]
+             "Leaves are low-poly alpha cards/ribbons; canes and stems remain real geometry.",
+             "Vertex RGB is wind stiffness: black at root/attachment, white at free foliage tips.",
+             "Morning-glory origin is curtain bottom; flowers face visitor-side X-." ]
     for i, note in enumerate(notes):
         draw.text((45, 1515 + i * 35), note, fill=(189, 200, 184), font=font)
     image.save(QA / "terrace_planter_botanical_preview.png")
+
+
+def verify_textures() -> dict[str, dict[str, object]]:
+    results: dict[str, dict[str, object]] = {}
+    mtl_text = (SOURCE / MTL).read_text(encoding="utf-8")
+    checker = Image.new("RGB", (2400, 900), (36, 40, 36))
+    draw = ImageDraw.Draw(checker)
+    for key, (species, filename) in enumerate(TEXTURES.items()):
+        path = CUTOUTS / filename
+        failures: list[str] = []
+        if not path.exists():
+            results[species] = {"pass": False, "failures": ["missing texture"]}
+            continue
+        image = Image.open(path)
+        if image.size != (1024, 1024):
+            failures.append(f"size is {image.size}, expected 1024x1024")
+        if image.mode != "RGBA":
+            failures.append(f"mode is {image.mode}, expected RGBA")
+        rgba = image.convert("RGBA")
+        alpha = rgba.getchannel("A")
+        extrema = alpha.getextrema()
+        alpha_values: list[int] = list(alpha.get_flattened_data())  # type: ignore[arg-type]
+        opaque_fraction = sum(1 for value in alpha_values if value >= 128) / (1024 * 1024)
+        if extrema != (0, 255):
+            failures.append(f"alpha extrema are {extrema}, expected (0,255)")
+        if not 0.03 <= opaque_fraction <= 0.65:
+            failures.append(f"opaque coverage {opaque_fraction:.3f} outside 0.03-0.65")
+        corners = [alpha.getpixel(point) for point in ((0, 0), (1023, 0), (0, 1023), (1023, 1023))]
+        if any(corners):
+            failures.append(f"transparent padding failed at corners: {corners}")
+        if mtl_text.count(filename) < 2:
+            failures.append("MTL does not reference the RGBA sheet for both base colour and opacity")
+        results[species] = {"pass": not failures, "failures": failures,
+                            "path": str(path.relative_to(ROOT)), "size": image.size,
+                            "mode": image.mode, "alpha_extrema": extrema,
+                            "opaque_fraction": round(opaque_fraction, 4)}
+
+        x0 = 35 + key * 790
+        tile = 56
+        for yy in range(35, 803, tile):
+            for xx in range(x0, x0 + 720, tile):
+                shade = 86 if ((xx - x0) // tile + (yy - 35) // tile) % 2 else 134
+                draw.rectangle((xx, yy, min(xx + tile, x0 + 720), min(yy + tile, 803)), fill=(shade,) * 3)
+        preview = rgba.resize((720, 720), Image.Resampling.LANCZOS)
+        checker.paste(preview, (x0, 55), preview)
+        draw.text((x0, 815), f"{species.upper()} / {filename}", fill=(232, 226, 202))
+    checker.save(QA / "terrace_botanical_alpha_sheets_preview.png")
+    return results
 
 
 def main() -> None:
@@ -272,8 +374,11 @@ def main() -> None:
     missing, extra = sorted(set(EXPECTED) - actual), sorted(actual - set(EXPECTED))
     meshes = {name: parse(SOURCE / f"{name}.obj") for name in EXPECTED if name in actual}
     results = {name: validate(mesh) for name, mesh in meshes.items()}
-    report = {"pass": not missing and not extra and all(r["pass"] for r in results.values()),
+    texture_results = verify_textures()
+    report = {"pass": (not missing and not extra and all(r["pass"] for r in results.values())
+                        and all(r["pass"] for r in texture_results.values())),
               "missing": missing, "extra": extra, "mesh_count": len(meshes), "meshes": results,
+              "textures": texture_results,
               "tiling": {"axis": "Y", "module_length_cm": 245.0,
                          "end_planes_cm": [-122.5, 122.5],
                          "continuous_components": ["front wall", "back wall", "rim rails", "soil surface"],

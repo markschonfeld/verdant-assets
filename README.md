@@ -278,16 +278,20 @@ cellulose-rich animal dermis—not a fertile cross-kingdom zygote.
 
 ## Entrance terrace planter and botanical kit
 
-The west entrance terrace barrier uses a 245 cm mid-module aligned to the
+The inboard entrance-terrace barrier uses a 245 cm mid-module aligned to the
 existing balustrade bay cadence, a reversible bolted end cap, and three instancing
-variants each of Dracaena, ZZ plant, and dwarf morning glory. Plant foliage is
-mesh geometry; Dracaena canes are closed tapered geometry.
+variants each of Dracaena, ZZ plant, and dwarf morning glory. The vessels remain
+rigid geometry. Canes and stems are real geometry; dense leaves and flowers use
+low-poly alpha-cut ribbons/cards with RGB vertex-colour wind stiffness.
 
 - `SourceMesh/terrace_botanical/VD_TerracePlanter.obj`
 - `SourceMesh/terrace_botanical/VD_TerracePlanter_EndCap.obj`
 - `SourceMesh/terrace_botanical/VD_Dracaena_{A,B,C}.obj`
 - `SourceMesh/terrace_botanical/VD_ZZPlant_{A,B,C}.obj`
 - `SourceMesh/terrace_botanical/VD_DwarfMorningGlory_{A,B,C}.obj`
+- `cutouts/terrace_botanical/dracaena_marginata_leaf_rgba_1024.png`
+- `cutouts/terrace_botanical/zz_leaflet_pair_rgba_1024.png`
+- `cutouts/terrace_botanical/morning_glory_leaf_flower_rgba_1024.png`
 - `references/botanical/TERRACE_PLANTER_BOTANICAL_HANDOFF.md`
 
 Regenerate and verify all 11 one-object, UV-indexed OBJs with:
@@ -297,5 +301,5 @@ python3 scripts/generate_terrace_planter_botanical_kit.py
 python3 scripts/verify_terrace_planter_botanical_kit.py
 ```
 
-Machine verification and both isolated/assembled visual previews are under
+Machine verification, the alpha-sheet contact sheet, and isolated/assembled visual previews are under
 `qa/terrace_planter_botanical/`.
