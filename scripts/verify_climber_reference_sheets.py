@@ -16,6 +16,7 @@ SHEETS=[
  REF/"solandra_maxima_trellis_reference_2400x1800.png",
  REF/"aristolochia_dutchmans_pipe_trellis_reference_2400x1800.png",
  REF/"climber_stem_bark_surface_reference_2400x1800.png",
+ REF/"climber_branching_architecture_reference_2400x1800.png",
 ]
 CARDS=[
  CUT/"solandra_maxima_leaf_flat_1024.png",
@@ -52,15 +53,16 @@ def main():
       "transparent_rgb_max":transparent_rgb_max,"content_bbox":[int(x0),int(y0),int(x1),int(y1)],"pass":bool(ok)}
   report["all_pass"] &= bool(ok)
 
- # Trellis pair, companion bark sheet, then checkerboard card previews.
+ # Four modelling sheets in a 2x2 grid, then checkerboard card previews.
  canvas=Image.new("RGB",(1800,2300),(231,226,210)); d=ImageDraw.Draw(canvas)
  f=ImageFont.truetype(FONT,24); fb=ImageFont.truetype(FONT,32)
  d.text((55,25),"VERDANT / CLIMBER REFERENCES / QA CONTACT SHEET",font=fb,fill=(31,38,39))
  for i,p in enumerate(SHEETS[:2]):
   im=Image.open(p).convert("RGB"); im.thumbnail((830,620),Image.Resampling.LANCZOS)
   x=55+i*875; canvas.paste(im,(x,85)); d.text((x,85+im.height+12),p.name,font=f,fill=(84,89,82))
- im=Image.open(SHEETS[2]).convert("RGB"); im.thumbnail((830,620),Image.Resampling.LANCZOS)
- x=485; canvas.paste(im,(x,780)); d.text((x,780+im.height+12),SHEETS[2].name,font=f,fill=(84,89,82))
+ for i,p in enumerate(SHEETS[2:]):
+  im=Image.open(p).convert("RGB"); im.thumbnail((830,620),Image.Resampling.LANCZOS)
+  x=55+i*875; canvas.paste(im,(x,780)); d.text((x,780+im.height+12),p.name,font=f,fill=(84,89,82))
  for i,p in enumerate(CARDS):
   rgba=Image.open(p).convert("RGBA"); rgba.thumbnail((500,500),Image.Resampling.LANCZOS)
   bg=checker((500,500)); bg.paste(rgba,((500-rgba.width)//2,(500-rgba.height)//2),rgba)

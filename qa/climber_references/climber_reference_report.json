@@ -23,6 +23,14 @@
       ],
       "mode": "RGB",
       "pass": true
+    },
+    "climber_branching_architecture_reference_2400x1800.png": {
+      "size": [
+        2400,
+        1800
+      ],
+      "mode": "RGB",
+      "pass": true
     }
   },
   "cards": {

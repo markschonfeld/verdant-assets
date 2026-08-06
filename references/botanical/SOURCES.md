@@ -16,6 +16,8 @@ source photograph is redistributed or embedded in the assets.
   <https://en.wikipedia.org/wiki/Solandra_maxima>
 - Visual morphology consulted, but not copied into the deliverable:
   <https://commons.wikimedia.org/wiki/Category:Solandra_maxima>
+- Kew Plants of the World Online taxon record:
+  <https://powo.science.kew.org/taxon/urn:lsid:ipni.org:names:818078-1>
 
 ### Dutchman's pipe — *Aristolochia macrophylla*
 
@@ -31,6 +33,17 @@ source photograph is redistributed or embedded in the assets.
   <https://plants.ces.ncsu.edu/plants/aristolochia-macrophylla/>
 - Reference summary and morphology image index:
   <https://en.wikipedia.org/wiki/Aristolochia_macrophylla>
+- Missouri Botanical Garden Plant Finder:
+  <https://www.missouribotanicalgarden.org/PlantFinder/PlantFinderDetails.aspx?taxonid=276768>
+- Visual whole-habit morphology consulted, but not copied into the deliverable:
+  <https://commons.wikimedia.org/wiki/Category:Aristolochia_macrophylla>
+
+### General branch anatomy
+
+- A leaf attaches at a node; an axillary bud in the angle between leaf and stem
+  can produce a lateral branch or flower. The leaf does not transform into a
+  branch. OpenStax, *Biology 2e*, “30.2 Stems”:
+  <https://openstax.org/books/biology-2e/pages/30-2-stems>
 
 ## VERDANT interpretation — not a botanical claim
 
@@ -56,3 +69,9 @@ source photograph is redistributed or embedded in the assets.
 - Corner treatment deliberately combines a dense bearing knot with a hanging
   skirt. This masks the gable/barrel seam without pretending the underlying node
   graphs coincide.
+- Study 06's 3–5 structural leaders, retained-node ratios, and third-order shoot
+  density are production heuristics, not measured species constants. The
+  hierarchy is source-grounded; the counts are art-direction controls.
+- A visibly profuse *A. macrophylla* pipe-flower display is not the normal
+  species read because its flowers are commonly hidden by the dense leaf canopy.
+  If used, it is an explicit VERDANT mutation/story override.
