@@ -1,5 +1,5 @@
 {
- "actor_count": 1717,
+ "actor_count": 1720,
  "families": {
   "AQUIFER": {
    "actors": [
@@ -9764,22 +9764,22 @@
    "actors": [
     {
      "bounds_max": [
-      60828.0,
-      114.9,
-      8970.0
+      59247.8,
+      828.0,
+      7870.0
      ],
      "bounds_min": [
-      59172.0,
-      -80.6,
-      8181.7
+      59052.2,
+      -828.0,
+      7081.7
      ],
      "class": "StaticMeshActor",
      "collision": "NoCollision",
      "label": "FLAG_Cloth",
      "loc": [
-      60000.0,
+      59132.8,
       0.0,
-      8970.0
+      7870.0
      ],
      "materials": [
       "M_Flag"
@@ -9787,7 +9787,7 @@
      "mesh": "/Game/Meshes/Kit/VD_Flag",
      "rot_pyr": [
       0.0,
-      90.0,
+      0.0,
       -0.0
      ],
      "scale": [
@@ -9799,14 +9799,14 @@
     }
    ],
    "bounds_max": [
-    60828.0,
-    114.9,
-    8970.0
+    59247.8,
+    828.0,
+    7870.0
    ],
    "bounds_min": [
-    59172.0,
-    -80.6,
-    8181.7
+    59052.2,
+    -828.0,
+    7081.7
    ],
    "count": 1
   },
@@ -14863,6 +14863,59 @@
    ],
    "count": 5
   },
+  "PLANTERS": {
+   "actors": [
+    {
+     "bounds_max": [
+      824.6,
+      7361.0,
+      3809.0
+     ],
+     "bounds_min": [
+      -128.0,
+      -7381.6,
+      -128.0
+     ],
+     "class": "BP_TerracePlanters_C",
+     "collision": "QueryAndPhysics",
+     "instances": 420,
+     "label": "PLANTERS_Terrace",
+     "loc": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "materials": [
+      "MI_PlanterConcrete",
+      "MI_PlanterRepair",
+      "MI_PlanterSoil"
+     ],
+     "mesh": "/Game/Meshes/Kit/VD_TerracePlanter",
+     "rot_pyr": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "spatially_loaded": true
+    }
+   ],
+   "bounds_max": [
+    824.6,
+    7361.0,
+    3809.0
+   ],
+   "bounds_min": [
+    -128.0,
+    -7381.6,
+    -128.0
+   ],
+   "count": 1
+  },
   "PLINTH": {
    "all_labels": [
     "PLINTH_E_0",
@@ -18085,12 +18138,12 @@
      "bounds_max": [
       62518.6,
       4864.9,
-      29000.0
+      27900.0
      ],
      "bounds_min": [
       54197.4,
       -2786.1,
-      18000.0
+      16900.0
      ],
      "class": "StaticMeshActor",
      "collision": "NoCollision",
@@ -18098,7 +18151,7 @@
      "loc": [
       60000.0,
       0.0,
-      18000.0
+      16900.0
      ],
      "materials": [
       "M_Smoke"
@@ -18120,12 +18173,12 @@
    "bounds_max": [
     62518.6,
     4864.9,
-    29000.0
+    27900.0
    ],
    "bounds_min": [
     54197.4,
     -2786.1,
-    18000.0
+    16900.0
    ],
    "count": 1
   },
@@ -19110,12 +19163,12 @@
      "bounds_max": [
       61100.0,
       1100.0,
-      18000.0
+      16900.0
      ],
      "bounds_min": [
       58900.0,
       -1100.0,
-      0.0
+      -1100.0
      ],
      "class": "StaticMeshActor",
      "collision": "QueryAndPhysics",
@@ -19123,7 +19176,7 @@
      "loc": [
       60000.0,
       0.0,
-      0.0
+      -1100.0
      ],
      "materials": [
       "MI_SpireStackConcrete",
@@ -19149,12 +19202,12 @@
      "bounds_max": [
       61200.0,
       1200.0,
-      1200.0
+      100.0
      ],
      "bounds_min": [
       58800.0,
       -1200.0,
-      0.0
+      -1100.0
      ],
      "class": "StaticMeshActor",
      "collision": "QueryAndPhysics",
@@ -19162,7 +19215,7 @@
      "loc": [
       60000.0,
       0.0,
-      0.0
+      -1100.0
      ],
      "materials": [
       "MI_SpireConcrete",
@@ -19188,12 +19241,12 @@
      "bounds_max": [
       60660.0,
       660.0,
-      17770.0
+      16670.0
      ],
      "bounds_min": [
       59340.0,
       -660.0,
-      5980.0
+      4880.0
      ],
      "class": "StaticMeshActor",
      "collision": "QueryAndPhysics",
@@ -19201,7 +19254,7 @@
      "loc": [
       60000.0,
       0.0,
-      0.0
+      -1100.0
      ],
      "materials": [
       "MI_SpireWarningLens"
@@ -19223,12 +19276,12 @@
    "bounds_max": [
     61200.0,
     1200.0,
-    18000.0
+    16900.0
    ],
    "bounds_min": [
     58800.0,
     -1200.0,
-    0.0
+    -1100.0
    ],
    "count": 3
   },
@@ -24042,6 +24095,95 @@
    ],
    "count": 9
   },
+  "VEST": {
+   "actors": [
+    {
+     "bounds_max": [
+      498.0,
+      972.0,
+      4409.0
+     ],
+     "bounds_min": [
+      128.0,
+      -972.0,
+      3500.0
+     ],
+     "class": "StaticMeshActor",
+     "collision": "QueryAndPhysics",
+     "label": "VEST_Frame",
+     "loc": [
+      128.0,
+      0.0,
+      3500.0
+     ],
+     "materials": [
+      "MI_VestPainted",
+      "MI_VestKick",
+      "MI_VestSeal",
+      "MI_VestBareSteel"
+     ],
+     "mesh": "/Game/Meshes/Kit/VD_VestibuleFrame",
+     "rot_pyr": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "spatially_loaded": true
+    },
+    {
+     "bounds_max": [
+      489.0,
+      941.0,
+      4399.0
+     ],
+     "bounds_min": [
+      140.0,
+      -941.0,
+      3578.0
+     ],
+     "class": "StaticMeshActor",
+     "collision": "NoCollision",
+     "label": "VEST_Glass",
+     "loc": [
+      128.0,
+      0.0,
+      3500.0
+     ],
+     "materials": [
+      "MX_GlazeAcrylic",
+      "MX_GlazeRepair"
+     ],
+     "mesh": "/Game/Meshes/Kit/VD_VestibuleGlass",
+     "rot_pyr": [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "scale": [
+      1.0,
+      1.0,
+      1.0
+     ],
+     "spatially_loaded": true
+    }
+   ],
+   "bounds_max": [
+    498.0,
+    972.0,
+    4409.0
+   ],
+   "bounds_min": [
+    128.0,
+    -972.0,
+    3500.0
+   ],
+   "count": 2
+  },
   "VINE": {
    "actors": [
     {
@@ -26101,7 +26243,7 @@
    "count": 1
   }
  },
- "generated_utc": "2026-08-06T15:23:03.749407Z",
+ "generated_utc": "2026-08-06T19:03:26.689378Z",
  "level": "Rootstead",
  "note": "Read-only dump for offline measurement. Do not treat as a build target: it is a snapshot, not a spec.",
  "units": "1 uu = 1 cm; +X east, +Y north, +Z up"
