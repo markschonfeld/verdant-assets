@@ -1,0 +1,136 @@
+{
+  "spec": {
+    "dimensions": [
+      2048,
+      2048
+    ],
+    "format": "PNG",
+    "metallic_constant": 1.0,
+    "normal_convention": "DirectX tangent-space; green-down",
+    "basecolor_policy": "unpainted neutral mill/zinc pigment only; no AO or lighting",
+    "uv_caveat": "edge dimples require pane-local 0..1 UVs; use geometry/barycentric edge treatment under world projection"
+  },
+  "maps": {
+    "basecolor": {
+      "path": "textures/pbr/seal_plate_sheet_basecolor.png",
+      "mode": "RGB",
+      "size": [
+        2048,
+        2048
+      ],
+      "exact_left_right": true,
+      "exact_top_bottom": true,
+      "statistics": {
+        "min": 147,
+        "max": 183,
+        "mean": 164.629,
+        "stddev": 3.796,
+        "p05": 158.43,
+        "p95": 171.073,
+        "mean_rgb": [
+          163.299,
+          165.261,
+          162.288
+        ],
+        "mean_chroma": 3.068,
+        "p95_chroma": 4.0
+      },
+      "pass": true
+    },
+    "normal": {
+      "path": "textures/pbr/seal_plate_sheet_normal.png",
+      "mode": "RGB",
+      "size": [
+        2048,
+        2048
+      ],
+      "exact_left_right": true,
+      "exact_top_bottom": true,
+      "statistics": {
+        "min": 82,
+        "max": 184,
+        "mean": 136.163,
+        "stddev": 3.92,
+        "p05": 131.666,
+        "p95": 140.673,
+        "channels_rgb": [
+          {
+            "min": 66,
+            "max": 174,
+            "mean": 127.0,
+            "stddev": 3.829,
+            "p05": 123.0,
+            "p95": 131.0
+          },
+          {
+            "min": 61,
+            "max": 192,
+            "mean": 127.0,
+            "stddev": 5.361,
+            "p05": 121.0,
+            "p95": 133.0
+          },
+          {
+            "min": 232,
+            "max": 255,
+            "mean": 253.911,
+            "stddev": 0.669,
+            "p05": 254.0,
+            "p95": 254.0
+          }
+        ]
+      },
+      "pass": true
+    },
+    "roughness": {
+      "path": "textures/pbr/seal_plate_sheet_roughness.png",
+      "mode": "L",
+      "size": [
+        2048,
+        2048
+      ],
+      "exact_left_right": true,
+      "exact_top_bottom": true,
+      "statistics": {
+        "min": 74,
+        "max": 228,
+        "mean": 137.672,
+        "stddev": 20.971,
+        "p05": 103.0,
+        "p95": 172.0,
+        "p95_minus_p05": 69.0
+      },
+      "pass": true
+    },
+    "ao": {
+      "path": "textures/pbr/seal_plate_sheet_ao.png",
+      "mode": "L",
+      "size": [
+        2048,
+        2048
+      ],
+      "exact_left_right": true,
+      "exact_top_bottom": true,
+      "statistics": {
+        "min": 132,
+        "max": 255,
+        "mean": 243.545,
+        "stddev": 16.33,
+        "p05": 213.0,
+        "p95": 255.0,
+        "p95_minus_p05": 42.0
+      },
+      "pass": true
+    }
+  },
+  "base_ao_abs_correlation": 0.1993,
+  "normal_relief_edge_mean": 5.833,
+  "normal_relief_center_mean": 4.12,
+  "edge_fastener_concentration_pass": true,
+  "directx_convention_unit_check": {
+    "positive_image_y_slope_green": 141,
+    "negative_image_y_slope_green": 113,
+    "pass": true
+  },
+  "pass": true
+}

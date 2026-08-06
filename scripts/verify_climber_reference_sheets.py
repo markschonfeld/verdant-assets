@@ -18,6 +18,7 @@ SHEETS=[
  REF/"climber_stem_bark_surface_reference_2400x1800.png",
  REF/"climber_branching_architecture_reference_2400x1800.png",
  REF/"vine_weight_wind_bloom_reference_2400x1800.png",
+ REF/"climber_flower_scale_reference_2400x1800.png",
 ]
 CARDS=[
  CUT/"solandra_maxima_leaf_flat_1024.png",
