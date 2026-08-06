@@ -31,6 +31,14 @@
       ],
       "mode": "RGB",
       "pass": true
+    },
+    "vine_weight_wind_bloom_reference_2400x1800.png": {
+      "size": [
+        2400,
+        1800
+      ],
+      "mode": "RGB",
+      "pass": true
     }
   },
   "cards": {
@@ -85,6 +93,42 @@
         317,
         985,
         733
+      ],
+      "pass": true
+    },
+    "solandra_maxima_flower_open_1024.png": {
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "alpha_levels": 229,
+      "transparent_rgb_max": 0,
+      "content_bbox": [
+        81,
+        190,
+        987,
+        760
+      ],
+      "pass": true
+    },
+    "solandra_maxima_flower_bud_1024.png": {
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "alpha_levels": 205,
+      "transparent_rgb_max": 0,
+      "content_bbox": [
+        90,
+        333,
+        977,
+        652
       ],
       "pass": true
     }
