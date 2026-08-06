@@ -263,3 +263,15 @@ Regenerate both images with:
 ```bash
 python3 scripts/generate_atomic_research_references.py
 ```
+
+## Lore and biological references
+
+The plant–animal composite brief separates demonstrated biology from VERDANT's
+fictional leap, then proposes a period-compatible route from atomic-age mutation
+breeding and cell culture to a self-renewing composite organism:
+
+- `references/lore/PLANT_ANIMAL_HYBRID_SCIENCE_BRIEF.md`
+
+The governing premise is an animal developmental chassis containing
+photosynthetic symbionts and chloroplast-bearing compartments, plus
+cellulose-rich animal dermis—not a fertile cross-kingdom zygote.
