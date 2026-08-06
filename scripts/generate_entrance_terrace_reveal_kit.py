@@ -709,6 +709,219 @@ def build_coleus(name: str, seed: int) -> Mesh:
 
 
 # --------------------------------------------------------------------------- #
+#  Vertical slice 3: public visitor furniture (benches, brochure stand, fountain)
+# --------------------------------------------------------------------------- #
+
+def beam_ring(mesh: Mesh, centre: Vec3, right_axis: Vec3, up_axis: Vec3,
+             half_w: float, half_h: float) -> list[int]:
+    pts = (add(centre, add(mul(right_axis, -half_w), mul(up_axis, -half_h))),
+          add(centre, add(mul(right_axis, half_w), mul(up_axis, -half_h))),
+          add(centre, add(mul(right_axis, half_w), mul(up_axis, half_h))),
+          add(centre, add(mul(right_axis, -half_w), mul(up_axis, half_h))))
+    return [mesh.vertex(p) for p in pts]
+
+
+def build_beam(mesh: Mesh, path: list[Vec3], right_axis: Vec3, up_axis: Vec3,
+              half_w: float, half_h: float, material: str) -> None:
+    """A straight or bent rectangular timber beam lofted along `path`.
+
+    Rigid furniture geometry only -- vertices never carry stiffness colour, so
+    a beam with a bowed path (see the sagging bench seat) reads as damage
+    through shape alone, never through vertex colour.
+    """
+    rings = [beam_ring(mesh, p, right_axis, up_axis, half_w, half_h) for p in path]
+    for i in range(len(rings) - 1):
+        mesh.bridge(rings[i], rings[i + 1], material)
+    mesh.face(material, tuple(reversed(rings[0])))
+    mesh.face(material, tuple(rings[-1]))
+
+
+def tube_polyline(mesh: Mesh, points: list[Vec3], radius: float, sides: int,
+                  material: str) -> None:
+    """A chain of open (uncapped) round tube segments, matching the existing
+    frond-rachis/petiole/stem convention elsewhere in this file."""
+    for i in range(len(points) - 1):
+        mesh.cylinder(points[i], points[i + 1], radius, radius, sides, material)
+
+
+def build_bench(name: str, damaged: bool, seed: int) -> Mesh:
+    """1960s municipal park bench: tubular welded/cast-steel end frames carrying
+    real slatted timber seat and back boards, paired end to end in the same
+    footprint as its sibling variant.
+
+    `damaged` sags the seat boards, drops one seat stretcher, and leans the
+    back frame further -- damage is entirely geometric (bowed beam paths,
+    offset frame points), never vertex colour, since this is rigid furniture.
+    """
+    rng = random.Random(seed)
+    mesh = Mesh(name)
+    frame_x = 95.0
+    slat_span = 2.0 * frame_x - 4.0
+    seat_h = 44.0
+
+    frame_mat = "M_Bench_CastFrame_Damaged" if damaged else "M_Bench_CastFrame_Intact"
+    seat_mat = "M_Bench_SeatSlat_Damaged" if damaged else "M_Bench_SeatSlat_Intact"
+    back_mat = "M_Bench_BackSlat_Damaged" if damaged else "M_Bench_BackSlat_Intact"
+
+    back_lean = math.radians(15.0 if damaged else 11.0)
+    back_up = (0.0, -math.sin(back_lean), math.cos(back_lean))
+    back_depth = (0.0, math.cos(back_lean), math.sin(back_lean))
+    back_top_z = 74.0 if damaged else 78.0
+
+    for side in (-1.0, 1.0):
+        x = side * frame_x
+        arc = [(x, 21.0, 0.0), (x, 21.0, seat_h), (x, 24.5, 64.0),
+              (x, 9.0, 72.0), (x, -4.0, 58.0)]
+        tube_polyline(mesh, arc, 2.2, 8, frame_mat)
+        upright_top_y = -21.0 - (4.0 if damaged else 0.0)
+        upright = [(x, -21.0, 0.0), (x, -21.0, 40.0), (x, upright_top_y, back_top_z)]
+        tube_polyline(mesh, upright, 2.0, 8, frame_mat)
+        strut_drop = 6.0 if damaged else 0.0
+        tube_polyline(mesh, [(x, 21.0, seat_h), (x, -16.0, 50.0 - strut_drop)], 1.6, 8, frame_mat)
+        tube_polyline(mesh, [(x, 21.0, 0.0), (x, -21.0, 0.0)], 1.6, 8, frame_mat)
+
+    seg = 6
+    seat_slats = 6
+    seat_width, seat_thick, seat_gap = 5.6, 3.4, 1.0
+    seat_start_y = 19.0
+    sag_amp = 5.0 if damaged else 0.0
+    for i in range(seat_slats):
+        y = seat_start_y - i * (seat_width + seat_gap)
+        jitter = rng.uniform(-0.6, 0.6) if damaged else 0.0
+        path = []
+        for s in range(seg):
+            t = s / (seg - 1)
+            x = -slat_span / 2.0 + t * slat_span
+            bow = (1.0 - (2.0 * t - 1.0) ** 2)
+            dip = (sag_amp + jitter) * bow
+            path.append((x, y, seat_h + seat_thick / 2.0 - dip))
+        build_beam(mesh, path, (0.0, 1.0, 0.0), (0.0, 0.0, 1.0),
+                  seat_width / 2.0, seat_thick / 2.0, seat_mat)
+
+    back_slats = 4
+    back_width, back_thick, back_gap = 6.0, 3.0, 1.4
+    back_start = 52.0
+    for i in range(back_slats):
+        rise = back_start + i * (back_width + back_gap) + back_width / 2.0
+        centre = add((0.0, -21.0, 0.0), mul(back_up, rise))
+        path = [(-slat_span / 2.0 + (s / (seg - 1)) * slat_span, centre[1], centre[2])
+               for s in range(seg)]
+        build_beam(mesh, path, back_depth, back_up,
+                  back_thick / 2.0, back_width / 2.0, back_mat)
+    return mesh
+
+
+def build_brochure_stand(name: str, seed: int) -> Mesh:
+    """Freestanding period institutional literature rack: one tubular post on a
+    splayed tripod foot, five shallow angled sheet-metal pockets, and a warped
+    paper leaflet still standing in each pocket."""
+    rng = random.Random(seed)
+    mesh = Mesh(name)
+    post_top = 148.0
+    tube_polyline(mesh, [(0.0, 0.0, 0.0), (0.0, 0.0, post_top)], 2.4, 10, "M_BrochureStand_Frame")
+    for k in range(3):
+        angle = 2 * math.pi * k / 3 + math.radians(60)
+        tip = (math.cos(angle) * 21.0, math.sin(angle) * 21.0, 0.0)
+        tube_polyline(mesh, [(0.0, 0.0, 9.0), tip], 1.8, 8, "M_BrochureStand_Frame")
+
+    tilt = math.radians(24.0)
+    floor_dir = (0.0, math.cos(tilt), -math.sin(tilt))
+    lip_dir = (0.0, math.sin(tilt), math.cos(tilt))
+    floor_len, lip_len, width = 18.0, 4.5, 32.0
+    pockets = 5
+    for p in range(pockets):
+        origin = (0.0, 0.0, 42.0 + p * 21.0)
+        p1 = add(origin, mul(floor_dir, floor_len))
+        p2 = add(p1, mul(lip_dir, lip_len))
+
+        def side_points(centre: Vec3) -> tuple[Vec3, Vec3]:
+            return (add(centre, (-width / 2, 0.0, 0.0)), add(centre, (width / 2, 0.0, 0.0)))
+
+        a0, b0 = side_points(origin)
+        a1, b1 = side_points(p1)
+        a2, b2 = side_points(p2)
+        mesh.quad((a0, a1, b1, b0), "M_BrochureStand_Pocket")
+        mesh.quad((a1, a2, b2, b1), "M_BrochureStand_Pocket")
+
+        card_lean = math.radians(46.0)
+        card_y = (0.0, math.cos(card_lean), -math.sin(card_lean))
+        card_z = (0.0, math.sin(card_lean), math.cos(card_lean))
+        card_origin = add(p1, (0.0, 1.0, 0.5))
+        add_leaf_card(mesh, card_origin, (1.0, 0.0, 0.0), card_y, card_z,
+                      13.0 + rng.uniform(-1.0, 1.0), 20.0 + rng.uniform(-1.5, 1.5),
+                      "M_BrochureStand_Paper", (0.0, 0.0, 1.0, 1.0), 0.0, 0.0,
+                      0.16, 0.30, 3, 2)
+    return mesh
+
+
+def build_fountain(name: str, seed: int) -> Mesh:
+    """Dry, non-functioning octagonal public-garden fountain. The floor sits
+    well below the rim so the empty basin reads immediately, a stained
+    pedestal stub replaces any spray nozzle, and drifted leaf litter has
+    collected across the dry floor. No water material appears anywhere."""
+    rng = random.Random(seed)
+    mesh = Mesh(name)
+    sides = 8
+    outer_r = 190.0
+    height = 112.0
+    wall = 15.0
+    floor_z = 46.0
+
+    levels = 5
+    outer_rings = [mesh.ring((0, 0, (i / levels) * height), outer_r, sides)
+                  for i in range(levels + 1)]
+    for i in range(levels):
+        mesh.bridge(outer_rings[i], outer_rings[i + 1], "M_Fountain_BasinWall")
+    base_centre = mesh.vertex((0, 0, 0))
+    mesh.cap(outer_rings[0], base_centre, "M_Fountain_BasinWall", reverse=True)
+
+    inner_top_r = outer_r - wall
+    inner_top = mesh.ring((0, 0, height), inner_top_r, sides)
+    mesh.bridge(outer_rings[levels], inner_top, "M_Fountain_BasinWall")  # rim lip
+
+    inner_floor_r = inner_top_r * 0.94
+    inner_floor_ring = mesh.ring((0, 0, floor_z), inner_floor_r, sides)
+    mesh.bridge(inner_top, inner_floor_ring, "M_Fountain_BasinWall", flip=True)  # dry drop to the floor
+
+    ped_base_r = inner_floor_r * 0.32
+    ped_base_ring = mesh.ring((0, 0, floor_z), ped_base_r, sides)
+    mesh.bridge(inner_floor_ring, ped_base_ring, "M_Fountain_BasinFloor", flip=True)
+
+    ped_mid = mesh.ring((0, 0, floor_z + 28.0), ped_base_r * 0.75, sides)
+    ped_top_ring = mesh.ring((0, 0, floor_z + 40.0), ped_base_r * 0.5, sides)
+    mesh.bridge(ped_base_ring, ped_mid, "M_Fountain_Pedestal")
+    mesh.bridge(ped_mid, ped_top_ring, "M_Fountain_Pedestal")
+    ped_cap = mesh.vertex((0, 0, floor_z + 40.0))
+    mesh.cap(ped_top_ring, ped_cap, "M_Fountain_Pedestal")
+
+    litter_count = 10
+    reach_inner = ped_base_r * 1.15
+    reach_outer = inner_floor_r * 0.92
+    for index in range(litter_count):
+        angle = rng.uniform(0, 2 * math.pi)
+        dist = reach_inner + (reach_outer - reach_inner) * rng.uniform(0.0, 1.0)
+        cx, cy = math.cos(angle) * dist, math.sin(angle) * dist
+        size = rng.uniform(14.0, 26.0)
+        yaw = rng.uniform(0, 2 * math.pi)
+        side_axis = (math.cos(yaw), math.sin(yaw), 0.0)
+        forward_axis = (-math.sin(yaw), math.cos(yaw), 0.0)
+        lift = floor_z + 0.4 + index * 0.28
+        centre = (cx, cy, lift)
+        slot = index % 4
+        u0, v0 = 0.5 * (slot % 2), 0.5 * (slot // 2)
+        u1, v1 = u0 + 0.5, v0 + 0.5
+        half_s = mul(side_axis, size * 0.5)
+        half_f = mul(forward_axis, size * 0.5)
+        points = (add(centre, add(mul(half_s, -1), mul(half_f, -1))),
+                 add(centre, add(mul(half_s, -1), half_f)),
+                 add(centre, add(half_s, half_f)),
+                 add(centre, add(half_s, mul(half_f, -1))))
+        mesh.quad(points, "M_Fountain_LeafLitter",
+                 ((u0, v0), (u0, v1), (u1, v1), (u1, v0)))
+    return mesh
+
+
+# --------------------------------------------------------------------------- #
 #  RGBA cutout atlases
 # --------------------------------------------------------------------------- #
 
@@ -906,6 +1119,19 @@ MATERIALS = {
     "M_Coleus_Base": ((0.18, 0.13, 0.08), 0.0, 0.90, None),
     "M_Coleus_Stem": ((0.34, 0.28, 0.20), 0.0, 0.60, None),
     "M_Coleus_Leaf": ((0.36, 0.16, 0.20), 0.0, 0.50, "coleus_leaf_rgba_1024.png"),
+    "M_Bench_CastFrame_Intact": ((0.16, 0.24, 0.16), 0.15, 0.55, None),
+    "M_Bench_SeatSlat_Intact": ((0.42, 0.27, 0.14), 0.0, 0.62, None),
+    "M_Bench_BackSlat_Intact": ((0.40, 0.26, 0.13), 0.0, 0.62, None),
+    "M_Bench_CastFrame_Damaged": ((0.30, 0.18, 0.10), 0.05, 0.72, None),
+    "M_Bench_SeatSlat_Damaged": ((0.34, 0.30, 0.24), 0.0, 0.80, None),
+    "M_Bench_BackSlat_Damaged": ((0.33, 0.29, 0.23), 0.0, 0.80, None),
+    "M_BrochureStand_Frame": ((0.10, 0.10, 0.11), 0.10, 0.50, None),
+    "M_BrochureStand_Pocket": ((0.44, 0.44, 0.40), 0.05, 0.42, None),
+    "M_BrochureStand_Paper": ((0.82, 0.78, 0.66), 0.0, 0.70, None),
+    "M_Fountain_BasinWall": ((0.46, 0.45, 0.40), 0.0, 0.86, None),
+    "M_Fountain_BasinFloor": ((0.30, 0.28, 0.23), 0.0, 0.92, None),
+    "M_Fountain_Pedestal": ((0.24, 0.22, 0.19), 0.0, 0.88, None),
+    "M_Fountain_LeafLitter": ((0.42, 0.30, 0.16), 0.0, 0.72, "leaf_bark_litter_rgba_1024.png"),
 }
 
 
@@ -925,7 +1151,7 @@ def write_mtl() -> None:
 #  Handoff
 # --------------------------------------------------------------------------- #
 
-HANDOFF = """# Entrance-Terrace Reveal Kit — Handoff (Slice 1 base + Slice 2 supporting species)
+HANDOFF = """# Entrance-Terrace Reveal Kit — Handoff (Slice 1 base + Slice 2 supporting species + Slice 3 furniture)
 
 Source: `scripts/generate_entrance_terrace_reveal_kit.py`
 Verify: `scripts/verify_entrance_terrace_reveal_kit.py`
@@ -937,10 +1163,19 @@ Slice 2 adds three supporting display specimens: an aloe rosette, a
 philodendron, and a coleus mound. Each is a composed specimen, not a hedge
 module.
 
+Slice 3 adds public visitor furniture: a pair of 1960s municipal park benches
+(one intact, one subtly sagged/damaged), a freestanding period brochure/
+leaflet stand, and one dry, non-functioning octagonal public-garden fountain.
+All four are rigid props and carry **no vertex colour** -- the damaged bench
+shows its damage through bowed beam geometry and a distinct weathered
+material, never through paint-by-vertex.
+
 MTL: `SourceMesh/entrance_terrace_reveal/VD_EntranceTerraceReveal.mtl`
 RGBA cutouts: `cutouts/entrance_terrace_reveal/` — four alpha sheets (date-palm
 leaflet, leaf/bark litter, philodendron lobed leaf, coleus patterned leaf),
-each referenced by both `map_Kd` and `map_d`.
+each referenced by both `map_Kd` and `map_d`. Slice 3 reuses the leaf/bark
+litter sheet for the fountain's collected leaf debris rather than adding a
+fifth sheet.
 
 ## Import steps (Unreal)
 1. Import each OBJ as its own Static Mesh; keep "Combine Meshes" OFF (one object
@@ -950,10 +1185,12 @@ each referenced by both `map_Kd` and `map_d`.
 3. On every foliage mesh (date palm, aloe, philodendron, coleus) enable "Vertex
    Colors" import and drive a wind/pivot-sway node from vertex-colour luminance
    (0 anchored/rigid, 1 free tip). Trunks, stems, petioles and leaf attachments
-   are 0; free leaf tips approach 1.
+   are 0; free leaf tips approach 1. The Slice 3 furniture (benches, brochure
+   stand, fountain) imports with no vertex colour at all -- do not wire a wind
+   node to it.
 4. Author collision per the notes below; do NOT let Unreal auto-generate a
-   single convex hull on the planters — it seals the open mouth. Foliage leaves
-   generally take NO collision.
+   single convex hull on the planters or the fountain — it seals the open
+   mouth / basin. Foliage leaves generally take NO collision.
 
 {assets}
 
@@ -961,6 +1198,14 @@ each referenced by both `map_Kd` and `map_d`.
 The three `VD_SoilDressing_*` meshes are base-centred at Z=0 and sized to drop
 into both these planters and the existing `SourceMesh/terrace_botanical`
 planters. Scatter/rotate freely around Z; they carry no wind colour.
+
+## Slice 3 furniture usage
+`VD_Bench_Municipal_Intact` and `VD_Bench_Municipal_Damaged` share the same
+196 cm footprint and frame layout so they place cleanly in pairs (e.g. flanking
+a walkway) without visually mismatching in scale. Mix them freely; the damaged
+variant reads as a single neglected bench in an otherwise-maintained row, not
+a different bench type. `VD_BrochureStand_Institutional` and
+`VD_Fountain_DryBasin` are each single freestanding props.
 """
 
 ASSET_DOCS = [
@@ -1000,6 +1245,22 @@ ASSET_DOCS = [
      "~45-75 cm tall low dense mound, wider than tall; branching real stems with 60 opposite decussate patterned alpha-cut leaves (burgundy centre, chartreuse margin).",
      "M_Coleus_Base (soil crown), M_Coleus_Stem (real branching stems), M_Coleus_Leaf (patterned alpha-cut leaves).",
      "No leaf collision. Optionally one low box/capsule (~12 cm radius x ~12 cm) over the base crown; do not hull the mound of leaves."),
+    ("VD_Bench_Municipal_Intact", "Public visitor furniture — 1960s municipal park bench (intact)",
+     "196 cm long x ~46 cm deep x ~78 cm tall (to back top); ~44 cm seat height; tubular welded/cast-steel end frames, 6 seat slats + 4 back slats, flat and true.",
+     "M_Bench_CastFrame_Intact (tubular end frames + stretchers), M_Bench_SeatSlat_Intact (6 real timber seat boards), M_Bench_BackSlat_Intact (4 real timber back boards). No vertex colour.",
+     "Two simple boxes (seat slab + back slab) plus a capsule or box per end frame, OR complex-as-simple on the tube frame silhouette. Do not collide individual slats separately."),
+    ("VD_Bench_Municipal_Damaged", "Public visitor furniture — 1960s municipal park bench (damaged/sagged)",
+     "Same 196 cm x ~46 cm footprint as the intact bench so the pair reads as one row; seat boards bow down to ~5 cm mid-span sag, the back frame leans further (~74 cm back top), one seat stretcher has dropped.",
+     "M_Bench_CastFrame_Damaged (leaning/corroded frame), M_Bench_SeatSlat_Damaged (weathered, sagging boards), M_Bench_BackSlat_Damaged (weathered back boards). No vertex colour -- damage is geometric + a distinct weathered material only.",
+     "Same collision approach as the intact bench (simple boxes/capsules per frame end + seat/back slabs, or complex-as-simple); size the seat-slab box to the sagged mid-span, not the flat rest height."),
+    ("VD_BrochureStand_Institutional", "Public visitor furniture — freestanding brochure/leaflet stand",
+     "~148 cm tall; ~45 cm footprint on a splayed 3-leg tripod foot; 5 shallow angled sheet-metal pockets climbing the post, each still holding one warped paper leaflet card.",
+     "M_BrochureStand_Frame (post + tripod legs), M_BrochureStand_Pocket (5 angled pocket trays), M_BrochureStand_Paper (5 warped leaflet cards). No vertex colour.",
+     "One simple box or vertical capsule around the post + tripod footprint. Paper cards get NO collision (overlap-only)."),
+    ("VD_Fountain_DryBasin", "Public visitor furniture — dry, non-functioning octagonal public-garden fountain",
+     "~380 cm across x 112 cm tall; octagonal basin, dry recessed floor at 46 cm (well below the rim), stained central pedestal/nozzle stub to ~86 cm, 10 leaf-litter cards collected on the floor. No water material.",
+     "M_Fountain_BasinWall (outer wall + rim lip + inner drop), M_Fountain_BasinFloor (dry floor annulus), M_Fountain_Pedestal (stained pedestal/nozzle stub), M_Fountain_LeafLitter (collected leaf-litter cards, reuses the Slice 1 leaf/bark litter sheet). No vertex colour.",
+     "Segmented ring collision: 8 convex wall segments (one per octagon face) + a separate floor-annulus disc + a short cylinder/capsule for the pedestal. NEVER one convex hull across the whole prop -- that seals the dry basin and hides/blocks the recessed floor."),
 ]
 
 
@@ -1037,6 +1298,10 @@ def main() -> None:
         build_aloe("VD_Aloe_Specimen", 8101),
         build_philodendron("VD_Philodendron_Specimen", 8102),
         build_coleus("VD_Coleus_Specimen", 8103),
+        build_bench("VD_Bench_Municipal_Intact", False, 8301),
+        build_bench("VD_Bench_Municipal_Damaged", True, 8302),
+        build_brochure_stand("VD_BrochureStand_Institutional", 8401),
+        build_fountain("VD_Fountain_DryBasin", 8501),
     ]
     write_mtl()
     write_handoff()
@@ -1053,7 +1318,7 @@ def main() -> None:
                                 "size_cm": [round(v, 2) for v in size]})
     manifest = {
         "units": "centimetres; Z-up",
-        "slice": "entrance-terrace reveal kit (slice 1 base + slice 2 supporting species)",
+        "slice": "entrance-terrace reveal kit (slice 1 base + slice 2 supporting species + slice 3 furniture)",
         "mesh_count": len(meshes),
         "foliage_contract": {
             "alpha_cut_rgba_sheets": 4,
@@ -1076,6 +1341,26 @@ def main() -> None:
                 "form": "low dense mound; branching real stems, opposite decussate patterned alpha-cut leaves",
                 "leaves": 60,
                 "alpha_sheets": ["coleus_leaf_rgba_1024.png"],
+            },
+        },
+        "public_furniture": {
+            "contract": "rigid props; zero vertex colour on every furniture mesh",
+            "VD_Bench_Municipal_Intact": {
+                "form": "tubular end frames + real slatted timber seat/back, flat and true",
+                "seat_slats": 6, "back_slats": 4, "sag_cm": 0.0,
+            },
+            "VD_Bench_Municipal_Damaged": {
+                "form": "same frame layout as the intact bench; boards bow down mid-span, frame leans further",
+                "seat_slats": 6, "back_slats": 4, "sag_cm": 5.0,
+            },
+            "VD_BrochureStand_Institutional": {
+                "form": "tripod-footed post with angled sheet-metal pockets, each holding one warped paper card",
+                "pockets": 5, "paper_cards": 5,
+            },
+            "VD_Fountain_DryBasin": {
+                "form": "dry octagonal basin, recessed floor well below the rim, stained pedestal stub, no water material",
+                "sides": 8, "leaf_litter_cards": 10,
+                "rim_to_floor_drop_cm": 66.0,
             },
         },
         "meshes": manifest_meshes,

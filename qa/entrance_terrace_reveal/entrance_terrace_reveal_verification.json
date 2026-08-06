@@ -2,7 +2,7 @@
   "pass": true,
   "missing": [],
   "extra": [],
-  "mesh_count": 9,
+  "mesh_count": 13,
   "meshes": {
     "VD_SpecimenPlanter_Concrete": {
       "pass": true,
@@ -387,6 +387,176 @@
       },
       "invalid_uv_corners": 0,
       "degenerate_regions": 0
+    },
+    "VD_Bench_Municipal_Intact": {
+      "pass": true,
+      "failures": [],
+      "vertices": 496,
+      "texture_coordinates": 1392,
+      "faces": 348,
+      "triangles": 696,
+      "object_names": [
+        "VD_Bench_Municipal_Intact"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_Bench_BackSlat_Intact",
+        "M_Bench_CastFrame_Intact",
+        "M_Bench_SeatSlat_Intact"
+      ],
+      "material_face_counts": {
+        "M_Bench_BackSlat_Intact": 88,
+        "M_Bench_CastFrame_Intact": 128,
+        "M_Bench_SeatSlat_Intact": 132
+      },
+      "wind_stiffness": null,
+      "bounds_cm": {
+        "min": [
+          -97.2,
+          -32.221195,
+          0.0
+        ],
+        "max": [
+          97.2,
+          32.221195,
+          80.612714
+        ],
+        "size": [
+          194.4,
+          64.44239,
+          80.612714
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_Bench_Municipal_Damaged": {
+      "pass": true,
+      "failures": [],
+      "vertices": 496,
+      "texture_coordinates": 1392,
+      "faces": 348,
+      "triangles": 696,
+      "object_names": [
+        "VD_Bench_Municipal_Damaged"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_Bench_BackSlat_Damaged",
+        "M_Bench_CastFrame_Damaged",
+        "M_Bench_SeatSlat_Damaged"
+      ],
+      "material_face_counts": {
+        "M_Bench_BackSlat_Damaged": 88,
+        "M_Bench_CastFrame_Damaged": 128,
+        "M_Bench_SeatSlat_Damaged": 132
+      },
+      "wind_stiffness": null,
+      "bounds_cm": {
+        "min": [
+          -97.2,
+          -34.936622,
+          0.0
+        ],
+        "max": [
+          97.2,
+          34.936622,
+          79.45548
+        ],
+        "size": [
+          194.4,
+          69.873244,
+          79.45548
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_BrochureStand_Institutional": {
+      "pass": true,
+      "failures": [],
+      "vertices": 168,
+      "texture_coordinates": 296,
+      "faces": 74,
+      "triangles": 148,
+      "object_names": [
+        "VD_BrochureStand_Institutional"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_BrochureStand_Frame",
+        "M_BrochureStand_Paper",
+        "M_BrochureStand_Pocket"
+      ],
+      "material_face_counts": {
+        "M_BrochureStand_Frame": 34,
+        "M_BrochureStand_Paper": 30,
+        "M_BrochureStand_Pocket": 10
+      },
+      "wind_stiffness": null,
+      "bounds_cm": {
+        "min": [
+          -18.854527,
+          -24.299584,
+          0.0
+        ],
+        "max": [
+          18.854527,
+          24.299584,
+          149.654461
+        ],
+        "size": [
+          37.709054,
+          48.599168,
+          149.654461
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_Fountain_DryBasin": {
+      "pass": true,
+      "failures": [],
+      "vertices": 130,
+      "texture_coordinates": 408,
+      "faces": 106,
+      "triangles": 196,
+      "object_names": [
+        "VD_Fountain_DryBasin"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_Fountain_BasinFloor",
+        "M_Fountain_BasinWall",
+        "M_Fountain_LeafLitter",
+        "M_Fountain_Pedestal"
+      ],
+      "material_face_counts": {
+        "M_Fountain_BasinFloor": 8,
+        "M_Fountain_BasinWall": 64,
+        "M_Fountain_LeafLitter": 10,
+        "M_Fountain_Pedestal": 24
+      },
+      "wind_stiffness": null,
+      "bounds_cm": {
+        "min": [
+          -190.0,
+          -190.0,
+          0.0
+        ],
+        "max": [
+          190.0,
+          190.0,
+          112.0
+        ],
+        "size": [
+          380.0,
+          380.0,
+          112.0
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
     }
   },
   "textures": {
@@ -455,6 +625,7 @@
     "entrance_terrace_reveal_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_preview.png",
     "entrance_terrace_reveal_hero_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_hero_preview.png",
     "entrance_terrace_reveal_alpha_sheets_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_alpha_sheets_preview.png",
-    "entrance_terrace_reveal_supporting_species_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_supporting_species_preview.png"
+    "entrance_terrace_reveal_supporting_species_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_supporting_species_preview.png",
+    "entrance_terrace_reveal_furniture_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_furniture_preview.png"
   }
 }

@@ -1,4 +1,4 @@
-# Entrance-Terrace Reveal Kit — Handoff (Slice 1 base + Slice 2 supporting species)
+# Entrance-Terrace Reveal Kit — Handoff (Slice 1 base + Slice 2 supporting species + Slice 3 furniture)
 
 Source: `scripts/generate_entrance_terrace_reveal_kit.py`
 Verify: `scripts/verify_entrance_terrace_reveal_kit.py`
@@ -10,10 +10,19 @@ Slice 2 adds three supporting display specimens: an aloe rosette, a
 philodendron, and a coleus mound. Each is a composed specimen, not a hedge
 module.
 
+Slice 3 adds public visitor furniture: a pair of 1960s municipal park benches
+(one intact, one subtly sagged/damaged), a freestanding period brochure/
+leaflet stand, and one dry, non-functioning octagonal public-garden fountain.
+All four are rigid props and carry **no vertex colour** -- the damaged bench
+shows its damage through bowed beam geometry and a distinct weathered
+material, never through paint-by-vertex.
+
 MTL: `SourceMesh/entrance_terrace_reveal/VD_EntranceTerraceReveal.mtl`
 RGBA cutouts: `cutouts/entrance_terrace_reveal/` — four alpha sheets (date-palm
 leaflet, leaf/bark litter, philodendron lobed leaf, coleus patterned leaf),
-each referenced by both `map_Kd` and `map_d`.
+each referenced by both `map_Kd` and `map_d`. Slice 3 reuses the leaf/bark
+litter sheet for the fountain's collected leaf debris rather than adding a
+fifth sheet.
 
 ## Import steps (Unreal)
 1. Import each OBJ as its own Static Mesh; keep "Combine Meshes" OFF (one object
@@ -23,10 +32,12 @@ each referenced by both `map_Kd` and `map_d`.
 3. On every foliage mesh (date palm, aloe, philodendron, coleus) enable "Vertex
    Colors" import and drive a wind/pivot-sway node from vertex-colour luminance
    (0 anchored/rigid, 1 free tip). Trunks, stems, petioles and leaf attachments
-   are 0; free leaf tips approach 1.
+   are 0; free leaf tips approach 1. The Slice 3 furniture (benches, brochure
+   stand, fountain) imports with no vertex colour at all -- do not wire a wind
+   node to it.
 4. Author collision per the notes below; do NOT let Unreal auto-generate a
-   single convex hull on the planters — it seals the open mouth. Foliage leaves
-   generally take NO collision.
+   single convex hull on the planters or the fountain — it seals the open
+   mouth / basin. Foliage leaves generally take NO collision.
 
 ## Assets
 
@@ -93,7 +104,43 @@ each referenced by both `map_Kd` and `map_d`.
 - Material slots: M_Coleus_Base (soil crown), M_Coleus_Stem (real branching stems), M_Coleus_Leaf (patterned alpha-cut leaves).
 - Collision: No leaf collision. Optionally one low box/capsule (~12 cm radius x ~12 cm) over the base crown; do not hull the mound of leaves.
 
+### VD_Bench_Municipal_Intact
+**Public visitor furniture — 1960s municipal park bench (intact)**
+
+- Dimensions: 196 cm long x ~46 cm deep x ~78 cm tall (to back top); ~44 cm seat height; tubular welded/cast-steel end frames, 6 seat slats + 4 back slats, flat and true.
+- Material slots: M_Bench_CastFrame_Intact (tubular end frames + stretchers), M_Bench_SeatSlat_Intact (6 real timber seat boards), M_Bench_BackSlat_Intact (4 real timber back boards). No vertex colour.
+- Collision: Two simple boxes (seat slab + back slab) plus a capsule or box per end frame, OR complex-as-simple on the tube frame silhouette. Do not collide individual slats separately.
+
+### VD_Bench_Municipal_Damaged
+**Public visitor furniture — 1960s municipal park bench (damaged/sagged)**
+
+- Dimensions: Same 196 cm x ~46 cm footprint as the intact bench so the pair reads as one row; seat boards bow down to ~5 cm mid-span sag, the back frame leans further (~74 cm back top), one seat stretcher has dropped.
+- Material slots: M_Bench_CastFrame_Damaged (leaning/corroded frame), M_Bench_SeatSlat_Damaged (weathered, sagging boards), M_Bench_BackSlat_Damaged (weathered back boards). No vertex colour -- damage is geometric + a distinct weathered material only.
+- Collision: Same collision approach as the intact bench (simple boxes/capsules per frame end + seat/back slabs, or complex-as-simple); size the seat-slab box to the sagged mid-span, not the flat rest height.
+
+### VD_BrochureStand_Institutional
+**Public visitor furniture — freestanding brochure/leaflet stand**
+
+- Dimensions: ~148 cm tall; ~45 cm footprint on a splayed 3-leg tripod foot; 5 shallow angled sheet-metal pockets climbing the post, each still holding one warped paper leaflet card.
+- Material slots: M_BrochureStand_Frame (post + tripod legs), M_BrochureStand_Pocket (5 angled pocket trays), M_BrochureStand_Paper (5 warped leaflet cards). No vertex colour.
+- Collision: One simple box or vertical capsule around the post + tripod footprint. Paper cards get NO collision (overlap-only).
+
+### VD_Fountain_DryBasin
+**Public visitor furniture — dry, non-functioning octagonal public-garden fountain**
+
+- Dimensions: ~380 cm across x 112 cm tall; octagonal basin, dry recessed floor at 46 cm (well below the rim), stained central pedestal/nozzle stub to ~86 cm, 10 leaf-litter cards collected on the floor. No water material.
+- Material slots: M_Fountain_BasinWall (outer wall + rim lip + inner drop), M_Fountain_BasinFloor (dry floor annulus), M_Fountain_Pedestal (stained pedestal/nozzle stub), M_Fountain_LeafLitter (collected leaf-litter cards, reuses the Slice 1 leaf/bark litter sheet). No vertex colour.
+- Collision: Segmented ring collision: 8 convex wall segments (one per octagon face) + a separate floor-annulus disc + a short cylinder/capsule for the pedestal. NEVER one convex hull across the whole prop -- that seals the dry basin and hides/blocks the recessed floor.
+
 ## Scatter usage
 The three `VD_SoilDressing_*` meshes are base-centred at Z=0 and sized to drop
 into both these planters and the existing `SourceMesh/terrace_botanical`
 planters. Scatter/rotate freely around Z; they carry no wind colour.
+
+## Slice 3 furniture usage
+`VD_Bench_Municipal_Intact` and `VD_Bench_Municipal_Damaged` share the same
+196 cm footprint and frame layout so they place cleanly in pairs (e.g. flanking
+a walkway) without visually mismatching in scale. Mix them freely; the damaged
+variant reads as a single neglected bench in an otherwise-maintained row, not
+a different bench type. `VD_BrochureStand_Institutional` and
+`VD_Fountain_DryBasin` are each single freestanding props.

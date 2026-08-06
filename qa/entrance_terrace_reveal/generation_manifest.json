@@ -1,7 +1,7 @@
 {
   "units": "centimetres; Z-up",
-  "slice": "entrance-terrace reveal kit (slice 1 base + slice 2 supporting species)",
-  "mesh_count": 9,
+  "slice": "entrance-terrace reveal kit (slice 1 base + slice 2 supporting species + slice 3 furniture)",
+  "mesh_count": 13,
   "foliage_contract": {
     "alpha_cut_rgba_sheets": 4,
     "wind_encoding": "OBJ vertex RGB grayscale; 0=root/rigid, 1=free tip",
@@ -27,6 +27,32 @@
       "alpha_sheets": [
         "coleus_leaf_rgba_1024.png"
       ]
+    }
+  },
+  "public_furniture": {
+    "contract": "rigid props; zero vertex colour on every furniture mesh",
+    "VD_Bench_Municipal_Intact": {
+      "form": "tubular end frames + real slatted timber seat/back, flat and true",
+      "seat_slats": 6,
+      "back_slats": 4,
+      "sag_cm": 0.0
+    },
+    "VD_Bench_Municipal_Damaged": {
+      "form": "same frame layout as the intact bench; boards bow down mid-span, frame leans further",
+      "seat_slats": 6,
+      "back_slats": 4,
+      "sag_cm": 5.0
+    },
+    "VD_BrochureStand_Institutional": {
+      "form": "tripod-footed post with angled sheet-metal pockets, each holding one warped paper card",
+      "pockets": 5,
+      "paper_cards": 5
+    },
+    "VD_Fountain_DryBasin": {
+      "form": "dry octagonal basin, recessed floor well below the rim, stained pedestal stub, no water material",
+      "sides": 8,
+      "leaf_litter_cards": 10,
+      "rim_to_floor_drop_cm": 66.0
     }
   },
   "meshes": [
@@ -118,6 +144,46 @@
         73.32,
         68.55,
         61.65
+      ]
+    },
+    {
+      "name": "VD_Bench_Municipal_Intact",
+      "vertices": 496,
+      "faces": 348,
+      "size_cm": [
+        194.4,
+        64.44,
+        80.61
+      ]
+    },
+    {
+      "name": "VD_Bench_Municipal_Damaged",
+      "vertices": 496,
+      "faces": 348,
+      "size_cm": [
+        194.4,
+        69.87,
+        79.46
+      ]
+    },
+    {
+      "name": "VD_BrochureStand_Institutional",
+      "vertices": 168,
+      "faces": 74,
+      "size_cm": [
+        37.71,
+        48.6,
+        149.65
+      ]
+    },
+    {
+      "name": "VD_Fountain_DryBasin",
+      "vertices": 130,
+      "faces": 106,
+      "size_cm": [
+        380.0,
+        380.0,
+        112.0
       ]
     }
   ]

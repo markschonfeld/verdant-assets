@@ -31,10 +31,17 @@ EXPECTED = {
     "VD_Aloe_Specimen": {"M_Aloe_Leaf", "M_Aloe_Base"},
     "VD_Philodendron_Specimen": {"M_Philodendron_Crown", "M_Philodendron_Petiole", "M_Philodendron_Leaf"},
     "VD_Coleus_Specimen": {"M_Coleus_Base", "M_Coleus_Stem", "M_Coleus_Leaf"},
+    "VD_Bench_Municipal_Intact": {"M_Bench_CastFrame_Intact", "M_Bench_SeatSlat_Intact", "M_Bench_BackSlat_Intact"},
+    "VD_Bench_Municipal_Damaged": {"M_Bench_CastFrame_Damaged", "M_Bench_SeatSlat_Damaged", "M_Bench_BackSlat_Damaged"},
+    "VD_BrochureStand_Institutional": {"M_BrochureStand_Frame", "M_BrochureStand_Pocket", "M_BrochureStand_Paper"},
+    "VD_Fountain_DryBasin": {"M_Fountain_BasinWall", "M_Fountain_BasinFloor", "M_Fountain_Pedestal", "M_Fountain_LeafLitter"},
 }
 PLANTERS = {"VD_SpecimenPlanter_Concrete": "M_Planter_DressedSoil",
             "VD_SpecimenPlanter_Ceramic": "M_Planter_DressedSoil"}
 FOLIAGE = {"VD_DatePalm_Hero", "VD_Aloe_Specimen", "VD_Philodendron_Specimen", "VD_Coleus_Specimen"}
+FURNITURE = {"VD_Bench_Municipal_Intact", "VD_Bench_Municipal_Damaged",
+            "VD_BrochureStand_Institutional", "VD_Fountain_DryBasin"}
+BENCHES = {"VD_Bench_Municipal_Intact": ("Intact", False), "VD_Bench_Municipal_Damaged": ("Damaged", True)}
 COLORS = {
     "M_ConcretePlanter_Cast": (150, 150, 138, 255),
     "M_ConcretePlanter_Rim": (176, 172, 158, 255),
@@ -55,6 +62,19 @@ COLORS = {
     "M_Coleus_Base": (54, 40, 24, 255),
     "M_Coleus_Stem": (104, 86, 60, 255),
     "M_Coleus_Leaf": (130, 58, 74, 255),
+    "M_Bench_CastFrame_Intact": (40, 60, 40, 255),
+    "M_Bench_SeatSlat_Intact": (106, 68, 35, 255),
+    "M_Bench_BackSlat_Intact": (100, 65, 32, 255),
+    "M_Bench_CastFrame_Damaged": (76, 46, 26, 255),
+    "M_Bench_SeatSlat_Damaged": (86, 76, 61, 255),
+    "M_Bench_BackSlat_Damaged": (84, 74, 59, 255),
+    "M_BrochureStand_Frame": (26, 26, 28, 255),
+    "M_BrochureStand_Pocket": (112, 112, 102, 255),
+    "M_BrochureStand_Paper": (209, 199, 168, 255),
+    "M_Fountain_BasinWall": (117, 115, 102, 255),
+    "M_Fountain_BasinFloor": (76, 71, 59, 255),
+    "M_Fountain_Pedestal": (61, 56, 48, 255),
+    "M_Fountain_LeafLitter": (107, 77, 41, 255),
 }
 TEXTURES = {
     "date_palm_leaflet": "date_palm_leaflet_ribbon_rgba_1024.png",
@@ -67,6 +87,7 @@ VISUAL_OUTPUTS = [
     "entrance_terrace_reveal_hero_preview.png",
     "entrance_terrace_reveal_alpha_sheets_preview.png",
     "entrance_terrace_reveal_supporting_species_preview.png",
+    "entrance_terrace_reveal_furniture_preview.png",
 ]
 Vec3 = tuple[float, float, float]
 
@@ -191,6 +212,23 @@ def validate(mesh: Obj) -> dict[str, object]:
             failures.append(f"coleus height {size[2]:.1f} cm outside 45-75")
         if max(size[0], size[1]) < size[2] * 0.9:
             failures.append(f"coleus footprint {max(size[0], size[1]):.1f} cm does not read as a low mound")
+    if mesh.name in BENCHES:
+        if not 180.0 <= size[0] <= 210.0:
+            failures.append(f"bench length {size[0]:.1f} cm outside 180-210")
+        if not 40.0 <= size[1] <= 80.0:
+            failures.append(f"bench depth {size[1]:.1f} cm outside 40-80")
+        if not 65.0 <= size[2] <= 95.0:
+            failures.append(f"bench height {size[2]:.1f} cm outside 65-95")
+    if mesh.name == "VD_BrochureStand_Institutional":
+        if not 120.0 <= size[2] <= 170.0:
+            failures.append(f"brochure stand height {size[2]:.1f} cm outside 120-170")
+        if not 25.0 <= max(size[0], size[1]) <= 70.0:
+            failures.append(f"brochure stand footprint {max(size[0], size[1]):.1f} cm outside 25-70")
+    if mesh.name == "VD_Fountain_DryBasin":
+        if not 300.0 <= size[0] <= 450.0 or not 300.0 <= size[1] <= 450.0:
+            failures.append(f"fountain diameter {size[0]:.1f}x{size[1]:.1f} cm outside 300-450")
+        if not 80.0 <= size[2] <= 140.0:
+            failures.append(f"fountain height {size[2]:.1f} cm outside 80-140")
 
     wind_values = [colour[0] for colour in mesh.wind_colours if colour is not None]
     is_foliage = mesh.name in FOLIAGE
@@ -235,6 +273,58 @@ def validate(mesh: Obj) -> dict[str, object]:
             failures.append(f"coleus has only {leaf_cards} leaves; not a dense mound")
         if material_faces.get("M_Coleus_Stem", 0) < 120:
             failures.append("coleus stem geometry is missing or too sparse")
+
+    def material_z_range(material: str) -> float:
+        ids = {i for m, face, _ in mesh.faces if m == material for i in face}
+        if not ids:
+            return 0.0
+        zs = [mesh.vertices[i][2] for i in ids]
+        return max(zs) - min(zs)
+
+    if any("water" in material.lower() for material in materials):
+        failures.append("mesh carries a water material; furniture/fountain must read dry")
+
+    if mesh.name in BENCHES:
+        label, damaged = BENCHES[mesh.name]
+        seat_mat = f"M_Bench_SeatSlat_{label}"
+        back_mat = f"M_Bench_BackSlat_{label}"
+        frame_mat = f"M_Bench_CastFrame_{label}"
+        if material_faces.get(seat_mat, 0) < 100:
+            failures.append(f"bench has only {material_faces.get(seat_mat, 0)} seat-slat faces; too sparse")
+        if material_faces.get(back_mat, 0) < 60:
+            failures.append(f"bench has only {material_faces.get(back_mat, 0)} back-slat faces; too sparse")
+        if material_faces.get(frame_mat, 0) < 80:
+            failures.append("bench cast-frame geometry is missing or too sparse")
+        seat_sag = material_z_range(seat_mat)
+        if damaged and seat_sag < 6.0:
+            failures.append(f"damaged bench seat sag is only {seat_sag:.1f} cm; does not read as sagged")
+        if not damaged and seat_sag > 4.0:
+            failures.append(f"intact bench seat is not flat (z-range {seat_sag:.1f} cm)")
+    if mesh.name == "VD_BrochureStand_Institutional":
+        pockets = material_faces.get("M_BrochureStand_Pocket", 0) // 2
+        cards = material_faces.get("M_BrochureStand_Paper", 0) // 6
+        if pockets < 4:
+            failures.append(f"brochure stand has only {pockets} pockets; needs several")
+        if cards < 4:
+            failures.append(f"brochure stand has only {cards} warped paper cards present")
+        if material_faces.get("M_BrochureStand_Frame", 0) < 20:
+            failures.append("brochure stand frame/tripod geometry is missing or too sparse")
+    if mesh.name == "VD_Fountain_DryBasin":
+        litter = material_faces.get("M_Fountain_LeafLitter", 0)
+        if litter < 6:
+            failures.append(f"fountain basin has only {litter} leaf-litter cards collected")
+        if material_faces.get("M_Fountain_BasinWall", 0) < 40:
+            failures.append("fountain basin wall geometry is missing or too sparse")
+        if material_faces.get("M_Fountain_BasinFloor", 0) < 6:
+            failures.append("fountain dry basin floor geometry is missing or too sparse")
+        if material_faces.get("M_Fountain_Pedestal", 0) < 10:
+            failures.append("fountain pedestal/nozzle stub geometry is missing or too sparse")
+        rim_z = max(mesh.vertices[i][2] for m, face, _ in mesh.faces if m == "M_Fountain_BasinWall" for i in face)
+        floor_ids = {i for m, face, _ in mesh.faces if m == "M_Fountain_BasinFloor" for i in face}
+        if floor_ids:
+            floor_z = sum(mesh.vertices[i][2] for i in floor_ids) / len(floor_ids)
+            if rim_z - floor_z < 40.0:
+                failures.append(f"fountain floor is only {rim_z - floor_z:.1f} cm below the rim; does not read as an empty basin")
 
     return {"pass": not failures, "failures": failures,
             "vertices": len(mesh.vertices), "texture_coordinates": len(mesh.texcoords),
@@ -369,6 +459,35 @@ def render_supporting(meshes: dict[str, Obj]) -> None:
     image.save(QA / "entrance_terrace_reveal_supporting_species_preview.png")
 
 
+def render_furniture(meshes: dict[str, Obj]) -> None:
+    """Visitor-attraction furniture elevations and dry-fountain proof."""
+    image = Image.new("RGB", (2400, 1500), (19, 24, 21))
+    draw = ImageDraw.Draw(image)
+    font = ImageFont.load_default()
+    draw.text((45, 22), "ENTRANCE-TERRACE REVEAL KIT / SLICE 3 — PUBLIC VISITOR FURNITURE",
+              fill=(238, 226, 190), font=font)
+    draw.text((45, 45), "1960s municipal benches · leaflet stand · dry public-garden fountain · Unreal cm",
+              fill=(150, 173, 157), font=font)
+    panels = [
+        ("VD_Bench_Municipal_Intact", (40, 80, 790, 670), (280, -330, 180),
+         "MUNICIPAL BENCH A / intact slatted seat + cast frame"),
+        ("VD_Bench_Municipal_Damaged", (810, 80, 1560, 670), (280, -330, 180),
+         "MUNICIPAL BENCH B / sagged boards + dropped stretcher"),
+        ("VD_BrochureStand_Institutional", (1580, 80, 2360, 670), (180, -240, 180),
+         "FREE-LEAFLET STAND / 5 pockets + warped paper"),
+        ("VD_Fountain_DryBasin", (300, 710, 2100, 1400), (610, -720, 430),
+         "DRY FOUNTAIN / recessed stained basin + dead nozzle + collected litter"),
+    ]
+    for name, box, camera, label in panels:
+        render_panel(image, box, [meshes[name]], [(0, 0, 0)], camera, label)
+    notes = ["Fountain has no water material; the floor is 66 cm below the rim and visibly littered.",
+             "COLLISION: fountain = segmented wall ring + floor + pedestal, never one sealing convex hull.",
+             "Benches use simple seat/back/frame primitives; brochure paper and fountain litter use no collision."]
+    for i, note in enumerate(notes):
+        draw.text((45, 1408 + i * 26), note, fill=(189, 200, 184), font=font)
+    image.save(QA / "entrance_terrace_reveal_furniture_preview.png")
+
+
 def verify_textures() -> dict[str, dict[str, object]]:
     results: dict[str, dict[str, object]] = {}
     mtl_text = (SOURCE / MTL).read_text(encoding="utf-8")
@@ -428,6 +547,8 @@ def main() -> None:
         render_hero(meshes)
         if all(name in meshes for name in ("VD_Aloe_Specimen", "VD_Philodendron_Specimen", "VD_Coleus_Specimen")):
             render_supporting(meshes)
+        if all(name in meshes for name in FURNITURE):
+            render_furniture(meshes)
     visual = {name: (QA / name).exists() and (QA / name).stat().st_size > 1024 for name in VISUAL_OUTPUTS}
     report = {"pass": (not missing and not extra
                        and all(r["pass"] for r in results.values())

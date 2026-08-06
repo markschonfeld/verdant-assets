@@ -101,3 +101,70 @@ Pm 0.0
 Pr 0.5
 map_Kd ../../cutouts/entrance_terrace_reveal/coleus_leaf_rgba_1024.png
 map_d ../../cutouts/entrance_terrace_reveal/coleus_leaf_rgba_1024.png
+
+newmtl M_Bench_CastFrame_Intact
+Kd 0.16 0.24 0.16
+Pm 0.15
+Pr 0.55
+
+newmtl M_Bench_SeatSlat_Intact
+Kd 0.42 0.27 0.14
+Pm 0.0
+Pr 0.62
+
+newmtl M_Bench_BackSlat_Intact
+Kd 0.4 0.26 0.13
+Pm 0.0
+Pr 0.62
+
+newmtl M_Bench_CastFrame_Damaged
+Kd 0.3 0.18 0.1
+Pm 0.05
+Pr 0.72
+
+newmtl M_Bench_SeatSlat_Damaged
+Kd 0.34 0.3 0.24
+Pm 0.0
+Pr 0.8
+
+newmtl M_Bench_BackSlat_Damaged
+Kd 0.33 0.29 0.23
+Pm 0.0
+Pr 0.8
+
+newmtl M_BrochureStand_Frame
+Kd 0.1 0.1 0.11
+Pm 0.1
+Pr 0.5
+
+newmtl M_BrochureStand_Pocket
+Kd 0.44 0.44 0.4
+Pm 0.05
+Pr 0.42
+
+newmtl M_BrochureStand_Paper
+Kd 0.82 0.78 0.66
+Pm 0.0
+Pr 0.7
+
+newmtl M_Fountain_BasinWall
+Kd 0.46 0.45 0.4
+Pm 0.0
+Pr 0.86
+
+newmtl M_Fountain_BasinFloor
+Kd 0.3 0.28 0.23
+Pm 0.0
+Pr 0.92
+
+newmtl M_Fountain_Pedestal
+Kd 0.24 0.22 0.19
+Pm 0.0
+Pr 0.88
+
+newmtl M_Fountain_LeafLitter
+Kd 0.42 0.3 0.16
+Pm 0.0
+Pr 0.72
+map_Kd ../../cutouts/entrance_terrace_reveal/leaf_bark_litter_rgba_1024.png
+map_d ../../cutouts/entrance_terrace_reveal/leaf_bark_litter_rgba_1024.png
