@@ -1,5 +1,33 @@
 # PR #18 rework — the lattice joints must match the vault kit
 
+> ## CORRECTION — the hub dimensions below produced the wrong shape
+>
+> Revision 2 of PR #18 built exactly what this document asked for, and the
+> result was rejected: *"Hermes overdid the junctions this time. Totally
+> different design."* Smooth solid doughnuts at every node, where the roof has
+> pipe-fitting clusters.
+>
+> **The fault is in this document, not in the build.** The figures "hub radius
+> 52.66, axial thickness 40.40, bore 14.31" were taken from the *radial extent*
+> of `VD_VaultNode.obj` and then described as a bored disc. They are bounding
+> measurements of a **spoked cluster**, not the profile of a disc. Re-measured
+> from the same file:
+>
+> ```
+> connected pieces                        117
+> outer-shell azimuth bins occupied        12 of 24   (a disc fills all 24)
+> ```
+>
+> The joint is a cluster of short cylindrical collars radiating from a compact
+> centre, each ending in a sleeve with a small flange ring — not an annulus.
+>
+> **Work from the mesh, not from this description.** The kit is now committed at
+> `reference-kit/rootstead-vault/`. Everything below about *which* quantities
+> matter still stands; the stated hub form does not.
+>
+> Standing lesson, and this is the third time in this asset's history: radial
+> extent is not form, and a bounding box is not geometry.
+
 **Status:** PR #18 (`feat/rootstead-west-endwall-entry`, `0c1155f`) is imported and
 structurally correct. Placement, bounds, the door envelope, the trellis stand-off,
 collision and material slots all verified in-engine. **Do not redo any of that.**
