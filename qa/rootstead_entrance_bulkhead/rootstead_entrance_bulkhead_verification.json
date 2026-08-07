@@ -1,0 +1,515 @@
+{
+  "verified": true,
+  "failures": [],
+  "checks": {
+    "obj_contract": {
+      "pass": true,
+      "detail": {
+        "objects": [
+          "VD_RootsteadEntranceBulkhead"
+        ],
+        "groups": 0,
+        "faces": 17794,
+        "uvs": 59364
+      }
+    },
+    "materials": {
+      "pass": true,
+      "detail": {
+        "used": [
+          "M_EntranceBulkhead_BoardFormedPlinth",
+          "M_EntranceBulkhead_ChamferArris",
+          "M_EntranceBulkhead_JointReveal",
+          "M_EntranceBulkhead_PrecastAggregate",
+          "M_EntranceBulkhead_ProudCoarseAggregate",
+          "M_EntranceBulkhead_RebarLug",
+          "M_EntranceBulkhead_SealantJoint",
+          "M_EntranceBulkhead_SpallReveal",
+          "M_EntranceBulkhead_StructuralConcrete",
+          "M_EntranceBulkhead_WeatherStreak"
+        ],
+        "mtl": [
+          "M_EntranceBulkhead_BoardFormedPlinth",
+          "M_EntranceBulkhead_ChamferArris",
+          "M_EntranceBulkhead_JointReveal",
+          "M_EntranceBulkhead_PrecastAggregate",
+          "M_EntranceBulkhead_ProudCoarseAggregate",
+          "M_EntranceBulkhead_RebarLug",
+          "M_EntranceBulkhead_SealantJoint",
+          "M_EntranceBulkhead_SpallReveal",
+          "M_EntranceBulkhead_StructuralConcrete",
+          "M_EntranceBulkhead_WeatherStreak"
+        ]
+      }
+    },
+    "closed_manifold": {
+      "pass": true,
+      "detail": {
+        "components": 1970,
+        "bad_edges": 0,
+        "degenerate_triangles": 0
+      }
+    },
+    "bounds_and_placement": {
+      "pass": true,
+      "detail": {
+        "placement": [
+          0.0,
+          0.0,
+          3500.0
+        ],
+        "local_min": [
+          -465.2,
+          -1300.0,
+          0.0
+        ],
+        "local_max": [
+          112.0,
+          1300.0,
+          825.0
+        ],
+        "required_exact_y": [
+          -1300,
+          1300
+        ],
+        "east_limit": 112.0
+      }
+    },
+    "metrics_exact": {
+      "pass": true,
+      "detail": {
+        "parsed_total": 23776,
+        "metrics_total": 23776,
+        "by_material": {
+          "M_EntranceBulkhead_StructuralConcrete": 96,
+          "M_EntranceBulkhead_BoardFormedPlinth": 576,
+          "M_EntranceBulkhead_PrecastAggregate": 336,
+          "M_EntranceBulkhead_JointReveal": 936,
+          "M_EntranceBulkhead_ChamferArris": 624,
+          "M_EntranceBulkhead_ProudCoarseAggregate": 11952,
+          "M_EntranceBulkhead_SealantJoint": 864,
+          "M_EntranceBulkhead_WeatherStreak": 7776,
+          "M_EntranceBulkhead_SpallReveal": 224,
+          "M_EntranceBulkhead_RebarLug": 392
+        }
+      }
+    },
+    "true_exclusions": {
+      "pass": true,
+      "detail": {
+        "intrusion_faces": {
+          "door_leaf": 0,
+          "clear_doorway": 0,
+          "jamb_positive": 0,
+          "jamb_negative": 0,
+          "head": 0,
+          "sill": 0,
+          "track": 0
+        },
+        "wend_entry_rule": "east-plane only"
+      }
+    },
+    "strict_doorway_global": {
+      "pass": true,
+      "detail": {
+        "vertices_strict_inside": 0,
+        "faces_crossing": 0
+      }
+    },
+    "structural_solid_coverage": {
+      "pass": true,
+      "detail": {
+        "samples": 21250,
+        "missing": 0,
+        "inside_declared_notches": 0,
+        "walkable_internal_pocket": false
+      }
+    },
+    "mounting_faces": {
+      "pass": true,
+      "detail": {
+        "DOOR_PanelIn": {
+          "plane_y": -424.0,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "samples": 81,
+          "covered": 81,
+          "joint_or_recess_hits": 0,
+          "minimum_course_or_joint_clearance": 6.0
+        },
+        "BEACON_positive": {
+          "plane_y": 424.0,
+          "normal": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "samples": 81,
+          "covered": 81,
+          "joint_or_recess_hits": 0,
+          "minimum_course_or_joint_clearance": 5.0
+        },
+        "BEACON_negative": {
+          "plane_y": -424.0,
+          "normal": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "samples": 81,
+          "covered": 81,
+          "joint_or_recess_hits": 0,
+          "minimum_course_or_joint_clearance": 5.0
+        }
+      }
+    },
+    "architectural_joint_scale": {
+      "pass": true,
+      "detail": {
+        "parsed_width_uu": 3.2,
+        "contract_width_uu": 3.2,
+        "maximum_uu": 4.0,
+        "reveal_depth_uu": 12.0
+      }
+    },
+    "aggregate_density": {
+      "pass": true,
+      "detail": {
+        "components": 1008,
+        "expected": 1008,
+        "modules": 72,
+        "per_module": 14,
+        "dense_modules_by_family": {
+          "west": 36,
+          "outer_return": 18,
+          "door_return": 18
+        },
+        "return_reduction": false
+      }
+    },
+    "aggregate_stamp_variation": {
+      "pass": true,
+      "detail": {
+        "method": "sorted normalized parsed component-centroid signatures rounded to 0.001",
+        "families": {
+          "west": {
+            "modules": 36,
+            "unique_centroid_signatures": 36
+          },
+          "outer_return": {
+            "modules": 18,
+            "unique_centroid_signatures": 18
+          },
+          "door_return": {
+            "modules": 18,
+            "unique_centroid_signatures": 18
+          }
+        },
+        "minimum_unique": {
+          "west": 30,
+          "outer_return": 15,
+          "door_return": 15
+        }
+      }
+    },
+    "geometry_obedient_weather": {
+      "pass": true,
+      "detail": {
+        "streak_faces": 3888,
+        "streak_components": 648,
+        "non_vertical_components": 0,
+        "joint_sill_fixing_origin_top_faces": 1080,
+        "module_profiles": 72,
+        "unique_profiles_by_family": {
+          "west": 36,
+          "outer_return": 18,
+          "door_return": 18
+        },
+        "orientation": "vertical local Z",
+        "identical_stamp": false
+      }
+    },
+    "irregular_corner_spalls": {
+      "pass": true,
+      "detail": {
+        "components": 14,
+        "family_distribution": {
+          "west": 6,
+          "outer_return": 4,
+          "door_return": 4
+        },
+        "vertex_projected_width_height_signatures": 13,
+        "all_non_box_non_rectangular": true,
+        "corner_signatures": [
+          "LB",
+          "LT",
+          "RB",
+          "RT"
+        ],
+        "rebar_components": 14,
+        "rebar_associated_within_24uu": 14
+      }
+    },
+    "collision": {
+      "pass": true,
+      "detail": {
+        "box_count": 8,
+        "intrusions": {
+          "door_leaf": 0,
+          "clear_doorway": 0,
+          "jamb_positive": 0,
+          "jamb_negative": 0,
+          "head": 0,
+          "sill": 0,
+          "track": 0
+        },
+        "doorway_bridging_boxes": 0,
+        "render_mesh_collision": "disabled"
+      }
+    },
+    "faithful_render": {
+      "pass": true,
+      "detail": {
+        "size": [
+          2600,
+          1700
+        ],
+        "mode": "RGB",
+        "renderer": "numpy_orthographic_zbuffer_v1",
+        "z_buffer": true,
+        "two_sided": true,
+        "parsed_obj_vertices": 15828,
+        "parsed_obj_faces": 17794,
+        "parsed_obj_triangles": 23776,
+        "view_names": [
+          "FULL WEST ELEVATION",
+          "WEST FRACTURE DETAIL - 9 MODULES",
+          "DOOR RETURN - FROM PASSAGE",
+          "OUTER RETURN - FROM OUTSIDE"
+        ]
+      }
+    },
+    "render_visual_sanity": {
+      "pass": true,
+      "detail": {
+        "thresholds": {
+          "viewport_coverage_min": 0.35,
+          "west_coverage_min": 0.5,
+          "return_semantic_colors_min": 5,
+          "return_structural_fraction_max": 0.72
+        },
+        "measured": {
+          "FULL WEST ELEVATION": {
+            "viewport": [
+              40,
+              100,
+              2560,
+              900
+            ],
+            "coverage": 0.6046,
+            "semantic_color_count": 7,
+            "structural_fraction_of_ink": 0.09268,
+            "semantic_pixels": {
+              "M_EntranceBulkhead_StructuralConcrete": 112968,
+              "M_EntranceBulkhead_BoardFormedPlinth": 168840,
+              "M_EntranceBulkhead_PrecastAggregate": 900780,
+              "M_EntranceBulkhead_ProudCoarseAggregate": 14477,
+              "M_EntranceBulkhead_ChamferArris": 0,
+              "M_EntranceBulkhead_JointReveal": 2028,
+              "M_EntranceBulkhead_SealantJoint": 0,
+              "M_EntranceBulkhead_SpallReveal": 1080,
+              "M_EntranceBulkhead_RebarLug": 0,
+              "M_EntranceBulkhead_WeatherStreak": 18691
+            }
+          },
+          "WEST FRACTURE DETAIL - 9 MODULES": {
+            "viewport": [
+              40,
+              980,
+              1020,
+              1540
+            ],
+            "coverage": 0.65182,
+            "semantic_color_count": 7,
+            "structural_fraction_of_ink": 0.07068,
+            "semantic_pixels": {
+              "M_EntranceBulkhead_StructuralConcrete": 25284,
+              "M_EntranceBulkhead_BoardFormedPlinth": 9240,
+              "M_EntranceBulkhead_PrecastAggregate": 311010,
+              "M_EntranceBulkhead_ProudCoarseAggregate": 5069,
+              "M_EntranceBulkhead_ChamferArris": 0,
+              "M_EntranceBulkhead_JointReveal": 520,
+              "M_EntranceBulkhead_SealantJoint": 0,
+              "M_EntranceBulkhead_SpallReveal": 312,
+              "M_EntranceBulkhead_RebarLug": 0,
+              "M_EntranceBulkhead_WeatherStreak": 6285
+            }
+          },
+          "DOOR RETURN - FROM PASSAGE": {
+            "viewport": [
+              1060,
+              980,
+              1790,
+              1540
+            ],
+            "coverage": 0.47647,
+            "semantic_color_count": 6,
+            "structural_fraction_of_ink": 0.08396,
+            "semantic_pixels": {
+              "M_EntranceBulkhead_StructuralConcrete": 16353,
+              "M_EntranceBulkhead_BoardFormedPlinth": 27158,
+              "M_EntranceBulkhead_PrecastAggregate": 146212,
+              "M_EntranceBulkhead_ProudCoarseAggregate": 2069,
+              "M_EntranceBulkhead_ChamferArris": 0,
+              "M_EntranceBulkhead_JointReveal": 0,
+              "M_EntranceBulkhead_SealantJoint": 0,
+              "M_EntranceBulkhead_SpallReveal": 217,
+              "M_EntranceBulkhead_RebarLug": 0,
+              "M_EntranceBulkhead_WeatherStreak": 2772
+            }
+          },
+          "OUTER RETURN - FROM OUTSIDE": {
+            "viewport": [
+              1830,
+              980,
+              2560,
+              1540
+            ],
+            "coverage": 0.47647,
+            "semantic_color_count": 6,
+            "structural_fraction_of_ink": 0.08387,
+            "semantic_pixels": {
+              "M_EntranceBulkhead_StructuralConcrete": 16337,
+              "M_EntranceBulkhead_BoardFormedPlinth": 27158,
+              "M_EntranceBulkhead_PrecastAggregate": 146474,
+              "M_EntranceBulkhead_ProudCoarseAggregate": 2119,
+              "M_EntranceBulkhead_ChamferArris": 0,
+              "M_EntranceBulkhead_JointReveal": 0,
+              "M_EntranceBulkhead_SealantJoint": 0,
+              "M_EntranceBulkhead_SpallReveal": 260,
+              "M_EntranceBulkhead_RebarLug": 0,
+              "M_EntranceBulkhead_WeatherStreak": 2433
+            }
+          }
+        }
+      }
+    },
+    "render_spall_no_rectangle_stamp": {
+      "pass": true,
+      "detail": {
+        "source": "actual parsed MAT_SPALL topology projected in each face plane",
+        "components": 14,
+        "identical_axis_aligned_rectangle_components": 0,
+        "unique_signatures": 13
+      }
+    },
+    "production_paths": {
+      "pass": true,
+      "detail": {
+        "prototype_geometry_contamination": false
+      }
+    }
+  },
+  "parsed": {
+    "vertices": 15828,
+    "faces": 17794,
+    "components": 1970,
+    "triangles": 23776,
+    "triangles_by_material": {
+      "M_EntranceBulkhead_StructuralConcrete": 96,
+      "M_EntranceBulkhead_BoardFormedPlinth": 576,
+      "M_EntranceBulkhead_PrecastAggregate": 336,
+      "M_EntranceBulkhead_JointReveal": 936,
+      "M_EntranceBulkhead_ChamferArris": 624,
+      "M_EntranceBulkhead_ProudCoarseAggregate": 11952,
+      "M_EntranceBulkhead_SealantJoint": 864,
+      "M_EntranceBulkhead_WeatherStreak": 7776,
+      "M_EntranceBulkhead_SpallReveal": 224,
+      "M_EntranceBulkhead_RebarLug": 392
+    },
+    "local_bounds": {
+      "min": [
+        -465.2,
+        -1300.0,
+        0.0
+      ],
+      "max": [
+        112.0,
+        1300.0,
+        825.0
+      ]
+    }
+  },
+  "variation": {
+    "aggregate": {
+      "west": {
+        "modules": 36,
+        "unique_centroid_signatures": 36
+      },
+      "outer_return": {
+        "modules": 18,
+        "unique_centroid_signatures": 18
+      },
+      "door_return": {
+        "modules": 18,
+        "unique_centroid_signatures": 18
+      }
+    },
+    "weather_unique_profiles": {
+      "west": 36,
+      "outer_return": 18,
+      "door_return": 18
+    }
+  },
+  "intrusion_faces": {
+    "door_leaf": 0,
+    "clear_doorway": 0,
+    "jamb_positive": 0,
+    "jamb_negative": 0,
+    "head": 0,
+    "sill": 0,
+    "track": 0
+  },
+  "mounts": {
+    "DOOR_PanelIn": {
+      "plane_y": -424.0,
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "samples": 81,
+      "covered": 81,
+      "joint_or_recess_hits": 0,
+      "minimum_course_or_joint_clearance": 6.0
+    },
+    "BEACON_positive": {
+      "plane_y": 424.0,
+      "normal": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "samples": 81,
+      "covered": 81,
+      "joint_or_recess_hits": 0,
+      "minimum_course_or_joint_clearance": 5.0
+    },
+    "BEACON_negative": {
+      "plane_y": -424.0,
+      "normal": [
+        0.0,
+        1.0,
+        0.0
+      ],
+      "samples": 81,
+      "covered": 81,
+      "joint_or_recess_hits": 0,
+      "minimum_course_or_joint_clearance": 5.0
+    }
+  },
+  "collision_box_count": 8
+}

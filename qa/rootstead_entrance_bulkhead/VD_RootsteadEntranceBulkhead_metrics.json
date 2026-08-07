@@ -1,0 +1,217 @@
+{
+  "asset": "VD_RootsteadEntranceBulkhead",
+  "production": true,
+  "placement_world": [
+    0.0,
+    0.0,
+    3500.0
+  ],
+  "local_bounds": {
+    "min": [
+      -465.2,
+      -1300.0,
+      0.0
+    ],
+    "max": [
+      112.0,
+      1300.0,
+      825.0
+    ]
+  },
+  "world_bounds": {
+    "min": [
+      -465.2,
+      -1300.0,
+      3500.0
+    ],
+    "max": [
+      112.0,
+      1300.0,
+      4325.0
+    ]
+  },
+  "vertices": 15828,
+  "faces": 17794,
+  "triangles": 23776,
+  "triangles_by_material": {
+    "M_EntranceBulkhead_StructuralConcrete": 96,
+    "M_EntranceBulkhead_BoardFormedPlinth": 576,
+    "M_EntranceBulkhead_PrecastAggregate": 336,
+    "M_EntranceBulkhead_JointReveal": 936,
+    "M_EntranceBulkhead_ChamferArris": 624,
+    "M_EntranceBulkhead_ProudCoarseAggregate": 11952,
+    "M_EntranceBulkhead_SealantJoint": 864,
+    "M_EntranceBulkhead_WeatherStreak": 7776,
+    "M_EntranceBulkhead_SpallReveal": 224,
+    "M_EntranceBulkhead_RebarLug": 392
+  },
+  "module_count": 72,
+  "joints": {
+    "width_uu": 3.2,
+    "reveal_depth_uu": 12.0,
+    "credible_range_uu": [
+      2.5,
+      4.0
+    ]
+  },
+  "spalls": {
+    "components": 14,
+    "family_distribution": {
+      "west": 6,
+      "outer_return": 4,
+      "door_return": 4
+    },
+    "geometry": "closed irregular five-sided corner-loss facets"
+  },
+  "aggregate": {
+    "components": 1008,
+    "per_module": 14,
+    "return_reduction": false,
+    "parsed_signature_unique_by_family": {
+      "west": 36,
+      "outer_return": 18,
+      "door_return": 18
+    }
+  },
+  "weather_streaks": {
+    "components": 648,
+    "parsed_profile_unique_by_family": {
+      "west": 36,
+      "outer_return": 18,
+      "door_return": 18
+    },
+    "vertical_down_gravity": true,
+    "origins": "top joints and fixing/spall origins"
+  },
+  "return_bays": {
+    "boundaries": [
+      -461.0,
+      -281.0,
+      -101.0,
+      112.0
+    ],
+    "widths": [
+      180,
+      180,
+      213
+    ],
+    "reason": "Equal 191 uu bays put a joint at x=-79 through device mounts; closure bays keep joints outside every footprint."
+  },
+  "render_source": {
+    "parsed_obj_faces": 17794,
+    "semantic_materials": 10
+  },
+  "render_evidence": {
+    "renderer": "numpy_orthographic_zbuffer_v1",
+    "z_buffer": true,
+    "two_sided": true,
+    "backface_culling": false,
+    "image_size": [
+      2600,
+      1700
+    ],
+    "parsed_obj_vertices": 15828,
+    "parsed_obj_faces": 17794,
+    "parsed_obj_triangles": 23776,
+    "view_names": [
+      "FULL WEST ELEVATION",
+      "WEST FRACTURE DETAIL - 9 MODULES",
+      "DOOR RETURN - FROM PASSAGE",
+      "OUTER RETURN - FROM OUTSIDE"
+    ],
+    "view_stats": {
+      "FULL WEST ELEVATION": {
+        "viewport": [
+          40,
+          100,
+          2560,
+          900
+        ],
+        "coverage": 0.6046,
+        "semantic_color_count": 7,
+        "structural_fraction_of_ink": 0.09268,
+        "semantic_pixels": {
+          "M_EntranceBulkhead_StructuralConcrete": 112968,
+          "M_EntranceBulkhead_BoardFormedPlinth": 168840,
+          "M_EntranceBulkhead_PrecastAggregate": 900780,
+          "M_EntranceBulkhead_ProudCoarseAggregate": 14477,
+          "M_EntranceBulkhead_ChamferArris": 0,
+          "M_EntranceBulkhead_JointReveal": 2028,
+          "M_EntranceBulkhead_SealantJoint": 0,
+          "M_EntranceBulkhead_SpallReveal": 1080,
+          "M_EntranceBulkhead_RebarLug": 0,
+          "M_EntranceBulkhead_WeatherStreak": 18691
+        }
+      },
+      "WEST FRACTURE DETAIL - 9 MODULES": {
+        "viewport": [
+          40,
+          980,
+          1020,
+          1540
+        ],
+        "coverage": 0.65182,
+        "semantic_color_count": 7,
+        "structural_fraction_of_ink": 0.07068,
+        "semantic_pixels": {
+          "M_EntranceBulkhead_StructuralConcrete": 25284,
+          "M_EntranceBulkhead_BoardFormedPlinth": 9240,
+          "M_EntranceBulkhead_PrecastAggregate": 311010,
+          "M_EntranceBulkhead_ProudCoarseAggregate": 5069,
+          "M_EntranceBulkhead_ChamferArris": 0,
+          "M_EntranceBulkhead_JointReveal": 520,
+          "M_EntranceBulkhead_SealantJoint": 0,
+          "M_EntranceBulkhead_SpallReveal": 312,
+          "M_EntranceBulkhead_RebarLug": 0,
+          "M_EntranceBulkhead_WeatherStreak": 6285
+        }
+      },
+      "DOOR RETURN - FROM PASSAGE": {
+        "viewport": [
+          1060,
+          980,
+          1790,
+          1540
+        ],
+        "coverage": 0.47647,
+        "semantic_color_count": 6,
+        "structural_fraction_of_ink": 0.08396,
+        "semantic_pixels": {
+          "M_EntranceBulkhead_StructuralConcrete": 16353,
+          "M_EntranceBulkhead_BoardFormedPlinth": 27158,
+          "M_EntranceBulkhead_PrecastAggregate": 146212,
+          "M_EntranceBulkhead_ProudCoarseAggregate": 2069,
+          "M_EntranceBulkhead_ChamferArris": 0,
+          "M_EntranceBulkhead_JointReveal": 0,
+          "M_EntranceBulkhead_SealantJoint": 0,
+          "M_EntranceBulkhead_SpallReveal": 217,
+          "M_EntranceBulkhead_RebarLug": 0,
+          "M_EntranceBulkhead_WeatherStreak": 2772
+        }
+      },
+      "OUTER RETURN - FROM OUTSIDE": {
+        "viewport": [
+          1830,
+          980,
+          2560,
+          1540
+        ],
+        "coverage": 0.47647,
+        "semantic_color_count": 6,
+        "structural_fraction_of_ink": 0.08387,
+        "semantic_pixels": {
+          "M_EntranceBulkhead_StructuralConcrete": 16337,
+          "M_EntranceBulkhead_BoardFormedPlinth": 27158,
+          "M_EntranceBulkhead_PrecastAggregate": 146474,
+          "M_EntranceBulkhead_ProudCoarseAggregate": 2119,
+          "M_EntranceBulkhead_ChamferArris": 0,
+          "M_EntranceBulkhead_JointReveal": 0,
+          "M_EntranceBulkhead_SealantJoint": 0,
+          "M_EntranceBulkhead_SpallReveal": 260,
+          "M_EntranceBulkhead_RebarLug": 0,
+          "M_EntranceBulkhead_WeatherStreak": 2433
+        }
+      }
+    }
+  }
+}

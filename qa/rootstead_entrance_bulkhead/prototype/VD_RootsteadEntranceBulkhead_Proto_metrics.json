@@ -1,0 +1,196 @@
+{
+  "asset": "VD_RootsteadEntranceBulkhead_Proto",
+  "purpose": "Triangle-budget prototype gate: one representative held precast module at true scale. NOT the full wall.",
+  "modules_represented": 1,
+  "world_placement_cm": [
+    0.0,
+    0.0,
+    3500.0
+  ],
+  "intended_placement": {
+    "note": "World-aligned local coordinates (local X==world X, local Y==world Y, local Z==world Z-3500 so base is at local Z=0). Authored at the representative cell (first column, bottom courses, of the +Y wing); eventual placement transform is (0,0,3500). Visible decorated face is the west (-X) face at the REQUIRED replacement extent x=-461; relief proud toward -X. x=-300 is only the defective void edge.",
+    "wall_extents_uu": {
+      "x": [
+        -461.0,
+        112.0
+      ],
+      "y": [
+        -1300.0,
+        1300.0
+      ],
+      "z": [
+        3500.0,
+        4325.0
+      ]
+    },
+    "door_clear_y_uu": [
+      -424.0,
+      424.0
+    ],
+    "prototype_cell_world_uu": {
+      "x": [
+        -465.2,
+        -391.0
+      ],
+      "y": [
+        424.0,
+        570.0
+      ],
+      "z": [
+        3500.0,
+        3875.0
+      ]
+    }
+  },
+  "candidate_module_rationale": "146 x 225 uu (1.46 x 2.25 m): within the 1960s architectural precast range (Mo-Sai / storey-band units ~1.2-1.5 m). 146 divides the 876 uu wing width exactly 6x and 225 divides the 675 uu precast field exactly 3x, so panels close on both the door jamb and the wall-end stop lines with no part-panels. Plinth is a separate 1.5 m board-marked in-situ pour.",
+  "triangle_counts_by_category": {
+    "M_EntranceBulkhead_BaseMassing": 22,
+    "M_EntranceBulkhead_JointReveal": 2,
+    "M_EntranceBulkhead_BoardFormedPlinth": 72,
+    "M_EntranceBulkhead_PrecastAggregate": 4,
+    "M_EntranceBulkhead_ChamferArris": 8,
+    "M_EntranceBulkhead_ProudCoarseAggregate": 166,
+    "M_EntranceBulkhead_SealantJoint": 36,
+    "M_EntranceBulkhead_SpallReveal": 6,
+    "M_EntranceBulkhead_RebarLug": 28,
+    "M_EntranceBulkhead_WeatherStreak": 108
+  },
+  "triangle_counts_grouped": {
+    "fixed_base_massing": {
+      "M_EntranceBulkhead_BoardFormedPlinth": 72,
+      "M_EntranceBulkhead_BaseMassing": 22
+    },
+    "repeated_decorative_detail": {
+      "M_EntranceBulkhead_ChamferArris": 8,
+      "M_EntranceBulkhead_SealantJoint": 36,
+      "M_EntranceBulkhead_JointReveal": 2,
+      "M_EntranceBulkhead_ProudCoarseAggregate": 166,
+      "M_EntranceBulkhead_PrecastAggregate": 4,
+      "M_EntranceBulkhead_WeatherStreak": 108
+    },
+    "sparse_decorative_detail": {
+      "M_EntranceBulkhead_RebarLug": 28,
+      "M_EntranceBulkhead_SpallReveal": 6
+    }
+  },
+  "total_prototype_triangles": 452,
+  "local_bounds_uu": {
+    "min": [
+      -465.2,
+      424.0,
+      0.0
+    ],
+    "max": [
+      -391.0,
+      570.0,
+      375.0
+    ]
+  },
+  "expected_world_face_x_uu": -461.0,
+  "aggregate_geometry": {
+    "count": 14,
+    "radius_range_uu": [
+      2.7,
+      5.2
+    ],
+    "distribution": "deterministic non-grid; varied 5/6/7-sided irregular closed bipyramids",
+    "triangle_cost": 166
+  },
+  "projection": {
+    "module_layout": {
+      "module_dimensions_uu": {
+        "width_Y": 146.0,
+        "height_Z": 225.0,
+        "plinth_height_Z": 150.0
+      },
+      "wing_width_uu": 876.0,
+      "columns_per_wing": 6,
+      "rows": 3,
+      "wings": 2,
+      "face_families": {
+        "west_exterior_wings": {
+          "faces": 2,
+          "run_uu": 876.0,
+          "bay_width_uu": 146.0,
+          "bays_per_face": 6,
+          "courses": 3,
+          "module_equivalents": 36
+        },
+        "outer_returns_y_plus_minus_1300": {
+          "faces": 2,
+          "run_uu": 573.0,
+          "bay_width_uu": 191.0,
+          "bays_per_face": 3,
+          "courses": 3,
+          "module_equivalents": 18
+        },
+        "doorway_returns_y_plus_minus_424": {
+          "faces": 2,
+          "run_uu": 573.0,
+          "bay_width_uu": 191.0,
+          "bays_per_face": 3,
+          "courses": 3,
+          "module_equivalents": 18
+        }
+      },
+      "surface_assumptions": [
+        "Architectural precast applies to west exterior faces of both wings.",
+        "It also applies to outer return faces at y=+/-1300 and doorway return faces at y=+/-424.",
+        "The east face x=112 abuts WEND_Entry and receives no exposed decoration.",
+        "All families hold the 225 uu vertical course; west bays are 146 uu and return bays 191 uu, closing exactly on 876 and 573 uu respectively."
+      ],
+      "module_count_full_wall": 72,
+      "spall_fraction": 0.2,
+      "spall_modules_full_wall": 14
+    },
+    "per_module": {
+      "repeated_detail_by_category": {
+        "M_EntranceBulkhead_ChamferArris": 8,
+        "M_EntranceBulkhead_SealantJoint": 36,
+        "M_EntranceBulkhead_JointReveal": 2,
+        "M_EntranceBulkhead_ProudCoarseAggregate": 166,
+        "M_EntranceBulkhead_PrecastAggregate": 4,
+        "M_EntranceBulkhead_WeatherStreak": 108
+      },
+      "repeated_detail_total": 324,
+      "sparse_detail_by_category": {
+        "M_EntranceBulkhead_RebarLug": 28,
+        "M_EntranceBulkhead_SpallReveal": 6
+      },
+      "sparse_detail_total_if_present": 34
+    },
+    "projected_full_wall": {
+      "fixed_base_massing": {
+        "note": "Does NOT scale with module count. Authored once as hand-placed segmented box primitives (none crossing the door clear volume) + a per-wing board-marked plinth strip. Estimate is stated, not multiplied from the module sample.",
+        "backing_boxes": 4,
+        "backing_triangles": 48,
+        "plinth_triangles": 432,
+        "base_massing_triangles": 480
+      },
+      "repeated_decorative_detail": {
+        "note": "Scales LINEARLY with module count -- this is where the scaling risk lives.",
+        "by_category": {
+          "M_EntranceBulkhead_ChamferArris": 576,
+          "M_EntranceBulkhead_SealantJoint": 2592,
+          "M_EntranceBulkhead_JointReveal": 144,
+          "M_EntranceBulkhead_ProudCoarseAggregate": 11952,
+          "M_EntranceBulkhead_PrecastAggregate": 288,
+          "M_EntranceBulkhead_WeatherStreak": 7776
+        },
+        "sparse_by_category": {
+          "M_EntranceBulkhead_RebarLug": 392,
+          "M_EntranceBulkhead_SpallReveal": 84
+        },
+        "detail_triangles": 23804
+      },
+      "total_projected_triangles": 24284,
+      "scaling_risk": {
+        "detail_multiplier": 72,
+        "detail_share_of_total": 0.9802,
+        "statement": "Decorative detail multiplies x72 (module count); base massing is ~constant. Detail is 98.0% of the projected total. Any increase in per-module detail density (e.g. modelling exposed aggregate as geometry instead of material) is amplified 72x."
+      }
+    }
+  },
+  "collision_note": "Render mesh only. Do NOT accept Unreal's import-generated convex hull and do NOT use convex decomposition -- either bridges the adjacent doorway. At integration, author explicit segmented Unreal box collision primitives; no primitive may cross the clear doorway at x -509..112, y +/-424, z 3500..3892.",
+  "banned_language": "No rivets, plate seams, welds, or steel-plate: 1960s institutional precast, not fabricated metal."
+}
