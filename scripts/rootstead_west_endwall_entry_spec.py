@@ -85,27 +85,21 @@ TUBE_RADIUS_LOWER = 9.0   # z < 4000 (transfer zone, near springing)
 TUBE_RADIUS_MID = 10.0    # 4000 <= z < 6000 (matches the vault barrel)
 TUBE_RADIUS_UPPER = 10.5  # z >= 6000 (upper lattice reads as roof structure)
 
-# VD_VaultNode_Far strategy: preserve the installed node's defining dimensions
-# and bore, but author a low-segment annular hub rather than duplicating the
-# 12,464-triangle near mesh at 957 nodes. 16 segments = 128 tris per hub,
-# comfortably below the shipped far variant's 672 tris.
-HUB_RADIUS = 52.66
-HUB_AXIAL_THICKNESS = 40.40
-HUB_BORE_RADIUS = 14.31
-HUB_RADIAL_SEGMENTS = 16
+# The committed vault-node kit is the sole joint-profile authority. The generator
+# reads VD_VaultNode_Far.obj directly, preserves its four centre components and
+# six barrel/flange pairs, and reduces their circular sections to six sides.
+# This yields 320 triangles/node versus 672 in the reference far LOD.
+JOINT_PROFILE_SIDES = 6
+JOINT_TRIANGLE_BUDGET = 410_000
 
-# PR #18's imported placement/bounds are locked. Full-size hubs therefore use
-# inset boundary centres: their outer rings land on the old envelope instead
-# of expanding it. These are measured from the imported PR #18 output.
+# PR #18's imported placement/bounds are locked. Boundary-node centres are
+# inset by the source-derived profile reach in the generator so regeneration
+# cannot expand this envelope.
 LOCKED_WORLD_PLACEMENT_Z = 3485.9398302666036
 LOCKED_LOCAL_BOUNDS_MIN = (-509.0, -7512.53137, 0.0)
 LOCKED_LOCAL_BOUNDS_MAX = (112.0, 7512.53137, 6205.037919)
 LOCKED_WORLD_Z_MIN = LOCKED_WORLD_PLACEMENT_Z + LOCKED_LOCAL_BOUNDS_MIN[2]
 LOCKED_WORLD_Z_MAX = LOCKED_WORLD_PLACEMENT_Z + LOCKED_LOCAL_BOUNDS_MAX[2]
-HUB_CENTER_Y_MIN = LOCKED_LOCAL_BOUNDS_MIN[1] + HUB_RADIUS
-HUB_CENTER_Y_MAX = LOCKED_LOCAL_BOUNDS_MAX[1] - HUB_RADIUS
-HUB_CENTER_Z_WORLD_MIN = LOCKED_WORLD_Z_MIN + HUB_RADIUS
-HUB_CENTER_Z_WORLD_MAX = LOCKED_WORLD_Z_MAX - HUB_RADIUS
 
 def tube_radius_for_z(world_z_value: float) -> float:
     if world_z_value < BAND_LOWER_Z_WORLD:

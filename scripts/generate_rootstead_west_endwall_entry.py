@@ -33,9 +33,22 @@ from typing import Iterable
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 import rootstead_west_endwall_entry_spec as spec  # noqa: E402
+from rootstead_vault_node_profile import (  # noqa: E402
+    VaultNodeProfile,
+    generated_profile_bounds,
+    generated_triangles_per_node,
+    load_vault_node_profile,
+)
 
 OUT = ROOT / "SourceMesh" / "architecture"
 QA = ROOT / "qa" / "rootstead_west_endwall_entry"
+VAULT_NODE_PROFILE = load_vault_node_profile()
+JOINT_PROFILE_BOUNDS_MIN, JOINT_PROFILE_BOUNDS_MAX = generated_profile_bounds(
+    VAULT_NODE_PROFILE, spec.JOINT_PROFILE_SIDES)
+JOINT_CENTER_Y_MIN = spec.LOCKED_LOCAL_BOUNDS_MIN[1] - JOINT_PROFILE_BOUNDS_MIN[1]
+JOINT_CENTER_Y_MAX = spec.LOCKED_LOCAL_BOUNDS_MAX[1] - JOINT_PROFILE_BOUNDS_MAX[1]
+JOINT_CENTER_Z_WORLD_MIN = spec.LOCKED_WORLD_Z_MIN - JOINT_PROFILE_BOUNDS_MIN[2]
+JOINT_CENTER_Z_WORLD_MAX = spec.LOCKED_WORLD_Z_MAX - JOINT_PROFILE_BOUNDS_MAX[2]
 
 Vec3 = tuple[float, float, float]
 Vec2 = tuple[float, float]
@@ -135,36 +148,63 @@ class Mesh:
             self.face(material, (rings[0][i], rings[0][j], rings[1][j], rings[1][i]))
         return (ring_ranges[0], ring_ranges[1])
 
-    def annular_hub_x(self, center: Vec3, outer_radius: float, bore_radius: float,
-                      axial_thickness: float, sides: int, material: str) -> dict[str, tuple[int, int]]:
-        """Low-poly bored disc hub with its axis along local X.
+    def vault_node_joint(self, center: Vec3, profile: VaultNodeProfile,
+                         sides: int, material: str) -> dict[str, int]:
+        """Emit a low-sided fitting derived directly from VD_VaultNode_Far.
 
-        The four rings are contiguous in outer0, outer1, inner0, inner1 order
-        so the verifier can measure the outer silhouette and bore directly
-        from the emitted OBJ rather than trusting graph metadata.
+        Reference X/Y map into the gable Y/Z plane and reference Z maps to
+        local X. Four centre cylinders and six separate barrel/flange pairs
+        remain disconnected exactly as in the far-LOD source profile.
         """
+        first_vertex = len(self.vertices) + 1
+        first_face = len(self.faces)
         cx, cy, cz = center
-        x0, x1 = cx - axial_thickness / 2.0, cx + axial_thickness / 2.0
 
-        def ring(x: float, radius: float) -> list[int]:
-            return [self.vertex((x, cy + radius * math.cos(2.0 * math.pi * i / sides),
-                                 cz + radius * math.sin(2.0 * math.pi * i / sides)))
-                    for i in range(sides)]
+        def close_rings(ring0: list[int], ring1: list[int]) -> None:
+            self.face(material, reversed(ring0))
+            self.face(material, ring1)
+            for i in range(sides):
+                j = (i + 1) % sides
+                self.face(material, (ring0[i], ring0[j], ring1[j], ring1[i]))
 
-        outer0 = ring(x0, outer_radius)
-        outer1 = ring(x1, outer_radius)
-        inner0 = ring(x0, bore_radius)
-        inner1 = ring(x1, bore_radius)
-        for i in range(sides):
-            j = (i + 1) % sides
-            self.face(material, (outer0[i], outer0[j], outer1[j], outer1[i]))
-            self.face(material, (inner0[j], inner0[i], inner1[i], inner1[j]))
-            self.face(material, (outer0[j], outer0[i], inner0[i], inner0[j]))
-            self.face(material, (outer1[i], outer1[j], inner1[j], inner1[i]))
+        for piece in profile.central:
+            rings = []
+            for x in (cx + piece.z_min, cx + piece.z_max):
+                rings.append([
+                    self.vertex((x,
+                                 cy + piece.radius * math.cos(2.0 * math.pi * i / sides),
+                                 cz + piece.radius * math.sin(2.0 * math.pi * i / sides)))
+                    for i in range(sides)
+                ])
+            close_rings(rings[0], rings[1])
+
+        max_sine = max(abs(math.sin(2.0 * math.pi * i / sides)) for i in range(sides))
+        for piece in sorted(profile.radial, key=lambda item: (item.sector, item.kind)):
+            angle = piece.sector * math.pi / 3.0
+            direction = (math.cos(angle), math.sin(angle))
+            tangent = (-direction[1], direction[0])
+            axial_scale = piece.axial_extent / max_sine
+            rings = []
+            for radial in (piece.radial_min, piece.radial_max):
+                ring = []
+                for i in range(sides):
+                    section_angle = 2.0 * math.pi * i / sides
+                    tangent_offset = piece.tangent_extent * math.cos(section_angle)
+                    ring.append(self.vertex((
+                        cx + axial_scale * math.sin(section_angle),
+                        cy + direction[0] * radial + tangent[0] * tangent_offset,
+                        cz + direction[1] * radial + tangent[1] * tangent_offset,
+                    )))
+                rings.append(ring)
+            close_rings(rings[0], rings[1])
+
         return {
-            "all": (outer0[0], sides * 4),
-            "outer": (outer0[0], sides * 2),
-            "inner": (inner0[0], sides * 2),
+            "vertex_start": first_vertex,
+            "vertex_count": len(self.vertices) - first_vertex + 1,
+            "face_start": first_face,
+            "face_count": len(self.faces) - first_face,
+            "component_count": profile.source_components,
+            "triangles": generated_triangles_per_node(sides),
         }
 
     def face_uvs(self, face: tuple[int, ...], scale: float = 100.0) -> list[Vec2]:
@@ -293,9 +333,9 @@ def classify_nodes(raw: dict[tuple[int, int], tuple[float, float]]) -> dict[tupl
             z_world = spec.world_z(z_local)
             boundary = "hole"
 
-        # Full 52.66 cm hubs cannot sit on the old centreline boundary without
-        # expanding PR #18's verified local bounds. Keep the full hub profile
-        # and inset only boundary centres so their outer rings retain the old
+        # The source-derived fitting cannot sit on the old centreline boundary without
+        # expanding PR #18's verified local bounds. Keep the full fitting profile
+        # and inset only boundary centres so the source-derived fitting profile retains the old
         # envelope. Bottom hole-edge nodes inside the opening are omitted;
         # otherwise moving them upward for the hub would put them inside the
         # topology-integrated aperture.
@@ -303,9 +343,9 @@ def classify_nodes(raw: dict[tuple[int, int], tuple[float, float]]) -> dict[tupl
                 and abs(y) < HOLE_HALF_Y - 1e-6:
             continue
         boundary_target = [y, z_world] if boundary == "arch" else None
-        y = min(max(y, spec.HUB_CENTER_Y_MIN), spec.HUB_CENTER_Y_MAX)
-        z_world = min(max(z_world, spec.HUB_CENTER_Z_WORLD_MIN), spec.HUB_CENTER_Z_WORLD_MAX)
-        if boundary == "interior" and abs(z_world - spec.HUB_CENTER_Z_WORLD_MIN) < 1e-6:
+        y = min(max(y, JOINT_CENTER_Y_MIN), JOINT_CENTER_Y_MAX)
+        z_world = min(max(z_world, JOINT_CENTER_Z_WORLD_MIN), JOINT_CENTER_Z_WORLD_MAX)
+        if boundary == "interior" and abs(z_world - JOINT_CENTER_Z_WORLD_MIN) < 1e-6:
             boundary = "base"
         nodes[key] = {"y": y, "z_world": z_world, "boundary": boundary,
                       "boundary_target": boundary_target}
@@ -413,18 +453,19 @@ def build_lattice(mesh: Mesh) -> tuple[dict, dict, list]:
     graph_nodes: dict[str, dict] = {}
     for key, n in nodes.items():
         z_local = spec.local_z(n["z_world"])
-        ranges = mesh.annular_hub_x(
-            (spec.TUBE_X, n["y"], z_local), spec.HUB_RADIUS, spec.HUB_BORE_RADIUS,
-            spec.HUB_AXIAL_THICKNESS, spec.HUB_RADIAL_SEGMENTS, spec.MAT_ALUMINIUM)
-        all_start, all_count = ranges["all"]
-        outer_start, outer_count = ranges["outer"]
-        inner_start, inner_count = ranges["inner"]
+        joint = mesh.vault_node_joint(
+            (spec.TUBE_X, n["y"], z_local), VAULT_NODE_PROFILE,
+            spec.JOINT_PROFILE_SIDES, spec.MAT_ALUMINIUM)
         graph_nodes[node_id_of[key]] = {
             "y": n["y"], "z_world": n["z_world"], "boundary": n["boundary"],
             "boundary_target": n["boundary_target"],
-            "collar_vertex_start": all_start - 1, "collar_vertex_count": all_count,
-            "hub_outer_vertex_start": outer_start - 1, "hub_outer_vertex_count": outer_count,
-            "hub_inner_vertex_start": inner_start - 1, "hub_inner_vertex_count": inner_count,
+            # Keep the legacy collar range names for endpoint/centroid checks.
+            "collar_vertex_start": joint["vertex_start"] - 1,
+            "collar_vertex_count": joint["vertex_count"],
+            "joint_face_start": joint["face_start"],
+            "joint_face_count": joint["face_count"],
+            "joint_component_count": joint["component_count"],
+            "joint_triangles": joint["triangles"],
         }
 
     graph_edges: list[dict] = []
@@ -627,7 +668,7 @@ def write_leaf_mtl() -> None:
 def rebase_to_z0(mesh: Mesh) -> float:
     """Shift every vertex up so the mesh's true lowest point sits at local Z=0.
 
-    Joint-collar cylinders (finite radius, centred on a node) dip below their
+    Vault-node fitting components (finite radius, centred on a node) dip below their
     node's nominal Z, so the lowest point of the authored geometry is not
     exactly at the nominal datum. Rather than hand-derive that dip, measure it
     and shift by exactly that amount; the applied shift is written to the
@@ -676,6 +717,14 @@ def main() -> None:
         "world_placement": list(spec.WORLD_PLACEMENT),
         "leaf_z_datum_shift": leaf_z_shift,
         "leaf_world_placement": [0.0, 0.0, spec.FIELD_BASE_Z_WORLD - leaf_z_shift],
+        "joint_profile": {
+            "source": str(VAULT_NODE_PROFILE.source_path.relative_to(ROOT)),
+            "source_sha256": VAULT_NODE_PROFILE.source_sha256,
+            "source_triangles": VAULT_NODE_PROFILE.source_triangles,
+            "source_components": VAULT_NODE_PROFILE.source_components,
+            "generated_sides": spec.JOINT_PROFILE_SIDES,
+            "generated_triangles_per_node": generated_triangles_per_node(spec.JOINT_PROFILE_SIDES),
+        },
         "nodes": graph_nodes,
         "edges": edge_bucket["edges"],
         "panes": graph_panes,

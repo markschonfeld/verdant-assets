@@ -283,7 +283,9 @@ systems with one authored rigid architectural mesh. It includes the complete
 triangulated gable, mixed-era panes, the ENDGLAZE_W transfer junction, a deep
 entrance reveal, and a fully proud rigid trellis. Animated door leaves are not
 baked into the main mesh; the optional `_Leaves` OBJ is a replacement for the
-existing leaf actors, never an additive closed-door overlay.
+existing leaf actors, never an additive closed-door overlay. Its lattice fittings
+are generated from the committed `reference-kit/rootstead-vault/VD_VaultNode_Far.obj`
+profile: six collar/barrel directions with separate flange pieces, not annular hubs.
 
 Regenerate and verify the delivery with:
 

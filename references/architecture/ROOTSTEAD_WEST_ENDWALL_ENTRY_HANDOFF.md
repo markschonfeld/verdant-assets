@@ -19,8 +19,8 @@ separate, explicitly optional mesh that never enters the leaf sweep volume.
 - Source: `SourceMesh/architecture/VD_RootsteadWestEndwallEntry.obj`
 - Material library: `SourceMesh/architecture/VD_RootsteadWestEndwallEntry.mtl`
 - Place at world **(0, 0, 3485.94)**, rotation zero, scale 1. (Local Z=0 is the
-  authored base datum. The full-size boundary hub centres are inset so their
-  outer rings retain PR #18's verified envelope; regeneration is locked to
+  authored base datum. Boundary fitting centres are inset by the signed extents
+  measured from the generated vault-node profile so they retain PR #18's verified envelope; regeneration is locked to
   this placement and bounds and the verifier fails on any drift. Always take
   the exact value from
   `qa/rootstead_west_endwall_entry/rootstead_west_endwall_entry_lattice_graph.json`
@@ -33,7 +33,7 @@ separate, explicitly optional mesh that never enters the leaf sweep volume.
 
 Material slots:
 
-1. `M_WestEndwall_OxidisedAluminium` — lattice tubes, bored disc hubs, and the
+1. `M_WestEndwall_OxidisedAluminium` — lattice tubes, vault-node collar clusters, and the
    ENDGLAZE transfer/sill cap band.
 2. `M_WestEndwall_GlazeAcrylic` — original-era lattice panes (~80%).
 3. `M_WestEndwall_GlazeRepair` — later repair-era lattice panes (~20%,
@@ -51,8 +51,8 @@ Material slots:
    top (`3892`) and the head return, and is verified never to overlap either.
 
 The OBJ contains one `o` object, zero `g` records, indexed UVs on every face
-corner, no vertex-colour data, and every solid component (tubes, bored disc
-hubs, panes, entrance structure, trellis, transfer cap) is a closed manifold
+corner, no vertex-colour data, and every solid component (tubes, collar-cluster
+pieces, panes, entrance structure, trellis, transfer cap) is a closed manifold
 (edge incidence exactly 2 everywhere — verified globally).
 
 #### Lattice / entrance topology
@@ -60,15 +60,18 @@ hubs, panes, entrance structure, trellis, transfer cap) is a closed manifold
 - 954 lattice nodes, 2729 tube members, 1776 panes — a 300 uu triangular grid
   conformed to the circular arch (centre y=0, z=2035.2, radius 7639.8) and the
   entrance-hole rectangle (`±560` Y, world Z `3500..4070`). Three obsolete
-  bottom-hole nodes were removed so full hubs cannot project into the opening.
-  Boundary hub centres are inset only far enough for their outer rings to keep
+  bottom-hole nodes were removed so full fittings cannot project into the opening.
+  Boundary fitting centres are inset only far enough for their profile to keep
   the already-imported PR #18 bounds; interior node positions are unchanged.
-- The middle-band tubes now measure 10.0 cm radius, between the installed
+- The middle-band tubes measure 10.0 cm radius, between the installed
   `VD_VaultTube` barrel range of 9.4..10.5 cm. Every lattice node carries a
-  distinct bored disc hub matching `VD_VaultNode`: radius 52.66 cm, axial
-  thickness 40.40 cm, bore radius 14.31 cm. The far-style 16-segment annulus is
-  128 triangles per hub; the complete rigid asset is 213,508 triangles, below
-  the verifier's 250,000-triangle ceiling.
+  profile derived directly from `reference-kit/rootstead-vault/VD_VaultNode_Far.obj`:
+  four compact centre pieces plus six separate radial barrel/flange pairs. The
+  six-sided reduction preserves all 16 edge-connected source component groups
+  at 320 triangles per fitting. The complete rigid asset is 396,676 triangles
+  (versus approximately 732k if the 672-triangle far node were repeated unchanged),
+  below the verifier's 410,000-triangle source-profile ceiling. It is explicitly
+  not a disc, torus, annulus, or radius/thickness approximation.
 - The ENDGLAZE transfer/sill cap (`M_WestEndwall_OxidisedAluminium`, world X
   `-509..-431`, Z `3500..3560`) is continuous across the full wall width
   except for the entrance gap (`±560` Y) — there is no unsupported gap at the
@@ -136,7 +139,7 @@ vestibule doorway on an earlier delivery (see
 — it does not reliably segment a shape this large and complex; expect it to
 collapse to one or two hulls that still bridge the aperture, the same failure
 mode recorded for the planter rings. **Do not set complex-as-simple for the
-whole asset** — at 48k faces spanning 150 m, that is both expensive and
+whole asset** — at 158,584 faces spanning 150 m, that is both expensive and
 pointless on a mesh that is mostly non-walkable glazing and high lattice.
 
 Recommended setup:
@@ -206,7 +209,9 @@ QA artifacts:
 The verifier does not just report counts — it independently recomputes the
 arch/hole envelope from `rootstead_west_endwall_entry_spec.py`'s constants,
 cross-checks every node/edge/pane's declared position against the vertex data
-the generator actually wrote into the OBJ, measures tube/collar radii from
-ring geometry rather than trusting the declared values, and integrates pane
+the generator actually wrote into the OBJ, measures tube radii from ring
+geometry, and compares every fitting's actual face connectivity and measured
+centre/barrel/flange extents against the committed `VD_VaultNode_Far.obj` profile.
+It also integrates pane
 area against the analytic arch-minus-hole area to catch gaps or overlaps in
 the field.

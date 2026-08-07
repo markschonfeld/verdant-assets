@@ -7,7 +7,7 @@ recomputes every claim in `docs/VERDANT_PROJECT_BRIEF.md`'s asset brief:
 one-object/no-group/UV/no-vertex-colour contract, world placement and arch
 envelope, 300 uu triangular-lattice coherence with a topology-integrated
 entrance aperture (no floating tube ends, no orphan nodes), vault-kit-matched
-tube and hub sizing, continuous ENDGLAZE
+tube sizing and source-mesh-derived fitting profiles, continuous ENDGLAZE
 contact, an empty animated-door-leaf envelope in the main mesh, a matching
 optional leaf-replacement mesh, and positive trellis stand-off within the
 VEST_Frame hard east limit.
@@ -32,6 +32,11 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 import rootstead_west_endwall_entry_spec as spec  # noqa: E402
+from rootstead_vault_node_profile import (  # noqa: E402
+    VaultNodeProfile,
+    generated_triangles_per_node,
+    load_vault_node_profile,
+)
 
 SOURCE = ROOT / "SourceMesh" / "architecture"
 QA = ROOT / "qa" / "rootstead_west_endwall_entry"
@@ -235,18 +240,6 @@ def _vertex_ring_radius(mesh: ObjMesh, start: int, count: int, centroid: Vec3) -
     return sum(math.dist(p, centroid) for p in pts) / len(pts)
 
 
-def _vertex_ring_radius_yz(mesh: ObjMesh, start: int, count: int, y: float, z_local: float) -> float:
-    """Radius measured in the Y/Z plane only.
-
-    Node joint collars are cylinders whose axis runs purely along local X, so
-    every ring vertex (on either end ring) sits at exactly `y,z_local +/-
-    radius` regardless of its X coordinate -- unlike `_vertex_ring_radius`,
-    this is safe to call across *both* combined end rings at once, which is
-    what lets the axial half-length check below share the same vertex range.
-    """
-    pts = mesh.vertices[start:start + count]
-    return sum(math.hypot(p[1] - y, p[2] - z_local) for p in pts) / len(pts)
-
 
 def hole_signed_distance(y: float, z: float, half_y: float, z_min: float, z_max: float) -> float:
     """Positive outside the hole rectangle, negative (magnitude = depth) inside.
@@ -267,6 +260,203 @@ def hole_signed_distance(y: float, z: float, half_y: float, z_min: float, z_max:
     ox = max(dy, 0.0)
     oz = max(dz, 0.0)
     return math.hypot(ox, oz)
+
+
+def _joint_face_components(mesh: ObjMesh, node: dict) -> tuple[list[list[Vec3]], list[str], int]:
+    """Measure edge-connected components from the actual OBJ face/vertex ranges."""
+    failures: list[str] = []
+    face_start = node.get("joint_face_start")
+    face_count = node.get("joint_face_count")
+    vertex_start = node.get("collar_vertex_start")
+    vertex_count = node.get("collar_vertex_count")
+    if not all(isinstance(value, int) for value in (face_start, face_count, vertex_start, vertex_count)):
+        return [], ["joint profile ranges are missing from the graph"], 0
+    face_start = cast(int, face_start)
+    face_count = cast(int, face_count)
+    vertex_start = cast(int, vertex_start)
+    vertex_count = cast(int, vertex_count)
+    if face_start < 0 or face_count <= 0 or face_start + face_count > len(mesh.faces):
+        return [], ["joint face range is outside the actual OBJ"], 0
+    if vertex_start < 0 or vertex_count <= 0 or vertex_start + vertex_count > len(mesh.vertices):
+        return [], ["joint vertex range is outside the actual OBJ"], 0
+
+    selected = mesh.faces[face_start:face_start + face_count]
+    allowed = range(vertex_start, vertex_start + vertex_count)
+    allowed_min, allowed_max = allowed.start, allowed.stop
+    if any(vertex < allowed_min or vertex >= allowed_max for _, face, _ in selected for vertex in face):
+        failures.append("joint face range references vertices outside its declared joint vertex range")
+    if any(material != spec.MAT_ALUMINIUM for material, _, _ in selected):
+        failures.append("joint face range contains a non-aluminium material")
+
+    edge_faces: dict[tuple[int, int], list[int]] = defaultdict(list)
+    triangles = 0
+    for local_index, (_, face, _) in enumerate(selected):
+        triangles += len(face) - 2
+        for a, b in zip(face, face[1:] + face[:1]):
+            edge_faces[(min(a, b), max(a, b))].append(local_index)
+    adjacency: dict[int, set[int]] = defaultdict(set)
+    for touching in edge_faces.values():
+        for face_index in touching:
+            adjacency[face_index].update(other for other in touching if other != face_index)
+
+    seen: set[int] = set()
+    components: list[list[Vec3]] = []
+    for start in range(len(selected)):
+        if start in seen:
+            continue
+        stack = [start]
+        seen.add(start)
+        component_faces: set[int] = set()
+        while stack:
+            current = stack.pop()
+            component_faces.add(current)
+            for neighbour in adjacency[current]:
+                if neighbour not in seen:
+                    seen.add(neighbour)
+                    stack.append(neighbour)
+        vertex_ids = sorted({
+            vertex for face_index in component_faces for vertex in selected[face_index][1]
+        })
+        components.append([mesh.vertices[vertex] for vertex in vertex_ids])
+    return components, failures, triangles
+
+
+def _measure_joint_profile(
+    components: list[list[Vec3]], center: Vec3,
+) -> tuple[list[dict[str, float]], dict[int, list[dict[str, float]]]]:
+    """Map actual gable fitting points back into the reference node's X/Y/Z frame."""
+    cx, cy, cz = center
+    central: list[dict[str, float]] = []
+    radial: dict[int, list[dict[str, float]]] = defaultdict(list)
+    for component in components:
+        # Reference X/Y are the gable Y/Z plane; reference Z is local X depth.
+        points = [(point[1] - cy, point[2] - cz, point[0] - cx) for point in component]
+        center_x = sum(point[0] for point in points) / len(points)
+        center_y = sum(point[1] for point in points) / len(points)
+        if math.hypot(center_x, center_y) < 5.0:
+            central.append({
+                "z_min": min(point[2] for point in points),
+                "z_max": max(point[2] for point in points),
+                "radius": max(math.hypot(point[0], point[1]) for point in points),
+            })
+            continue
+        sector = round(math.atan2(center_y, center_x) / (math.pi / 3.0)) % 6
+        direction = (math.cos(sector * math.pi / 3.0), math.sin(sector * math.pi / 3.0))
+        tangent = (-direction[1], direction[0])
+        radial_values = [point[0] * direction[0] + point[1] * direction[1] for point in points]
+        tangent_values = [point[0] * tangent[0] + point[1] * tangent[1] for point in points]
+        radial[sector].append({
+            "radial_min": min(radial_values),
+            "radial_max": max(radial_values),
+            "tangent_extent": max(abs(min(tangent_values)), abs(max(tangent_values))),
+            "axial_extent": max(abs(point[2]) for point in points),
+        })
+    central.sort(key=lambda item: item["z_min"])
+    for pieces in radial.values():
+        pieces.sort(key=lambda item: item["radial_max"] - item["radial_min"], reverse=True)
+    return central, radial
+
+
+def joint_profile_checks(mesh: ObjMesh, graph: dict) -> dict[str, object]:
+    """Compare every generated fitting's actual geometry to VD_VaultNode_Far."""
+    failures: list[str] = []
+    profile: VaultNodeProfile = load_vault_node_profile()
+    nodes = graph["nodes"]
+    shift = graph.get("z_datum_shift", 0.0)
+    expected_triangles = generated_triangles_per_node(spec.JOINT_PROFILE_SIDES)
+    profile_metadata = graph.get("joint_profile", {})
+    if profile_metadata.get("source_sha256") != profile.source_sha256:
+        failures.append("graph joint-profile SHA does not match the committed reference OBJ")
+
+    component_mismatch = 0
+    central_mismatch = 0
+    radial_group_mismatch = 0
+    profile_extent_mismatch = 0
+    triangle_mismatch = 0
+    range_failures = 0
+    measured_triangle_counts: list[int] = []
+    tolerance = 0.05
+
+    expected_central = [
+        {"z_min": piece.z_min, "z_max": piece.z_max, "radius": piece.radius}
+        for piece in profile.central
+    ]
+    expected_radial = {
+        sector: [
+            {"radial_min": piece.radial_min, "radial_max": piece.radial_max,
+             "tangent_extent": piece.tangent_extent, "axial_extent": piece.axial_extent}
+            for piece in pieces
+        ]
+        for sector, pieces in profile.radial_groups.items()
+    }
+
+    for node in nodes.values():
+        components, local_failures, triangles = _joint_face_components(mesh, node)
+        range_failures += len(local_failures)
+        measured_triangle_counts.append(triangles)
+        if len(components) != profile.source_components:
+            component_mismatch += 1
+        if triangles != expected_triangles:
+            triangle_mismatch += 1
+        center = (spec.TUBE_X, node["y"], spec.local_z(node["z_world"]) + shift)
+        central, radial = _measure_joint_profile(components, center)
+        if len(central) != len(expected_central):
+            central_mismatch += 1
+        else:
+            for actual, expected in zip(central, expected_central):
+                if any(abs(actual[key] - expected[key]) > tolerance for key in expected):
+                    central_mismatch += 1
+                    break
+        if set(radial) != set(expected_radial) or any(
+            len(radial.get(sector, [])) != len(expected_radial[sector]) for sector in expected_radial
+        ):
+            radial_group_mismatch += 1
+        else:
+            mismatch = False
+            for sector in expected_radial:
+                for actual, expected in zip(radial[sector], expected_radial[sector]):
+                    if any(abs(actual[key] - expected[key]) > tolerance for key in expected):
+                        mismatch = True
+                        break
+                if mismatch:
+                    break
+            if mismatch:
+                profile_extent_mismatch += 1
+
+    if range_failures:
+        failures.append(f"{range_failures} joint face/vertex ranges do not describe actual aluminium geometry")
+    if component_mismatch:
+        failures.append(f"{component_mismatch} joints do not preserve the reference's "
+                        f"{profile.source_components} edge-connected fitting components")
+    if central_mismatch:
+        failures.append(f"{central_mismatch} joints do not match the reference centre-piece profile")
+    if radial_group_mismatch:
+        failures.append(f"{radial_group_mismatch} joints do not contain six barrel/flange direction pairs")
+    if profile_extent_mismatch:
+        failures.append(f"{profile_extent_mismatch} joints differ from the reference barrel/flange extents")
+    if triangle_mismatch:
+        failures.append(f"{triangle_mismatch} joints do not use the {expected_triangles}-triangle far profile")
+
+    return {
+        "pass": not failures,
+        "failures": failures,
+        "reference_source": str(profile.source_path.relative_to(ROOT)),
+        "reference_sha256": profile.source_sha256,
+        "reference_triangles": profile.source_triangles,
+        "reference_components": profile.source_components,
+        "reference_central_components": len(profile.central),
+        "reference_radial_groups": {str(sector): len(pieces) for sector, pieces in profile.radial_groups.items()},
+        "generated_sides": spec.JOINT_PROFILE_SIDES,
+        "generated_triangles_per_node": expected_triangles,
+        "measured_triangle_range": [min(measured_triangle_counts), max(measured_triangle_counts)]
+        if measured_triangle_counts else None,
+        "component_mismatch_count": component_mismatch,
+        "central_profile_mismatch_count": central_mismatch,
+        "radial_group_mismatch_count": radial_group_mismatch,
+        "profile_extent_mismatch_count": profile_extent_mismatch,
+        "triangle_mismatch_count": triangle_mismatch,
+        "range_failure_count": range_failures,
+    }
 
 
 def lattice_checks(mesh: ObjMesh, graph: dict) -> dict[str, object]:
@@ -402,36 +592,9 @@ def lattice_checks(mesh: ObjMesh, graph: dict) -> dict[str, object]:
         failures.append(f"z4000..6000 band (avg r={avg['mid']:.2f}) is outside the vault-tube "
                          "barrel range 9.4..10.5")
 
-    hub_radius_mismatch = 0
-    hub_bore_mismatch = 0
-    hub_thickness_mismatch = 0
-    for nid, n in nodes.items():
-        c = _vertex_centroid(mesh, n["collar_vertex_start"], n["collar_vertex_count"])
-        z_local_n = lz(n["z_world"])
-        outer_start = n.get("hub_outer_vertex_start", n["collar_vertex_start"])
-        outer_count = n.get("hub_outer_vertex_count", n["collar_vertex_count"])
-        r = _vertex_ring_radius_yz(mesh, outer_start, outer_count, n["y"], z_local_n)
-        if abs(r - spec.HUB_RADIUS) > 0.75:
-            hub_radius_mismatch += 1
-        inner_start = n.get("hub_inner_vertex_start")
-        inner_count = n.get("hub_inner_vertex_count")
-        if inner_start is None or inner_count is None:
-            hub_bore_mismatch += 1
-        else:
-            bore = _vertex_ring_radius_yz(mesh, inner_start, inner_count, n["y"], z_local_n)
-            if abs(bore - spec.HUB_BORE_RADIUS) > 0.5:
-                hub_bore_mismatch += 1
-        half_len = max(abs(v[0] - c[0]) for v in mesh.vertices[n["collar_vertex_start"]:
-                                                                n["collar_vertex_start"] + n["collar_vertex_count"]])
-        if abs(2.0 * half_len - spec.HUB_AXIAL_THICKNESS) > 0.5:
-            hub_thickness_mismatch += 1
-    if hub_radius_mismatch:
-        failures.append(f"{hub_radius_mismatch} lattice hubs are outside {spec.HUB_RADIUS:.2f} +/- 0.75 radius")
-    if hub_bore_mismatch:
-        failures.append(f"{hub_bore_mismatch} lattice hubs are outside {spec.HUB_BORE_RADIUS:.2f} +/- 0.50 bore")
-    if hub_thickness_mismatch:
-        failures.append(f"{hub_thickness_mismatch} lattice hubs are outside "
-                         f"{spec.HUB_AXIAL_THICKNESS:.2f} +/- 0.50 axial thickness")
+    joint_profile = joint_profile_checks(mesh, graph)
+    if not joint_profile["pass"]:
+        failures.extend(cast(list[str], joint_profile["failures"]))
 
     # -- area coverage: proves the field has no unintended gaps ----------------
     def domain_area() -> float:
@@ -465,16 +628,7 @@ def lattice_checks(mesh: ObjMesh, graph: dict) -> dict[str, object]:
         "pitch_out_of_tolerance_edges": short_or_long,
         "floating_tube_ends": edge_mismatch,
         "measured_band_avg_radius_cm": avg,
-        "vault_hubs": {
-            "target_radius_cm": spec.HUB_RADIUS,
-            "target_axial_thickness_cm": spec.HUB_AXIAL_THICKNESS,
-            "target_bore_radius_cm": spec.HUB_BORE_RADIUS,
-            "radius_mismatch_count": hub_radius_mismatch,
-            "thickness_mismatch_count": hub_thickness_mismatch,
-            "bore_mismatch_count": hub_bore_mismatch,
-            "radial_segments": spec.HUB_RADIAL_SEGMENTS,
-            "triangles_per_hub": spec.HUB_RADIAL_SEGMENTS * 8,
-        },
+        "vault_joint_profile": joint_profile,
         "pane_area_coverage": {"measured_sq_cm": pane_area, "expected_sq_cm": expected_area, "ratio": ratio},
     }
 
@@ -521,8 +675,9 @@ def locked_delivery_checks(mesh: ObjMesh, graph: dict) -> dict[str, object]:
         failures.append(f"sill top world Z {sill_top} != locked 3506.0")
 
     triangles = sum(len(face) - 2 for _, face, _ in mesh.faces)
-    if triangles > 250_000:
-        failures.append(f"triangle budget {triangles} exceeds the 250000 far-hub ceiling")
+    if triangles > spec.JOINT_TRIANGLE_BUDGET:
+        failures.append(f"triangle budget {triangles} exceeds the "
+                        f"{spec.JOINT_TRIANGLE_BUDGET} source-profile ceiling")
 
     return {
         "pass": not failures,
@@ -533,7 +688,7 @@ def locked_delivery_checks(mesh: ObjMesh, graph: dict) -> dict[str, object]:
         "sill_top_world_z_cm": sill_top,
         "material_slots": sorted(materials),
         "triangles": triangles,
-        "triangle_budget_ceiling": 250_000,
+        "triangle_budget_ceiling": spec.JOINT_TRIANGLE_BUDGET,
     }
 
 

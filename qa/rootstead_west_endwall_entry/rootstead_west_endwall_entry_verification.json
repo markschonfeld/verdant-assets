@@ -14,10 +14,10 @@
     "contract": {
       "pass": true,
       "failures": [],
-      "vertices": 115836,
-      "texture_coordinates": 408564,
-      "faces": 97528,
-      "triangles": 213508,
+      "vertices": 237948,
+      "texture_coordinates": 713844,
+      "faces": 158584,
+      "triangles": 396676,
       "object_names": [
         "VD_RootsteadWestEndwallEntry"
       ],
@@ -35,7 +35,7 @@
       "invalid_uv_corners": 0,
       "degenerate_faces": 0,
       "edge_incidence": {
-        "total": 204282,
+        "total": 356922,
         "non_two_face": 0,
         "checked": true
       },
@@ -63,24 +63,43 @@
       "pitch_out_of_tolerance_edges": 0,
       "floating_tube_ends": 0,
       "measured_band_avg_radius_cm": {
-        "lower": 8.999999991161747,
+        "lower": 8.999999974732729,
         "mid": 9.999999990239974,
-        "upper": 10.50000003603881
+        "upper": 10.500000036458289
       },
-      "vault_hubs": {
-        "target_radius_cm": 52.66,
-        "target_axial_thickness_cm": 40.4,
-        "target_bore_radius_cm": 14.31,
-        "radius_mismatch_count": 0,
-        "thickness_mismatch_count": 0,
-        "bore_mismatch_count": 0,
-        "radial_segments": 16,
-        "triangles_per_hub": 128
+      "vault_joint_profile": {
+        "pass": true,
+        "failures": [],
+        "reference_source": "reference-kit/rootstead-vault/VD_VaultNode_Far.obj",
+        "reference_sha256": "e77ee9bfe10057730260570f9937dd5320f43f91c17ac18e2301880954f23283",
+        "reference_triangles": 672,
+        "reference_components": 16,
+        "reference_central_components": 4,
+        "reference_radial_groups": {
+          "0": 2,
+          "1": 2,
+          "2": 2,
+          "3": 2,
+          "4": 2,
+          "5": 2
+        },
+        "generated_sides": 6,
+        "generated_triangles_per_node": 320,
+        "measured_triangle_range": [
+          320,
+          320
+        ],
+        "component_mismatch_count": 0,
+        "central_profile_mismatch_count": 0,
+        "radial_group_mismatch_count": 0,
+        "profile_extent_mismatch_count": 0,
+        "triangle_mismatch_count": 0,
+        "range_failure_count": 0
       },
       "pane_area_coverage": {
-        "measured_sq_cm": 68285665.81714153,
+        "measured_sq_cm": 68296346.98350504,
         "expected_sq_cm": 68799792.44970404,
-        "ratio": 0.9925272066345497
+        "ratio": 0.9926824566139929
       }
     },
     "locked_delivery": {
@@ -117,8 +136,8 @@
         "M_WestEndwall_SealShadowGap",
         "M_WestEndwall_TrellisSteel"
       ],
-      "triangles": 213508,
-      "triangle_budget_ceiling": 250000
+      "triangles": 396676,
+      "triangle_budget_ceiling": 410000
     },
     "transfer_cap": {
       "pass": true,
@@ -156,12 +175,12 @@
         "min": [
           -397.0,
           -416.0,
-          22.06016973339652
+          22.060169733396297
         ],
         "max": [
           -353.0,
           416.0,
-          406.0601697333965
+          406.0601697333963
         ]
       },
       "envelope_world_cm": {
