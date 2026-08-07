@@ -1,0 +1,224 @@
+{
+  "all_pass": true,
+  "world_placement_cm": [
+    0.0,
+    0.0,
+    3485.9398302666036
+  ],
+  "leaf_world_placement_cm": [
+    0.0,
+    0.0,
+    3508.0
+  ],
+  "sections": {
+    "contract": {
+      "pass": true,
+      "failures": [],
+      "vertices": 74028,
+      "texture_coordinates": 222084,
+      "faces": 48026,
+      "triangles": 126032,
+      "object_names": [
+        "VD_RootsteadWestEndwallEntry"
+      ],
+      "group_records": 0,
+      "vertex_color_records": 0,
+      "material_slots": [
+        "M_WestEndwall_EntranceReveal",
+        "M_WestEndwall_FrostedTransom",
+        "M_WestEndwall_GlazeAcrylic",
+        "M_WestEndwall_GlazeRepair",
+        "M_WestEndwall_OxidisedAluminium",
+        "M_WestEndwall_SealShadowGap",
+        "M_WestEndwall_TrellisSteel"
+      ],
+      "invalid_uv_corners": 0,
+      "degenerate_faces": 0,
+      "edge_incidence": {
+        "total": 111042,
+        "non_two_face": 0,
+        "checked": true
+      },
+      "bounds_local_cm": {
+        "min": [
+          -509.0,
+          -7512.53137,
+          0.0
+        ],
+        "max": [
+          112.0,
+          7512.53137,
+          6205.037919
+        ]
+      }
+    },
+    "lattice": {
+      "pass": true,
+      "failures": [],
+      "node_count": 957,
+      "edge_count": 2735,
+      "pane_count": 1778,
+      "orphan_nodes": 0,
+      "dangling_edges": 0,
+      "pitch_out_of_tolerance_edges": 0,
+      "floating_tube_ends": 0,
+      "measured_band_avg_radius_cm": {
+        "lower": 9.000000043283556,
+        "mid": 5.499999856913079,
+        "upper": 10.500000036672848
+      },
+      "pane_area_coverage": {
+        "measured_sq_cm": 68933103.91695791,
+        "expected_sq_cm": 68799792.44970404,
+        "ratio": 1.001937672520616
+      }
+    },
+    "transfer_cap": {
+      "pass": true,
+      "failures": [],
+      "actual_component_count": 2,
+      "actual_contact_x_range": [
+        -509.0,
+        -40.0
+      ],
+      "actual_world_z_range": [
+        3500.000000266604,
+        3560.000000266604
+      ],
+      "required_ENDGLAZE_contact_x_range": [
+        -509.0,
+        -431.0
+      ],
+      "covered_y_uu": 13876.120164,
+      "expected_y_uu": 13876.120164895985,
+      "segments": [
+        [
+          -7498.060082,
+          -560.0
+        ],
+        [
+          560.0,
+          7498.060082
+        ]
+      ]
+    },
+    "leaf_envelope_empty": {
+      "pass": true,
+      "failures": [],
+      "envelope_local_cm": {
+        "min": [
+          -397.0,
+          -416.0,
+          22.060169733396513
+        ],
+        "max": [
+          -353.0,
+          416.0,
+          406.0601697333965
+        ]
+      },
+      "envelope_world_cm": {
+        "x": [
+          -397.0,
+          -353.0
+        ],
+        "y": [
+          -416.0,
+          416.0
+        ],
+        "z": [
+          3508.0,
+          3892.0
+        ]
+      },
+      "intrusions": [],
+      "intrusion_count": 0
+    },
+    "trellis": {
+      "pass": true,
+      "failures": [],
+      "actual_rail_component_count": 18,
+      "actual_facade_solid_count": 3,
+      "min_clearance_cm": 11.0,
+      "hard_east_limit_cm": 128.0
+    },
+    "leaf_replacement_obj": {
+      "pass": true,
+      "failures": [],
+      "contract": {
+        "pass": true,
+        "failures": [],
+        "vertices": 16,
+        "texture_coordinates": 48,
+        "faces": 12,
+        "triangles": 24,
+        "object_names": [
+          "VD_RootsteadWestEndwallEntry_Leaves"
+        ],
+        "group_records": 0,
+        "vertex_color_records": 0,
+        "material_slots": [
+          "M_WestEndwallLeaf_AluminiumFrame",
+          "M_WestEndwallLeaf_FrostedGlass"
+        ],
+        "invalid_uv_corners": 0,
+        "degenerate_faces": 0,
+        "edge_incidence": {
+          "total": 24,
+          "non_two_face": 0,
+          "checked": true
+        },
+        "bounds_local_cm": {
+          "min": [
+            -397.0,
+            -416.0,
+            0.0
+          ],
+          "max": [
+            -353.0,
+            416.0,
+            384.0
+          ]
+        }
+      },
+      "connected_components": 2,
+      "bounds_local_cm": {
+        "min": [
+          -397.0,
+          -416.0,
+          0.0
+        ],
+        "max": [
+          -353.0,
+          416.0,
+          384.0
+        ]
+      },
+      "measured_envelope_world_cm": {
+        "x": [
+          -397.0,
+          -353.0
+        ],
+        "y": [
+          -416.0,
+          416.0
+        ],
+        "z": [
+          3508.0,
+          3892.0
+        ]
+      },
+      "replaces_actors": [
+        "DOOR_LeafL",
+        "DOOR_LeafR"
+      ],
+      "additive": false
+    },
+    "handoff_doc": {
+      "pass": true,
+      "failures": [],
+      "path": "references/architecture/ROOTSTEAD_WEST_ENDWALL_ENTRY_HANDOFF.md"
+    }
+  },
+  "collision_note": "NoCollision on the render mesh. Do not accept Unreal's import-generated single convex hull (it bridges the door aperture on a 150 m-wide asset) and do not use convex decomposition. Do not use complex-as-simple for the whole asset. Author explicit segmented Unreal box collision primitives for the left/right entrance piers, head, jamb/reveal returns, and sill only where needed, plus broad lower structural zones; no primitive may bridge the door aperture. Glazing and the high lattice stay NoCollision."
+}

@@ -1,0 +1,12 @@
+# Semantic preview materials for VD_RootsteadWestEndwallEntry_Leaves
+newmtl M_WestEndwallLeaf_AluminiumFrame
+Kd 0.300 0.340 0.300
+Pr 0.620
+d 1.000
+illum 2
+
+newmtl M_WestEndwallLeaf_FrostedGlass
+Kd 0.660 0.740 0.720
+Pr 0.550
+d 0.550
+illum 2
