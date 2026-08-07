@@ -31,13 +31,27 @@ open span    y +/-424 (door jambs) out to y +/-1300 (where CLAD_Bulkhead ends)
 ```
 
 A 3 m wide, ~8.8 m long, 4 m tall void either side of the doorway, inside the
-entrance block's 621 uu depth, **open at both ends and leading out of the
-envelope**. It is currently masked by `BLOCK_EntWestL/R` blocking geometry,
-which is invisible in play — i.e. the player can presently walk out of the
-greenhouse here.
+entrance block's 621 uu depth, open at both ends.
 
 **The replacement must fill this solid.** No cavity, no service alley, no
 walkable pocket. A sealed 3 m void is a void with extra steps.
+
+### Why — this is an ARCHITECTURAL fix, not a containment fix
+
+An earlier revision of this document said the player could walk out of the
+building through this void. **That is no longer true and must not drive the
+design.** PR #18's gable collision already closes it: wall boxes span x 0..85
+for |y| 560..7513 and jamb boxes block x -509..0 at |y| 424..560, so the only
+route — through the doorway then sideways — is stopped. Confirmed in play.
+
+The reason to fill it is that **a real building does not have a 3 m gap between
+its cladding and its glazing.** Mark: "we want to close it for realism and
+architectural accuracy."
+
+So do not add mass, depth or collision to make it harder to breach, and do not
+treat this as a containment problem. Build the wall a 1960s institution would
+actually have built, at the thickness that construction implies. Correctness is
+the requirement; containment is solved elsewhere and is not this asset's job.
 
 ## Extents to build
 
