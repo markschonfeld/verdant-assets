@@ -1,0 +1,164 @@
+{
+  "all_pass": true,
+  "assets": {
+    "VD_RootsteadEntryPortal": {
+      "contract": {
+        "pass": true,
+        "failures": [],
+        "vertices": 1268,
+        "texture_coordinates": 3804,
+        "faces": 798,
+        "triangles": 2208,
+        "object_names": [
+          "VD_RootsteadEntryPortal"
+        ],
+        "group_records": 0,
+        "vertex_color_records": 0,
+        "material_slots": [
+          "M_EntryPortal_BoltSteel",
+          "M_EntryPortal_FormedConcrete",
+          "M_EntryPortal_FrostedGlass",
+          "M_EntryPortal_OxidisedAluminium",
+          "M_EntryPortal_RevealSteel",
+          "M_EntryPortal_TrellisSteel",
+          "M_EntryPortal_WaterStain"
+        ],
+        "invalid_uv_corners": 0,
+        "degenerate_regions": 0,
+        "edge_incidence": {
+          "total": 1902,
+          "non_two_face": 0
+        },
+        "bounds_cm": {
+          "min": [
+            -445.0,
+            -1450.0,
+            0.0
+          ],
+          "max": [
+            128.0,
+            1450.0,
+            1200.0
+          ]
+        }
+      },
+      "fit": {
+        "pass": true,
+        "failures": [],
+        "placement_world_cm": [
+          0,
+          0,
+          3500
+        ],
+        "gable_edit_required": false,
+        "facade_face_band_world_x_cm": [
+          0,
+          128
+        ],
+        "coverage_world_cm": {
+          "y": [
+            -1450,
+            1450
+          ],
+          "z": [
+            3500,
+            4700
+          ]
+        },
+        "vestibule_clear_opening_cm": {
+          "y": [
+            -1000,
+            1000
+          ],
+          "z": [
+            0,
+            920
+          ]
+        },
+        "frosted_glazing_local_bounds_cm": {
+          "min": [
+            -397.0,
+            -416.0,
+            8.0
+          ],
+          "max": [
+            -353.0,
+            416.0,
+            392.0
+          ]
+        },
+        "vestibule_clearance_intrusions": [],
+        "walkable_reveal_intrusions": [],
+        "collision_note": "Set CTF_USE_COMPLEX_AS_SIMPLE or author segmented aperture-safe primitives. Remove import-generated collision first; never use one auto convex hull because it seals the walk-through opening."
+      }
+    },
+    "VD_VaultFootShoe": {
+      "contract": {
+        "pass": true,
+        "failures": [],
+        "vertices": 184,
+        "texture_coordinates": 552,
+        "faces": 122,
+        "triangles": 308,
+        "object_names": [
+          "VD_VaultFootShoe"
+        ],
+        "group_records": 0,
+        "vertex_color_records": 0,
+        "material_slots": [
+          "M_VaultFootShoe_BoltSteel",
+          "M_VaultFootShoe_CastIron",
+          "M_VaultFootShoe_WaterStain"
+        ],
+        "invalid_uv_corners": 0,
+        "degenerate_regions": 0,
+        "edge_incidence": {
+          "total": 276,
+          "non_two_face": 0
+        },
+        "bounds_cm": {
+          "min": [
+            -91.0,
+            -94.0,
+            0.0
+          ],
+          "max": [
+            91.0,
+            94.0,
+            72.0
+          ]
+        }
+      },
+      "fit": {
+        "pass": true,
+        "failures": [],
+        "placement": "one per NodeHero foot; base at local Z=0 on deck top",
+        "node_stock_cm": {
+          "x": 100.1,
+          "y": 103.9,
+          "z": 40.3
+        },
+        "open_socket_cm": {
+          "x": [
+            -56.0,
+            56.0
+          ],
+          "y": [
+            -58.0,
+            58.0
+          ],
+          "z": [
+            12.0,
+            72.0
+          ]
+        },
+        "diametral_clearance_cm": {
+          "x": 11.900000000000006,
+          "y": 12.099999999999994
+        },
+        "junction_coverage": "72 cm collar covers the node centred 10 cm below the 3500 deck datum",
+        "collision_note": "Recommended NoCollision in the non-walkable planting beds. If collision is required, use the authored mesh/segmented primitives; do not rely on convex decomposition to preserve the explicit socket ring."
+      }
+    }
+  }
+}

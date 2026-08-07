@@ -1,0 +1,42 @@
+# Semantic preview materials for VD_RootsteadEntryPortal
+newmtl M_EntryPortal_FormedConcrete
+Kd 0.460 0.440 0.360
+Pr 0.900
+d 1.000
+illum 2
+
+newmtl M_EntryPortal_OxidisedAluminium
+Kd 0.280 0.340 0.320
+Pr 0.740
+d 1.000
+illum 2
+
+newmtl M_EntryPortal_RevealSteel
+Kd 0.080 0.100 0.095
+Pr 0.820
+d 1.000
+illum 2
+
+newmtl M_EntryPortal_TrellisSteel
+Kd 0.190 0.230 0.180
+Pr 0.780
+d 1.000
+illum 2
+
+newmtl M_EntryPortal_FrostedGlass
+Kd 0.640 0.730 0.700
+Pr 0.620
+d 0.580
+illum 2
+
+newmtl M_EntryPortal_WaterStain
+Kd 0.200 0.230 0.160
+Pr 0.960
+d 1.000
+illum 2
+
+newmtl M_EntryPortal_BoltSteel
+Kd 0.380 0.380 0.310
+Pr 0.520
+d 1.000
+illum 2

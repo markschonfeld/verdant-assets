@@ -1,0 +1,272 @@
+#!/usr/bin/env python3
+"""Generate the two additive Rootstead west-entry assets.
+
+Units are Unreal centimetres, Z-up. Both assets use a base-centred local origin.
+Place VD_RootsteadEntryPortal at world (0, 0, 3500); place each
+VD_VaultFootShoe at the relevant gable-node XY with its base on deck top.
+The west gable lattice is not modified by this delivery.
+"""
+
+from __future__ import annotations
+
+import math
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Iterable
+
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "SourceMesh" / "architecture"
+Vec3 = tuple[float, float, float]
+
+
+@dataclass
+class Mesh:
+    name: str
+    mtl_name: str
+    vertices: list[Vec3] = field(default_factory=list)
+    faces: list[tuple[str, tuple[int, ...]]] = field(default_factory=list)
+
+    def vertex(self, point: Vec3) -> int:
+        self.vertices.append(point)
+        return len(self.vertices)
+
+    def face(self, material: str, indices: Iterable[int]) -> None:
+        self.faces.append((material, tuple(indices)))
+
+    def box(self, minimum: Vec3, maximum: Vec3, material: str) -> None:
+        x0, y0, z0 = minimum
+        x1, y1, z1 = maximum
+        ids = [self.vertex((x, y, z)) for z in (z0, z1)
+               for y in (y0, y1) for x in (x0, x1)]
+        for face in ((0, 1, 3, 2), (4, 6, 7, 5), (0, 4, 5, 1),
+                     (2, 3, 7, 6), (0, 2, 6, 4), (1, 5, 7, 3)):
+            self.face(material, (ids[i] for i in face))
+
+    def prism_x(self, x0: float, x1: float, yz: list[tuple[float, float]],
+                material: str) -> None:
+        rings = [[self.vertex((x, y, z)) for y, z in yz] for x in (x0, x1)]
+        self.face(material, reversed(rings[0]))
+        self.face(material, rings[1])
+        for i in range(len(yz)):
+            j = (i + 1) % len(yz)
+            self.face(material, (rings[0][i], rings[0][j], rings[1][j], rings[1][i]))
+
+    def quad_prism(self, a: Vec3, b: Vec3, c: Vec3, d: Vec3,
+                   thickness_axis: Vec3, material: str) -> None:
+        """Extrude a planar quad by an explicit thickness vector."""
+        base = [a, b, c, d]
+        top = [(p[0] + thickness_axis[0], p[1] + thickness_axis[1],
+                p[2] + thickness_axis[2]) for p in base]
+        ids0 = [self.vertex(p) for p in base]
+        ids1 = [self.vertex(p) for p in top]
+        self.face(material, reversed(ids0))
+        self.face(material, ids1)
+        for i in range(4):
+            j = (i + 1) % 4
+            self.face(material, (ids0[i], ids0[j], ids1[j], ids1[i]))
+
+    def cylinder(self, start: Vec3, end: Vec3, radius: float,
+                 sides: int, material: str) -> None:
+        delta = tuple(end[i] - start[i] for i in range(3))
+        length = math.sqrt(sum(v * v for v in delta))
+        axis = tuple(v / length for v in delta)
+        seed = (0.0, 0.0, 1.0) if abs(axis[2]) < 0.92 else (1.0, 0.0, 0.0)
+        side = (axis[1] * seed[2] - axis[2] * seed[1],
+                axis[2] * seed[0] - axis[0] * seed[2],
+                axis[0] * seed[1] - axis[1] * seed[0])
+        side_length = math.sqrt(sum(v * v for v in side))
+        side = tuple(v / side_length for v in side)
+        up = (axis[1] * side[2] - axis[2] * side[1],
+              axis[2] * side[0] - axis[0] * side[2],
+              axis[0] * side[1] - axis[1] * side[0])
+        rings: list[list[int]] = []
+        for point in (start, end):
+            ring = []
+            for i in range(sides):
+                angle = 2.0 * math.pi * i / sides
+                ring.append(self.vertex((
+                    point[0] + radius * (math.cos(angle) * side[0] + math.sin(angle) * up[0]),
+                    point[1] + radius * (math.cos(angle) * side[1] + math.sin(angle) * up[1]),
+                    point[2] + radius * (math.cos(angle) * side[2] + math.sin(angle) * up[2]),
+                )))
+            rings.append(ring)
+        self.face(material, reversed(rings[0]))
+        self.face(material, rings[1])
+        for i in range(sides):
+            j = (i + 1) % sides
+            self.face(material, (rings[0][i], rings[0][j], rings[1][j], rings[1][i]))
+
+    def face_uvs(self, face: tuple[int, ...], scale: float = 100.0) -> list[tuple[float, float]]:
+        points = [self.vertices[i - 1] for i in face]
+        nx = ny = nz = 0.0
+        for point, following in zip(points, points[1:] + points[:1]):
+            nx += (point[1] - following[1]) * (point[2] + following[2])
+            ny += (point[2] - following[2]) * (point[0] + following[0])
+            nz += (point[0] - following[0]) * (point[1] + following[1])
+        dominant = max(range(3), key=lambda i: abs((nx, ny, nz)[i]))
+        if dominant == 0:
+            return [(p[1] / scale, p[2] / scale) for p in points]
+        if dominant == 1:
+            return [(p[0] / scale, p[2] / scale) for p in points]
+        return [(p[0] / scale, p[1] / scale) for p in points]
+
+    def write(self) -> None:
+        lines = [f"# Generated by {Path(__file__).name}", f"mtllib {self.mtl_name}", f"o {self.name}"]
+        lines.extend(f"v {x:.6f} {y:.6f} {z:.6f}" for x, y, z in self.vertices)
+        uv_indices: list[tuple[int, ...]] = []
+        next_uv = 1
+        for _, face in self.faces:
+            uvs = self.face_uvs(face)
+            lines.extend(f"vt {u:.6f} {v:.6f}" for u, v in uvs)
+            uv_indices.append(tuple(range(next_uv, next_uv + len(uvs))))
+            next_uv += len(uvs)
+        current = None
+        for (material, face), face_uvs in zip(self.faces, uv_indices):
+            if material != current:
+                lines.extend((f"usemtl {material}", "s 1"))
+                current = material
+            lines.append("f " + " ".join(f"{v}/{uv}" for v, uv in zip(face, face_uvs)))
+        (OUT / f"{self.name}.obj").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def write_mtl(name: str, materials: dict[str, tuple[tuple[float, float, float], float, float]]) -> None:
+    lines = [f"# Semantic preview materials for {name}"]
+    for material, (color, roughness, opacity) in materials.items():
+        lines.extend((f"newmtl {material}",
+                      f"Kd {color[0]:.3f} {color[1]:.3f} {color[2]:.3f}",
+                      f"Pr {roughness:.3f}", f"d {opacity:.3f}", "illum 2", ""))
+    (OUT / f"{name}.mtl").write_text("\n".join(lines), encoding="utf-8")
+
+
+def build_portal() -> Mesh:
+    mesh = Mesh("VD_RootsteadEntryPortal", "VD_RootsteadEntryPortal.mtl")
+    concrete = "M_EntryPortal_FormedConcrete"
+    aluminium = "M_EntryPortal_OxidisedAluminium"
+    reveal = "M_EntryPortal_RevealSteel"
+    trellis = "M_EntryPortal_TrellisSteel"
+    glass = "M_EntryPortal_FrostedGlass"
+    stain = "M_EntryPortal_WaterStain"
+    bolt = "M_EntryPortal_BoltSteel"
+
+    # Monumental facade, entirely within the permitted X 0..128 face band.
+    # The central void clears VEST_Frame at Y +/-972 and Z 3500..4409.
+    mesh.box((0, -1450, 0), (120, -1000, 1200), concrete)
+    mesh.box((0, 1000, 0), (120, 1450, 1200), concrete)
+    mesh.box((0, -1000, 920), (120, 1000, 1200), concrete)
+
+    # Stepped aluminium shadow frame around the vestibule-clear aperture.
+    mesh.box((120, -1040, 0), (128, -1000, 960), aluminium)
+    mesh.box((120, 1000, 0), (128, 1040, 960), aluminium)
+    mesh.box((120, -1000, 920), (128, 1000, 960), aluminium)
+    mesh.box((108, -1080, 0), (120, -1040, 1020), reveal)
+    mesh.box((108, 1040, 0), (120, 1080, 1020), reveal)
+    mesh.box((108, -1040, 960), (120, 1040, 1020), reveal)
+
+    # Flared deep reveal: 20 cm-thick side walls narrow from the 20 m facade
+    # aperture to the 9.24 m blast-door surround. The central route remains open.
+    mesh.quad_prism((0, -1000, 0), (0, -1000, 920), (-340, -462, 450), (-340, -462, 0),
+                    (0, -20, 0), reveal)
+    mesh.quad_prism((0, 1000, 0), (-340, 462, 0), (-340, 462, 450), (0, 1000, 920),
+                    (0, 20, 0), reveal)
+    mesh.quad_prism((0, -1000, 920), (0, 1000, 920), (-340, 462, 450), (-340, -462, 450),
+                    (0, 0, 18), reveal)
+
+    # Door frame at the west end of the reveal. This surrounds the measured leaf
+    # envelope while leaving the animated/replacement leaf volume unobstructed.
+    mesh.box((-430, -520, 0), (-340, -462, 470), concrete)
+    mesh.box((-430, 462, 0), (-340, 520, 470), concrete)
+    mesh.box((-430, -462, 450), (-340, 462, 500), concrete)
+    mesh.box((-410, -462, 8), (-340, -442, 450), aluminium)
+    mesh.box((-410, 442, 8), (-340, 462, 450), aluminium)
+    mesh.box((-410, -442, 430), (-340, 442, 450), aluminium)
+    mesh.box((-445, -442, 0), (-340, 442, 8), reveal)
+
+    # Frosted replacement leaves occupy the measured original leaf envelope.
+    # A narrow centre gap permits independent leaves/animation after import.
+    mesh.box((-397, -416, 8), (-353, -5, 392), glass)
+    mesh.box((-397, 5, 8), (-353, 416, 392), glass)
+    for y0, y1 in ((-416, -402), (-12, 0), (0, 12), (402, 416)):
+        mesh.box((-401, y0, 8), (-349, y1, 392), aluminium)
+    mesh.box((-401, -416, 8), (-349, 416, 22), aluminium)
+    mesh.box((-401, -416, 378), (-349, 416, 392), aluminium)
+    mesh.box((-401, -416, 190), (-349, 416, 206), aluminium)
+
+    # Integrated rigid trellis: stand-off rails and cross ties on both broad side
+    # bands. These replace the separate TRELLIS_WestDoor support geometry.
+    for side in (-1, 1):
+        y_outer = 1400 * side
+        y_inner = 1100 * side
+        for y in (y_outer, (y_outer + y_inner) / 2, y_inner):
+            mesh.cylinder((120, y, 90), (120, y, 1110), 7, 10, trellis)
+        for z in (160, 330, 500, 670, 840, 1010):
+            mesh.cylinder((120, y_inner, z), (120, y_outer, z), 6, 10, trellis)
+        for y in (y_inner, y_outer):
+            for z in (90, 1110):
+                mesh.cylinder((120, y, z), (128, y, z), 13, 10, bolt)
+
+    # Authored water-runoff accents on the bottom of each pier.
+    mesh.box((-2, -1430, 0), (0, -1190, 125), stain)
+    mesh.box((-2, 1180, 0), (0, 1425, 165), stain)
+    mesh.box((-433, -250, 0), (-430, 210, 70), stain)
+
+    # Large exposed facade fixings reinforce the retrofit reading.
+    for y in (-1380, -1280, -1160, 1160, 1280, 1380):
+        for z in (90, 590, 1090):
+            mesh.cylinder((120, y, z), (128, y, z), 7, 10, bolt)
+    for y in (-900, -600, -300, 0, 300, 600, 900):
+        mesh.cylinder((120, y, 1100), (128, y, 1100), 7, 10, bolt)
+    return mesh
+
+
+def build_shoe() -> Mesh:
+    mesh = Mesh("VD_VaultFootShoe", "VD_VaultFootShoe.mtl")
+    cast = "M_VaultFootShoe_CastIron"
+    steel = "M_VaultFootShoe_BoltSteel"
+    stain = "M_VaultFootShoe_WaterStain"
+
+    # 180 x 188 plate, centred at the base. The explicit four-piece collar has
+    # a 112 x 116 open socket, swallowing the measured 100.1 x 103.9 node stock.
+    mesh.box((-90, -94, 0), (90, 94, 12), cast)
+    mesh.box((-72, -74, 12), (72, -58, 72), cast)
+    mesh.box((-72, 58, 12), (72, 74, 72), cast)
+    mesh.box((-72, -58, 12), (-56, 58, 72), cast)
+    mesh.box((56, -58, 12), (72, 58, 72), cast)
+
+    # Four independently modelled anchor studs; no ring collision is required.
+    for x in (-72, 72):
+        for y in (-76, 76):
+            mesh.cylinder((x, y, 12), (x, y, 25), 8, 10, steel)
+            mesh.cylinder((x, y, 25), (x, y, 30), 12, 6, steel)
+
+    # Thin semantic stain patches stay part of the rigid mesh and start at Z=0.
+    mesh.box((-91, -62, 0), (-90, 44, 28), stain)
+    mesh.box((90, 28, 0), (91, 82, 20), stain)
+    return mesh
+
+
+def main() -> None:
+    OUT.mkdir(parents=True, exist_ok=True)
+    portal = build_portal()
+    shoe = build_shoe()
+    portal.write()
+    shoe.write()
+    write_mtl(portal.name, {
+        "M_EntryPortal_FormedConcrete": ((0.46, 0.44, 0.36), 0.90, 1.0),
+        "M_EntryPortal_OxidisedAluminium": ((0.28, 0.34, 0.32), 0.74, 1.0),
+        "M_EntryPortal_RevealSteel": ((0.08, 0.10, 0.095), 0.82, 1.0),
+        "M_EntryPortal_TrellisSteel": ((0.19, 0.23, 0.18), 0.78, 1.0),
+        "M_EntryPortal_FrostedGlass": ((0.64, 0.73, 0.70), 0.62, 0.58),
+        "M_EntryPortal_WaterStain": ((0.20, 0.23, 0.16), 0.96, 1.0),
+        "M_EntryPortal_BoltSteel": ((0.38, 0.38, 0.31), 0.52, 1.0),
+    })
+    write_mtl(shoe.name, {
+        "M_VaultFootShoe_CastIron": ((0.23, 0.25, 0.20), 0.86, 1.0),
+        "M_VaultFootShoe_BoltSteel": ((0.39, 0.38, 0.31), 0.58, 1.0),
+        "M_VaultFootShoe_WaterStain": ((0.17, 0.20, 0.13), 0.97, 1.0),
+    })
+    for mesh in (portal, shoe):
+        print(f"wrote {mesh.name}: {len(mesh.vertices)} vertices, {len(mesh.faces)} faces")
+
+
+if __name__ == "__main__":
+    main()

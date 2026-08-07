@@ -236,6 +236,29 @@ python3 scripts/verify_seal_plate_sheet_pbr.py
 
 QA previews and the machine report are under `qa/seal_plate_sheet/`.
 
+## Rootstead west-entry architecture
+
+Two additive rigid meshes resolve the west-gable/entrance overlap without
+editing `ENDWALL_W`:
+
+- `SourceMesh/architecture/VD_RootsteadEntryPortal.obj`
+- `SourceMesh/architecture/VD_VaultFootShoe.obj`
+
+The portal includes the monumental facade, a vestibule-clear deep reveal,
+integrated climbing support, and frosted replacement leaves. The shoe is an
+explicit open cast socket sized around the measured gable node stock. Import,
+placement, material-slot, and collision requirements are in
+`references/architecture/ROOTSTEAD_WEST_ENTRY_HANDOFF.md`.
+
+```bash
+python3 scripts/generate_rootstead_west_entry_assets.py
+python3 scripts/verify_rootstead_west_entry_assets.py
+```
+
+**Portal collision must never be one auto convex hull.** Use complex-as-simple
+or authored aperture-safe segments. Foot shoes should normally use NoCollision
+in the planting beds.
+
 ## Environment concept references
 
 The west blast-door reveal fixes the first eastward view down Eden Prime's

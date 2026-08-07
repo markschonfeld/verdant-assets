@@ -1,0 +1,18 @@
+# Semantic preview materials for VD_VaultFootShoe
+newmtl M_VaultFootShoe_CastIron
+Kd 0.230 0.250 0.200
+Pr 0.860
+d 1.000
+illum 2
+
+newmtl M_VaultFootShoe_BoltSteel
+Kd 0.390 0.380 0.310
+Pr 0.580
+d 1.000
+illum 2
+
+newmtl M_VaultFootShoe_WaterStain
+Kd 0.170 0.200 0.130
+Pr 0.970
+d 1.000
+illum 2
