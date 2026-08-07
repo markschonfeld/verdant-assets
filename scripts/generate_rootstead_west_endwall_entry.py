@@ -135,6 +135,38 @@ class Mesh:
             self.face(material, (rings[0][i], rings[0][j], rings[1][j], rings[1][i]))
         return (ring_ranges[0], ring_ranges[1])
 
+    def annular_hub_x(self, center: Vec3, outer_radius: float, bore_radius: float,
+                      axial_thickness: float, sides: int, material: str) -> dict[str, tuple[int, int]]:
+        """Low-poly bored disc hub with its axis along local X.
+
+        The four rings are contiguous in outer0, outer1, inner0, inner1 order
+        so the verifier can measure the outer silhouette and bore directly
+        from the emitted OBJ rather than trusting graph metadata.
+        """
+        cx, cy, cz = center
+        x0, x1 = cx - axial_thickness / 2.0, cx + axial_thickness / 2.0
+
+        def ring(x: float, radius: float) -> list[int]:
+            return [self.vertex((x, cy + radius * math.cos(2.0 * math.pi * i / sides),
+                                 cz + radius * math.sin(2.0 * math.pi * i / sides)))
+                    for i in range(sides)]
+
+        outer0 = ring(x0, outer_radius)
+        outer1 = ring(x1, outer_radius)
+        inner0 = ring(x0, bore_radius)
+        inner1 = ring(x1, bore_radius)
+        for i in range(sides):
+            j = (i + 1) % sides
+            self.face(material, (outer0[i], outer0[j], outer1[j], outer1[i]))
+            self.face(material, (inner0[j], inner0[i], inner1[i], inner1[j]))
+            self.face(material, (outer0[j], outer0[i], inner0[i], inner0[j]))
+            self.face(material, (outer1[i], outer1[j], inner1[j], inner1[i]))
+        return {
+            "all": (outer0[0], sides * 4),
+            "outer": (outer0[0], sides * 2),
+            "inner": (inner0[0], sides * 2),
+        }
+
     def face_uvs(self, face: tuple[int, ...], scale: float = 100.0) -> list[Vec2]:
         points = [self.vertices[i - 1] for i in face]
         nx = ny = nz = 0.0
@@ -261,7 +293,22 @@ def classify_nodes(raw: dict[tuple[int, int], tuple[float, float]]) -> dict[tupl
             z_world = spec.world_z(z_local)
             boundary = "hole"
 
-        nodes[key] = {"y": y, "z_world": z_world, "boundary": boundary}
+        # Full 52.66 cm hubs cannot sit on the old centreline boundary without
+        # expanding PR #18's verified local bounds. Keep the full hub profile
+        # and inset only boundary centres so their outer rings retain the old
+        # envelope. Bottom hole-edge nodes inside the opening are omitted;
+        # otherwise moving them upward for the hub would put them inside the
+        # topology-integrated aperture.
+        if boundary == "hole" and abs(z_world - spec.FIELD_BASE_Z_WORLD) < 1e-6 \
+                and abs(y) < HOLE_HALF_Y - 1e-6:
+            continue
+        boundary_target = [y, z_world] if boundary == "arch" else None
+        y = min(max(y, spec.HUB_CENTER_Y_MIN), spec.HUB_CENTER_Y_MAX)
+        z_world = min(max(z_world, spec.HUB_CENTER_Z_WORLD_MIN), spec.HUB_CENTER_Z_WORLD_MAX)
+        if boundary == "interior" and abs(z_world - spec.HUB_CENTER_Z_WORLD_MIN) < 1e-6:
+            boundary = "base"
+        nodes[key] = {"y": y, "z_world": z_world, "boundary": boundary,
+                      "boundary_target": boundary_target}
 
     # Dedup near-coincident hole-snapped nodes (can happen right at a hole corner).
     hole_keys = [k for k, n in nodes.items() if n["boundary"] == "hole"]
@@ -364,26 +411,20 @@ def build_lattice(mesh: Mesh) -> tuple[dict, dict, list]:
 
     node_id_of: dict[tuple[int, int], str] = {k: f"{k[0]}_{k[1]}" for k in nodes}
     graph_nodes: dict[str, dict] = {}
-    node_touch_radius: dict[tuple[int, int], float] = {k: 0.0 for k in nodes}
-
-    for a, b in edge_keys:
-        za, zb = nodes[a]["z_world"], nodes[b]["z_world"]
-        r = spec.tube_radius_for_z((za + zb) / 2.0)
-        node_touch_radius[a] = max(node_touch_radius[a], r)
-        node_touch_radius[b] = max(node_touch_radius[b], r)
-
     for key, n in nodes.items():
-        radius = node_touch_radius[key] or spec.TUBE_RADIUS_MID
-        collar_r = radius * spec.JOINT_COLLAR_RADIUS_FACTOR
-        h = spec.JOINT_COLLAR_HALF_LENGTH
         z_local = spec.local_z(n["z_world"])
-        (start_idx, start_count), _ = mesh.cylinder(
-            (spec.TUBE_X - h, n["y"], z_local), (spec.TUBE_X + h, n["y"], z_local),
-            collar_r, 10, spec.MAT_ALUMINIUM)
-        combined_count = start_count * 2
+        ranges = mesh.annular_hub_x(
+            (spec.TUBE_X, n["y"], z_local), spec.HUB_RADIUS, spec.HUB_BORE_RADIUS,
+            spec.HUB_AXIAL_THICKNESS, spec.HUB_RADIAL_SEGMENTS, spec.MAT_ALUMINIUM)
+        all_start, all_count = ranges["all"]
+        outer_start, outer_count = ranges["outer"]
+        inner_start, inner_count = ranges["inner"]
         graph_nodes[node_id_of[key]] = {
             "y": n["y"], "z_world": n["z_world"], "boundary": n["boundary"],
-            "collar_vertex_start": start_idx - 1, "collar_vertex_count": combined_count,
+            "boundary_target": n["boundary_target"],
+            "collar_vertex_start": all_start - 1, "collar_vertex_count": all_count,
+            "hub_outer_vertex_start": outer_start - 1, "hub_outer_vertex_count": outer_count,
+            "hub_inner_vertex_start": inner_start - 1, "hub_inner_vertex_count": inner_count,
         }
 
     graph_edges: list[dict] = []
@@ -632,7 +673,7 @@ def main() -> None:
     graph = {
         "spec_version": 1,
         "z_datum_shift": z_shift,
-        "world_placement": [0.0, 0.0, spec.FIELD_BASE_Z_WORLD - z_shift],
+        "world_placement": list(spec.WORLD_PLACEMENT),
         "leaf_z_datum_shift": leaf_z_shift,
         "leaf_world_placement": [0.0, 0.0, spec.FIELD_BASE_Z_WORLD - leaf_z_shift],
         "nodes": graph_nodes,

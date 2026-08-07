@@ -14,10 +14,10 @@
     "contract": {
       "pass": true,
       "failures": [],
-      "vertices": 74028,
-      "texture_coordinates": 222084,
-      "faces": 48026,
-      "triangles": 126032,
+      "vertices": 115836,
+      "texture_coordinates": 408564,
+      "faces": 97528,
+      "triangles": 213508,
       "object_names": [
         "VD_RootsteadWestEndwallEntry"
       ],
@@ -35,7 +35,7 @@
       "invalid_uv_corners": 0,
       "degenerate_faces": 0,
       "edge_incidence": {
-        "total": 111042,
+        "total": 204282,
         "non_two_face": 0,
         "checked": true
       },
@@ -55,23 +55,70 @@
     "lattice": {
       "pass": true,
       "failures": [],
-      "node_count": 957,
-      "edge_count": 2735,
-      "pane_count": 1778,
+      "node_count": 954,
+      "edge_count": 2729,
+      "pane_count": 1776,
       "orphan_nodes": 0,
       "dangling_edges": 0,
       "pitch_out_of_tolerance_edges": 0,
       "floating_tube_ends": 0,
       "measured_band_avg_radius_cm": {
-        "lower": 9.000000043283556,
-        "mid": 5.499999856913079,
-        "upper": 10.500000036672848
+        "lower": 8.999999991161747,
+        "mid": 9.999999990239974,
+        "upper": 10.50000003603881
+      },
+      "vault_hubs": {
+        "target_radius_cm": 52.66,
+        "target_axial_thickness_cm": 40.4,
+        "target_bore_radius_cm": 14.31,
+        "radius_mismatch_count": 0,
+        "thickness_mismatch_count": 0,
+        "bore_mismatch_count": 0,
+        "radial_segments": 16,
+        "triangles_per_hub": 128
       },
       "pane_area_coverage": {
-        "measured_sq_cm": 68933103.91695791,
+        "measured_sq_cm": 68285665.81714153,
         "expected_sq_cm": 68799792.44970404,
-        "ratio": 1.001937672520616
+        "ratio": 0.9925272066345497
       }
+    },
+    "locked_delivery": {
+      "pass": true,
+      "failures": [],
+      "world_placement_cm": [
+        0.0,
+        0.0,
+        3485.9398302666036
+      ],
+      "bounds_local_cm": {
+        "min": [
+          -509.0,
+          -7512.53137,
+          0.0
+        ],
+        "max": [
+          112.0,
+          7512.53137,
+          6205.037919
+        ]
+      },
+      "jamb_inner_edges_y_cm": [
+        -424.0,
+        424.0
+      ],
+      "sill_top_world_z_cm": 3506.000000266604,
+      "material_slots": [
+        "M_WestEndwall_EntranceReveal",
+        "M_WestEndwall_FrostedTransom",
+        "M_WestEndwall_GlazeAcrylic",
+        "M_WestEndwall_GlazeRepair",
+        "M_WestEndwall_OxidisedAluminium",
+        "M_WestEndwall_SealShadowGap",
+        "M_WestEndwall_TrellisSteel"
+      ],
+      "triangles": 213508,
+      "triangle_budget_ceiling": 250000
     },
     "transfer_cap": {
       "pass": true,
@@ -109,7 +156,7 @@
         "min": [
           -397.0,
           -416.0,
-          22.060169733396513
+          22.06016973339652
         ],
         "max": [
           -353.0,

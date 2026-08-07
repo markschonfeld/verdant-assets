@@ -6,8 +6,8 @@ generator emits alongside them, and the handoff doc, then independently
 recomputes every claim in `docs/VERDANT_PROJECT_BRIEF.md`'s asset brief:
 one-object/no-group/UV/no-vertex-colour contract, world placement and arch
 envelope, 300 uu triangular-lattice coherence with a topology-integrated
-entrance aperture (no floating tube ends, no orphan nodes), z4000..6000
-slenderness versus the upper "roof structure" band, continuous ENDGLAZE
+entrance aperture (no floating tube ends, no orphan nodes), vault-kit-matched
+tube and hub sizing, continuous ENDGLAZE
 contact, an empty animated-door-leaf envelope in the main mesh, a matching
 optional leaf-replacement mesh, and positive trellis stand-off within the
 VEST_Frame hard east limit.
@@ -314,7 +314,8 @@ def lattice_checks(mesh: ObjMesh, graph: dict) -> dict[str, object]:
         if hd < -spec.TOL_HOLE_NODE:
             bad_hole.append(nid)
         if n["boundary"] == "arch":
-            r = math.hypot(y, n["z_world"] - spec.ARCH_CENTER_Z)
+            target_y, target_z = n.get("boundary_target") or (y, n["z_world"])
+            r = math.hypot(target_y, target_z - spec.ARCH_CENTER_Z)
             if abs(r - spec.ARCH_RADIUS) > spec.TOL_ARCH_NODE:
                 bad_arch_snap.append(nid)
         if n["boundary"] == "hole":
@@ -382,7 +383,7 @@ def lattice_checks(mesh: ObjMesh, graph: dict) -> dict[str, object]:
     if pane_mismatch:
         failures.append(f"{pane_mismatch} pane corners do not coincide with their declared lattice node")
 
-    # -- measured member sizing by z band (materially slimmer z4000..6000) -----
+    # -- measured member sizing against the installed vault kit ----------------
     band_radii: dict[str, list[float]] = {"lower": [], "mid": [], "upper": []}
     radius_mismatch = 0
     for e in edges:
@@ -397,34 +398,40 @@ def lattice_checks(mesh: ObjMesh, graph: dict) -> dict[str, object]:
         failures.append(f"{radius_mismatch} tube radii measured from the OBJ do not match the declared radius")
 
     avg = {k: (sum(v) / len(v) if v else 0.0) for k, v in band_radii.items()}
-    if not (avg["mid"] and avg["mid"] < avg["lower"]):
-        failures.append(f"z4000..6000 band (avg r={avg['mid']:.2f}) is not slimmer than the lower band "
-                         f"(avg r={avg['lower']:.2f})")
-    if not (avg["mid"] and avg["mid"] < 0.75 * avg["upper"]):
-        failures.append(f"z4000..6000 band (avg r={avg['mid']:.2f}) is not materially slimmer than the "
-                         f"upper roof-structure band (avg r={avg['upper']:.2f})")
+    if not (9.4 <= avg["mid"] <= 10.5):
+        failures.append(f"z4000..6000 band (avg r={avg['mid']:.2f}) is outside the vault-tube "
+                         "barrel range 9.4..10.5")
 
-    collar_mismatch = 0
-    collar_oversize = 0
+    hub_radius_mismatch = 0
+    hub_bore_mismatch = 0
+    hub_thickness_mismatch = 0
     for nid, n in nodes.items():
         c = _vertex_centroid(mesh, n["collar_vertex_start"], n["collar_vertex_count"])
         z_local_n = lz(n["z_world"])
-        r = _vertex_ring_radius_yz(mesh, n["collar_vertex_start"], n["collar_vertex_count"], n["y"], z_local_n)
-        touching = [e["radius"] for e in edges if e["a"] == nid or e["b"] == nid]
-        if not touching:
-            continue
-        expected_r = max(touching) * spec.JOINT_COLLAR_RADIUS_FACTOR
-        if abs(r - expected_r) > 0.75:
-            collar_mismatch += 1
+        outer_start = n.get("hub_outer_vertex_start", n["collar_vertex_start"])
+        outer_count = n.get("hub_outer_vertex_count", n["collar_vertex_count"])
+        r = _vertex_ring_radius_yz(mesh, outer_start, outer_count, n["y"], z_local_n)
+        if abs(r - spec.HUB_RADIUS) > 0.75:
+            hub_radius_mismatch += 1
+        inner_start = n.get("hub_inner_vertex_start")
+        inner_count = n.get("hub_inner_vertex_count")
+        if inner_start is None or inner_count is None:
+            hub_bore_mismatch += 1
+        else:
+            bore = _vertex_ring_radius_yz(mesh, inner_start, inner_count, n["y"], z_local_n)
+            if abs(bore - spec.HUB_BORE_RADIUS) > 0.5:
+                hub_bore_mismatch += 1
         half_len = max(abs(v[0] - c[0]) for v in mesh.vertices[n["collar_vertex_start"]:
                                                                 n["collar_vertex_start"] + n["collar_vertex_count"]])
-        if r > 2.0 * max(touching) + 0.01 or half_len > spec.JOINT_COLLAR_HALF_LENGTH + 0.5:
-            collar_oversize += 1
-    if collar_mismatch:
-        failures.append(f"{collar_mismatch} joint collars do not match the declared collar radius")
-    if collar_oversize:
-        failures.append(f"{collar_oversize} joint collars read as an oversized flange, not a restrained "
-                         "compact joint")
+        if abs(2.0 * half_len - spec.HUB_AXIAL_THICKNESS) > 0.5:
+            hub_thickness_mismatch += 1
+    if hub_radius_mismatch:
+        failures.append(f"{hub_radius_mismatch} lattice hubs are outside {spec.HUB_RADIUS:.2f} +/- 0.75 radius")
+    if hub_bore_mismatch:
+        failures.append(f"{hub_bore_mismatch} lattice hubs are outside {spec.HUB_BORE_RADIUS:.2f} +/- 0.50 bore")
+    if hub_thickness_mismatch:
+        failures.append(f"{hub_thickness_mismatch} lattice hubs are outside "
+                         f"{spec.HUB_AXIAL_THICKNESS:.2f} +/- 0.50 axial thickness")
 
     # -- area coverage: proves the field has no unintended gaps ----------------
     def domain_area() -> float:
@@ -458,7 +465,75 @@ def lattice_checks(mesh: ObjMesh, graph: dict) -> dict[str, object]:
         "pitch_out_of_tolerance_edges": short_or_long,
         "floating_tube_ends": edge_mismatch,
         "measured_band_avg_radius_cm": avg,
+        "vault_hubs": {
+            "target_radius_cm": spec.HUB_RADIUS,
+            "target_axial_thickness_cm": spec.HUB_AXIAL_THICKNESS,
+            "target_bore_radius_cm": spec.HUB_BORE_RADIUS,
+            "radius_mismatch_count": hub_radius_mismatch,
+            "thickness_mismatch_count": hub_thickness_mismatch,
+            "bore_mismatch_count": hub_bore_mismatch,
+            "radial_segments": spec.HUB_RADIAL_SEGMENTS,
+            "triangles_per_hub": spec.HUB_RADIAL_SEGMENTS * 8,
+        },
         "pane_area_coverage": {"measured_sq_cm": pane_area, "expected_sq_cm": expected_area, "ratio": ratio},
+    }
+
+
+def locked_delivery_checks(mesh: ObjMesh, graph: dict) -> dict[str, object]:
+    """Guard every PR #18 in-engine lock that regeneration could move."""
+    failures: list[str] = []
+    placement = tuple(map(float, graph.get("world_placement", ())))
+    if len(placement) != 3 or any(abs(placement[i] - spec.WORLD_PLACEMENT[i]) > 1e-6 for i in range(3)):
+        failures.append(f"world placement {placement} != locked {spec.WORLD_PLACEMENT}")
+
+    bounds_min = tuple(min(v[i] for v in mesh.vertices) for i in range(3))
+    bounds_max = tuple(max(v[i] for v in mesh.vertices) for i in range(3))
+    for label, actual, expected in (
+        ("minimum", bounds_min, spec.LOCKED_LOCAL_BOUNDS_MIN),
+        ("maximum", bounds_max, spec.LOCKED_LOCAL_BOUNDS_MAX),
+    ):
+        if any(abs(actual[i] - expected[i]) > 0.01 for i in range(3)):
+            failures.append(f"local bounds {label} {actual} != locked {expected}")
+
+    materials = {material for material, _, _ in mesh.faces}
+    if materials != spec.MAIN_MATERIALS:
+        failures.append(f"material slots changed: {sorted(materials)} != {sorted(spec.MAIN_MATERIALS)}")
+
+    reveal_components = material_component_bounds(mesh, spec.MAT_ENTRANCE_REVEAL)
+    placement_z = placement[2] if len(placement) == 3 else spec.WORLD_PLACEMENT[2]
+    jambs = [
+        (lo, hi) for lo, hi in reveal_components
+        if abs(lo[0] + 430.0) < 0.01 and abs(hi[0] + 390.0) < 0.01
+        and abs(lo[2] + placement_z - 3500.0) < 0.01
+        and abs(hi[2] + placement_z - 3892.0) < 0.01
+    ]
+    jamb_inner_edges = sorted(round(lo[1] if lo[1] > 0 else hi[1], 3) for lo, hi in jambs)
+    if jamb_inner_edges != [-spec.JAMB_Y_INNER, spec.JAMB_Y_INNER]:
+        failures.append(f"jamb inner edges {jamb_inner_edges} != locked +/-{spec.JAMB_Y_INNER}")
+
+    sill_tops = [
+        hi[2] + placement_z for lo, hi in reveal_components
+        if abs(lo[2] + placement_z - 3500.0) < 0.01 and hi[1] - lo[1] >= 900.0
+        and hi[0] <= -300.0
+    ]
+    sill_top = max(sill_tops, default=float("nan"))
+    if not math.isfinite(sill_top) or abs(sill_top - 3506.0) > 0.01:
+        failures.append(f"sill top world Z {sill_top} != locked 3506.0")
+
+    triangles = sum(len(face) - 2 for _, face, _ in mesh.faces)
+    if triangles > 250_000:
+        failures.append(f"triangle budget {triangles} exceeds the 250000 far-hub ceiling")
+
+    return {
+        "pass": not failures,
+        "failures": failures,
+        "world_placement_cm": placement,
+        "bounds_local_cm": {"min": bounds_min, "max": bounds_max},
+        "jamb_inner_edges_y_cm": jamb_inner_edges,
+        "sill_top_world_z_cm": sill_top,
+        "material_slots": sorted(materials),
+        "triangles": triangles,
+        "triangle_budget_ceiling": 250_000,
     }
 
 
@@ -800,6 +875,7 @@ def main() -> None:
             check_manifold=True,
         ),
         "lattice": lattice_checks(mesh, graph),
+        "locked_delivery": locked_delivery_checks(mesh, graph),
         "transfer_cap": transfer_cap_checks(mesh, graph),
         "leaf_envelope_empty": leaf_envelope_empty_check(mesh, graph.get("z_datum_shift", 0.0)),
         "trellis": trellis_checks(mesh, graph),

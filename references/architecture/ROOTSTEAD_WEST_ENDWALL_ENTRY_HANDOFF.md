@@ -19,10 +19,10 @@ separate, explicitly optional mesh that never enters the leaf sweep volume.
 - Source: `SourceMesh/architecture/VD_RootsteadWestEndwallEntry.obj`
 - Material library: `SourceMesh/architecture/VD_RootsteadWestEndwallEntry.mtl`
 - Place at world **(0, 0, 3485.94)**, rotation zero, scale 1. (Local Z=0 is the
-  authored base datum — the lowest point of the joint collars sitting on the
-  z=3500 transfer row, which dip slightly below the row's nominal Z since a
-  collar has finite radius. Regenerating with different tube-radius constants
-  will change this offset; always take the exact value from
+  authored base datum. The full-size boundary hub centres are inset so their
+  outer rings retain PR #18's verified envelope; regeneration is locked to
+  this placement and bounds and the verifier fails on any drift. Always take
+  the exact value from
   `qa/rootstead_west_endwall_entry/rootstead_west_endwall_entry_lattice_graph.json`
   → `world_placement`, not the number above, if you've touched the generator.)
 - Local bounds: X `-509 .. 112`, Y `±7512.5`, Z `0 .. 6205` (i.e. world Z up to
@@ -33,7 +33,7 @@ separate, explicitly optional mesh that never enters the leaf sweep volume.
 
 Material slots:
 
-1. `M_WestEndwall_OxidisedAluminium` — lattice tubes, joint collars, and the
+1. `M_WestEndwall_OxidisedAluminium` — lattice tubes, bored disc hubs, and the
    ENDGLAZE transfer/sill cap band.
 2. `M_WestEndwall_GlazeAcrylic` — original-era lattice panes (~80%).
 3. `M_WestEndwall_GlazeRepair` — later repair-era lattice panes (~20%,
@@ -51,24 +51,24 @@ Material slots:
    top (`3892`) and the head return, and is verified never to overlap either.
 
 The OBJ contains one `o` object, zero `g` records, indexed UVs on every face
-corner, no vertex-colour data, and every solid component (tubes, joint
-collars, panes, entrance structure, trellis, transfer cap) is a closed manifold
+corner, no vertex-colour data, and every solid component (tubes, bored disc
+hubs, panes, entrance structure, trellis, transfer cap) is a closed manifold
 (edge incidence exactly 2 everywhere — verified globally).
 
 #### Lattice / entrance topology
 
-- 957 lattice nodes, 2735 tube members, 1778 panes — a 300 uu equilateral
-  triangular grid boundary-snapped to the true circular arch (centre y=0,
-  z=2035.2, radius 7639.8) and, separately, to the entrance-hole rectangle
-  (`±560` Y, world Z `3500..4070`). Boundary nodes are *repositioned* onto the
-  true boundary curves, not deleted and patched — this is what makes the
-  aperture "integrated by topology" rather than arbitrary member deletion:
-  every remaining node still has its full triangulated connectivity, just at
-  a boundary-conforming position.
-- z4000..6000 members measure ~5.5 cm radius versus ~9.0 cm below and ~10.5 cm
-  above (measured from the actual OBJ ring geometry, not just declared) — a
-  deliberately slender aluminium band with restrained, compact joint collars
-  (no flange plates), not a HERO_BAND-style heavy structural read.
+- 954 lattice nodes, 2729 tube members, 1776 panes — a 300 uu triangular grid
+  conformed to the circular arch (centre y=0, z=2035.2, radius 7639.8) and the
+  entrance-hole rectangle (`±560` Y, world Z `3500..4070`). Three obsolete
+  bottom-hole nodes were removed so full hubs cannot project into the opening.
+  Boundary hub centres are inset only far enough for their outer rings to keep
+  the already-imported PR #18 bounds; interior node positions are unchanged.
+- The middle-band tubes now measure 10.0 cm radius, between the installed
+  `VD_VaultTube` barrel range of 9.4..10.5 cm. Every lattice node carries a
+  distinct bored disc hub matching `VD_VaultNode`: radius 52.66 cm, axial
+  thickness 40.40 cm, bore radius 14.31 cm. The far-style 16-segment annulus is
+  128 triangles per hub; the complete rigid asset is 213,508 triangles, below
+  the verifier's 250,000-triangle ceiling.
 - The ENDGLAZE transfer/sill cap (`M_WestEndwall_OxidisedAluminium`, world X
   `-509..-431`, Z `3500..3560`) is continuous across the full wall width
   except for the entrance gap (`±560` Y) — there is no unsupported gap at the

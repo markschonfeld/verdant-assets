@@ -76,19 +76,36 @@ TUBE_X = -40.0
 PANE_X = -58.0
 
 # ---------------------------------------------------------------------------
-# Structural member sizing by Z band. The z4000..6000 band must read as
-# slender architectural aluminium, not PR17's heavy tube/flange language, and
-# must be measurably slimmer than the "roof structure" band above z6000.
+# Structural member sizing matched to the installed VD_VaultTube kit.
 # ---------------------------------------------------------------------------
 BAND_LOWER_Z_WORLD = 4000.0
 BAND_UPPER_Z_WORLD = 6000.0
 
 TUBE_RADIUS_LOWER = 9.0   # z < 4000 (transfer zone, near springing)
-TUBE_RADIUS_MID = 5.5     # 4000 <= z < 6000 (slender band, no HERO_BAND)
+TUBE_RADIUS_MID = 10.0    # 4000 <= z < 6000 (matches the vault barrel)
 TUBE_RADIUS_UPPER = 10.5  # z >= 6000 (upper lattice reads as roof structure)
 
-JOINT_COLLAR_RADIUS_FACTOR = 1.6
-JOINT_COLLAR_HALF_LENGTH = 11.0  # collar cylinder runs TUBE_X +/- this
+# VD_VaultNode_Far strategy: preserve the installed node's defining dimensions
+# and bore, but author a low-segment annular hub rather than duplicating the
+# 12,464-triangle near mesh at 957 nodes. 16 segments = 128 tris per hub,
+# comfortably below the shipped far variant's 672 tris.
+HUB_RADIUS = 52.66
+HUB_AXIAL_THICKNESS = 40.40
+HUB_BORE_RADIUS = 14.31
+HUB_RADIAL_SEGMENTS = 16
+
+# PR #18's imported placement/bounds are locked. Full-size hubs therefore use
+# inset boundary centres: their outer rings land on the old envelope instead
+# of expanding it. These are measured from the imported PR #18 output.
+LOCKED_WORLD_PLACEMENT_Z = 3485.9398302666036
+LOCKED_LOCAL_BOUNDS_MIN = (-509.0, -7512.53137, 0.0)
+LOCKED_LOCAL_BOUNDS_MAX = (112.0, 7512.53137, 6205.037919)
+LOCKED_WORLD_Z_MIN = LOCKED_WORLD_PLACEMENT_Z + LOCKED_LOCAL_BOUNDS_MIN[2]
+LOCKED_WORLD_Z_MAX = LOCKED_WORLD_PLACEMENT_Z + LOCKED_LOCAL_BOUNDS_MAX[2]
+HUB_CENTER_Y_MIN = LOCKED_LOCAL_BOUNDS_MIN[1] + HUB_RADIUS
+HUB_CENTER_Y_MAX = LOCKED_LOCAL_BOUNDS_MAX[1] - HUB_RADIUS
+HUB_CENTER_Z_WORLD_MIN = LOCKED_WORLD_Z_MIN + HUB_RADIUS
+HUB_CENTER_Z_WORLD_MAX = LOCKED_WORLD_Z_MAX - HUB_RADIUS
 
 def tube_radius_for_z(world_z_value: float) -> float:
     if world_z_value < BAND_LOWER_Z_WORLD:
@@ -215,7 +232,7 @@ LEAF_MATERIALS = {LEAF_MAT_FROSTED, LEAF_MAT_FRAME}
 MAIN_OBJ_NAME = "VD_RootsteadWestEndwallEntry"
 LEAF_OBJ_NAME = "VD_RootsteadWestEndwallEntry_Leaves"
 
-WORLD_PLACEMENT = (0.0, 0.0, FIELD_BASE_Z_WORLD)
+WORLD_PLACEMENT = (0.0, 0.0, LOCKED_WORLD_PLACEMENT_Z)
 
 # ---------------------------------------------------------------------------
 # Tolerances used by the verifier.
