@@ -1,0 +1,60 @@
+# Semantic materials for VD_RootsteadEntranceBulkhead
+newmtl M_EntranceBulkhead_StructuralConcrete
+Kd 0.42 0.4 0.36
+Pr 0.850
+d 1.000
+illum 2
+
+newmtl M_EntranceBulkhead_BoardFormedPlinth
+Kd 0.55 0.5 0.42
+Pr 0.850
+d 1.000
+illum 2
+
+newmtl M_EntranceBulkhead_PrecastAggregate
+Kd 0.72 0.68 0.58
+Pr 0.850
+d 1.000
+illum 2
+
+newmtl M_EntranceBulkhead_ProudCoarseAggregate
+Kd 0.35 0.31 0.24
+Pr 0.850
+d 1.000
+illum 2
+
+newmtl M_EntranceBulkhead_ChamferArris
+Kd 0.61 0.57 0.49
+Pr 0.850
+d 1.000
+illum 2
+
+newmtl M_EntranceBulkhead_JointReveal
+Kd 0.25 0.23 0.21
+Pr 0.850
+d 1.000
+illum 2
+
+newmtl M_EntranceBulkhead_SealantJoint
+Kd 0.12 0.11 0.1
+Pr 0.850
+d 1.000
+illum 2
+
+newmtl M_EntranceBulkhead_SpallReveal
+Kd 0.57 0.53 0.45
+Pr 0.850
+d 1.000
+illum 2
+
+newmtl M_EntranceBulkhead_RebarLug
+Kd 0.42 0.19 0.11
+Pr 0.850
+d 1.000
+illum 2
+
+newmtl M_EntranceBulkhead_WeatherStreak
+Kd 0.35 0.37 0.34
+Pr 0.850
+d 1.000
+illum 2
