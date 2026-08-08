@@ -1,0 +1,75 @@
+{
+  "units": "centimetres (1 OBJ unit = 1 Unreal uu = 1 cm)",
+  "axis": "Z-up; +X projects east into the greenhouse",
+  "pivot": "shared porch back-bottom-centre at (0, 0, 0)",
+  "placement_world_cm": [
+    128,
+    0,
+    3500
+  ],
+  "walkthrough_clear_cm": {
+    "width": 920,
+    "height": 520
+  },
+  "trellis_internal_clear_cm": {
+    "width": 1840,
+    "eave_height": 810
+  },
+  "meshes": {
+    "VD_RootsteadEntryVestibule_Frame": {
+      "vertices": 744,
+      "faces": 522,
+      "triangles_after_import": 1188,
+      "bounds_cm": {
+        "min": [
+          0.0,
+          -972.0,
+          0
+        ],
+        "max": [
+          370.0,
+          972.0,
+          908.967
+        ],
+        "size": [
+          370.0,
+          1944.0,
+          908.967
+        ]
+      },
+      "materials": [
+        "M_Vestibule_BareSteel",
+        "M_Vestibule_Kickplate",
+        "M_Vestibule_PaintedSteel",
+        "M_Vestibule_PaintedSteel_BaseWear",
+        "M_Vestibule_RubberSeal"
+      ]
+    },
+    "VD_RootsteadEntryVestibule_Glazing": {
+      "vertices": 88,
+      "faces": 22,
+      "triangles_after_import": 44,
+      "bounds_cm": {
+        "min": [
+          12.0,
+          -941.0,
+          78.0
+        ],
+        "max": [
+          361.0,
+          941.0,
+          898.979
+        ],
+        "size": [
+          349.0,
+          1882.0,
+          820.979
+        ]
+      },
+      "materials": [
+        "M_Vestibule_GlassAged",
+        "M_Vestibule_GlassRepair"
+      ]
+    }
+  }
+}

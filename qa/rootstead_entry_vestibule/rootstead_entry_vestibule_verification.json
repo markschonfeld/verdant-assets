@@ -1,0 +1,114 @@
+{
+  "all_pass": true,
+  "checks": {
+    "VD_RootsteadEntryVestibule_Frame": {
+      "pass": true,
+      "failures": [],
+      "vertices": 744,
+      "texture_coordinates": 2232,
+      "faces": 522,
+      "triangles": 1188,
+      "uv_indexed_face_corners": 2232,
+      "object_names": [
+        "VD_RootsteadEntryVestibule_Frame"
+      ],
+      "group_records": 0,
+      "bounds_cm": {
+        "min": [
+          0.0,
+          -972.0,
+          0.0
+        ],
+        "max": [
+          370.0,
+          972.0,
+          908.966885
+        ],
+        "size": [
+          370.0,
+          1944.0,
+          908.966885
+        ]
+      },
+      "material_slots": [
+        "M_Vestibule_BareSteel",
+        "M_Vestibule_Kickplate",
+        "M_Vestibule_PaintedSteel",
+        "M_Vestibule_PaintedSteel_BaseWear",
+        "M_Vestibule_RubberSeal"
+      ],
+      "edge_incidence": {
+        "total": 1116,
+        "non_two_face": 0
+      }
+    },
+    "VD_RootsteadEntryVestibule_Glazing": {
+      "pass": true,
+      "failures": [],
+      "vertices": 88,
+      "texture_coordinates": 88,
+      "faces": 22,
+      "triangles": 44,
+      "uv_indexed_face_corners": 88,
+      "object_names": [
+        "VD_RootsteadEntryVestibule_Glazing"
+      ],
+      "group_records": 0,
+      "bounds_cm": {
+        "min": [
+          12.0,
+          -941.0,
+          78.0
+        ],
+        "max": [
+          361.0,
+          941.0,
+          898.978723
+        ],
+        "size": [
+          349.0,
+          1882.0,
+          820.978723
+        ]
+      },
+      "material_slots": [
+        "M_Vestibule_GlassAged",
+        "M_Vestibule_GlassRepair"
+      ],
+      "edge_incidence": {
+        "total": 88,
+        "non_two_face": 88
+      }
+    }
+  },
+  "walkthrough": {
+    "pass": true,
+    "clear_width_cm": 920.0,
+    "clear_height_cm": 520.0,
+    "intrusions": []
+  },
+  "removed_rear_intermediate_posts": {
+    "pass": true,
+    "cleared_post_centres_cm": [
+      [
+        10.0,
+        -470.0
+      ],
+      [
+        10.0,
+        470.0
+      ]
+    ],
+    "intrusions": []
+  },
+  "material_separation": {
+    "pass": true,
+    "opaque_mesh": "VD_RootsteadEntryVestibule_Frame",
+    "non_nanite_translucent_mesh": "VD_RootsteadEntryVestibule_Glazing"
+  },
+  "placement_world_cm": [
+    128,
+    0,
+    3500
+  ]
+}

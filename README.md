@@ -97,6 +97,27 @@ The machine report and visual contact sheets are under
 `qa/vault_materials_growth/`; the focused aluminium sheet remains under
 `qa/batch4_aluminium/`.
 
+## Authored architectural geometry
+
+The Rootstead west-entry kit replaces the primitive entrance enclosure with a
+later glazed-steel greenhouse porch sized around the retained trellis and vines.
+Opaque framing and translucent glazing share a back-bottom-centre origin but
+remain separate for Unreal material and Nanite handling:
+
+- `SourceMesh/architecture/VD_RootsteadEntryVestibule_Frame.obj`
+- `SourceMesh/architecture/VD_RootsteadEntryVestibule_Glazing.obj`
+- `references/architecture/ROOTSTEAD_ENTRY_VESTIBULE_HANDOFF.md`
+
+Regenerate and verify with:
+
+```bash
+python3 scripts/generate_rootstead_entry_vestibule.py
+python3 scripts/verify_rootstead_entry_vestibule.py
+```
+
+The OBJ verifier locks the single-object/no-group import contract, indexed UV0
+coverage, material separation, bounds, and unobstructed walk-through opening.
+
 ## Reproduction and QA
 
 ```bash

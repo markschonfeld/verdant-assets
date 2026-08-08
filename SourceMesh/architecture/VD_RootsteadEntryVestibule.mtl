@@ -1,0 +1,42 @@
+# Unreal material-slot placeholders; PBR intent follows as comments.
+newmtl M_Vestibule_PaintedSteel
+Kd 0.105 0.205 0.190
+d 1.000
+# metallic 0.75
+# roughness 0.52
+
+newmtl M_Vestibule_PaintedSteel_BaseWear
+Kd 0.085 0.125 0.105
+d 1.000
+# metallic 0.70
+# roughness 0.78
+
+newmtl M_Vestibule_BareSteel
+Kd 0.290 0.315 0.305
+d 1.000
+# metallic 0.95
+# roughness 0.38
+
+newmtl M_Vestibule_RubberSeal
+Kd 0.025 0.030 0.026
+d 1.000
+# metallic 0.00
+# roughness 0.88
+
+newmtl M_Vestibule_Kickplate
+Kd 0.155 0.165 0.145
+d 1.000
+# metallic 0.85
+# roughness 0.62
+
+newmtl M_Vestibule_GlassAged
+Kd 0.280 0.390 0.350
+d 0.280
+# metallic 0.00
+# roughness 0.24
+
+newmtl M_Vestibule_GlassRepair
+Kd 0.410 0.540 0.510
+d 0.160
+# metallic 0.00
+# roughness 0.12
