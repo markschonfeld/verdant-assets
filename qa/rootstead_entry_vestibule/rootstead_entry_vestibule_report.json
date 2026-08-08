@@ -17,14 +17,14 @@
   },
   "meshes": {
     "VD_RootsteadEntryVestibule_Frame": {
-      "vertices": 744,
-      "faces": 522,
-      "triangles_after_import": 1188,
+      "vertices": 708,
+      "faces": 514,
+      "triangles_after_import": 1172,
       "bounds_cm": {
         "min": [
           0.0,
           -972.0,
-          0
+          0.0
         ],
         "max": [
           370.0,
@@ -43,7 +43,21 @@
         "M_Vestibule_PaintedSteel",
         "M_Vestibule_PaintedSteel_BaseWear",
         "M_Vestibule_RubberSeal"
-      ]
+      ],
+      "mesh_hygiene": {
+        "merge_distance_cm": 0.0001,
+        "vertices_before": 744,
+        "vertices_after": 708,
+        "vertices_merged_or_orphaned": 36,
+        "faces_before": 522,
+        "faces_after": 514,
+        "duplicate_faces_removed": 8,
+        "stacked_faces_removed_1cm": 0,
+        "degenerate_faces_removed": 0,
+        "triangles_before": 1188,
+        "triangles_after": 1172,
+        "triangles_removed": 16
+      }
     },
     "VD_RootsteadEntryVestibule_Glazing": {
       "vertices": 88,
@@ -69,7 +83,21 @@
       "materials": [
         "M_Vestibule_GlassAged",
         "M_Vestibule_GlassRepair"
-      ]
+      ],
+      "mesh_hygiene": {
+        "merge_distance_cm": 0.0001,
+        "vertices_before": 88,
+        "vertices_after": 88,
+        "vertices_merged_or_orphaned": 0,
+        "faces_before": 22,
+        "faces_after": 22,
+        "duplicate_faces_removed": 0,
+        "stacked_faces_removed_1cm": 0,
+        "degenerate_faces_removed": 0,
+        "triangles_before": 44,
+        "triangles_after": 44,
+        "triangles_removed": 0
+      }
     }
   }
 }

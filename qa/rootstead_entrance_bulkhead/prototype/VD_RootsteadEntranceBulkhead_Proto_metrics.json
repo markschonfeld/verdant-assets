@@ -44,36 +44,50 @@
   },
   "candidate_module_rationale": "146 x 225 uu (1.46 x 2.25 m): within the 1960s architectural precast range (Mo-Sai / storey-band units ~1.2-1.5 m). 146 divides the 876 uu wing width exactly 6x and 225 divides the 675 uu precast field exactly 3x, so panels close on both the door jamb and the wall-end stop lines with no part-panels. Plinth is a separate 1.5 m board-marked in-situ pour.",
   "triangle_counts_by_category": {
-    "M_EntranceBulkhead_BaseMassing": 22,
+    "M_EntranceBulkhead_BaseMassing": 20,
     "M_EntranceBulkhead_JointReveal": 2,
     "M_EntranceBulkhead_BoardFormedPlinth": 72,
     "M_EntranceBulkhead_PrecastAggregate": 4,
     "M_EntranceBulkhead_ChamferArris": 8,
     "M_EntranceBulkhead_ProudCoarseAggregate": 166,
-    "M_EntranceBulkhead_SealantJoint": 36,
+    "M_EntranceBulkhead_SealantJoint": 34,
     "M_EntranceBulkhead_SpallReveal": 6,
     "M_EntranceBulkhead_RebarLug": 28,
-    "M_EntranceBulkhead_WeatherStreak": 108
+    "M_EntranceBulkhead_WeatherStreak": 78
   },
   "triangle_counts_grouped": {
     "fixed_base_massing": {
-      "M_EntranceBulkhead_BoardFormedPlinth": 72,
-      "M_EntranceBulkhead_BaseMassing": 22
+      "M_EntranceBulkhead_BaseMassing": 20,
+      "M_EntranceBulkhead_BoardFormedPlinth": 72
     },
     "repeated_decorative_detail": {
       "M_EntranceBulkhead_ChamferArris": 8,
-      "M_EntranceBulkhead_SealantJoint": 36,
       "M_EntranceBulkhead_JointReveal": 2,
-      "M_EntranceBulkhead_ProudCoarseAggregate": 166,
       "M_EntranceBulkhead_PrecastAggregate": 4,
-      "M_EntranceBulkhead_WeatherStreak": 108
+      "M_EntranceBulkhead_ProudCoarseAggregate": 166,
+      "M_EntranceBulkhead_SealantJoint": 34,
+      "M_EntranceBulkhead_WeatherStreak": 78
     },
     "sparse_decorative_detail": {
       "M_EntranceBulkhead_RebarLug": 28,
       "M_EntranceBulkhead_SpallReveal": 6
     }
   },
-  "total_prototype_triangles": 452,
+  "total_prototype_triangles": 418,
+  "mesh_hygiene": {
+    "merge_distance_cm": 0.0001,
+    "vertices_before": 300,
+    "vertices_after": 294,
+    "vertices_merged_or_orphaned": 6,
+    "faces_before": 307,
+    "faces_after": 290,
+    "duplicate_faces_removed": 0,
+    "stacked_faces_removed_1cm": 17,
+    "degenerate_faces_removed": 0,
+    "triangles_before": 452,
+    "triangles_after": 418,
+    "triangles_removed": 34
+  },
   "local_bounds_uu": {
     "min": [
       -465.2,
@@ -146,13 +160,13 @@
     "per_module": {
       "repeated_detail_by_category": {
         "M_EntranceBulkhead_ChamferArris": 8,
-        "M_EntranceBulkhead_SealantJoint": 36,
         "M_EntranceBulkhead_JointReveal": 2,
-        "M_EntranceBulkhead_ProudCoarseAggregate": 166,
         "M_EntranceBulkhead_PrecastAggregate": 4,
-        "M_EntranceBulkhead_WeatherStreak": 108
+        "M_EntranceBulkhead_ProudCoarseAggregate": 166,
+        "M_EntranceBulkhead_SealantJoint": 34,
+        "M_EntranceBulkhead_WeatherStreak": 78
       },
-      "repeated_detail_total": 324,
+      "repeated_detail_total": 292,
       "sparse_detail_by_category": {
         "M_EntranceBulkhead_RebarLug": 28,
         "M_EntranceBulkhead_SpallReveal": 6
@@ -171,23 +185,23 @@
         "note": "Scales LINEARLY with module count -- this is where the scaling risk lives.",
         "by_category": {
           "M_EntranceBulkhead_ChamferArris": 576,
-          "M_EntranceBulkhead_SealantJoint": 2592,
           "M_EntranceBulkhead_JointReveal": 144,
-          "M_EntranceBulkhead_ProudCoarseAggregate": 11952,
           "M_EntranceBulkhead_PrecastAggregate": 288,
-          "M_EntranceBulkhead_WeatherStreak": 7776
+          "M_EntranceBulkhead_ProudCoarseAggregate": 11952,
+          "M_EntranceBulkhead_SealantJoint": 2448,
+          "M_EntranceBulkhead_WeatherStreak": 5616
         },
         "sparse_by_category": {
           "M_EntranceBulkhead_RebarLug": 392,
           "M_EntranceBulkhead_SpallReveal": 84
         },
-        "detail_triangles": 23804
+        "detail_triangles": 21500
       },
-      "total_projected_triangles": 24284,
+      "total_projected_triangles": 21980,
       "scaling_risk": {
         "detail_multiplier": 72,
-        "detail_share_of_total": 0.9802,
-        "statement": "Decorative detail multiplies x72 (module count); base massing is ~constant. Detail is 98.0% of the projected total. Any increase in per-module detail density (e.g. modelling exposed aggregate as geometry instead of material) is amplified 72x."
+        "detail_share_of_total": 0.9782,
+        "statement": "Decorative detail multiplies x72 (module count); base massing is ~constant. Detail is 97.8% of the projected total. Any increase in per-module detail density (e.g. modelling exposed aggregate as geometry instead of material) is amplified 72x."
       }
     }
   },

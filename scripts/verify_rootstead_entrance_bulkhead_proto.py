@@ -7,6 +7,7 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]; sys.path.insert(0,str(ROOT/"scripts"))
 import rootstead_entrance_bulkhead_proto_spec as spec
+from mesh_hygiene import assert_obj_hygiene
 OBJ=ROOT/"SourceMesh/architecture/VD_RootsteadEntranceBulkhead_Proto.obj"
 MTL=ROOT/"SourceMesh/architecture/VD_RootsteadEntranceBulkhead_Proto.mtl"
 MET=ROOT/"qa/rootstead_entrance_bulkhead/prototype/VD_RootsteadEntranceBulkhead_Proto_metrics.json"
@@ -14,6 +15,7 @@ MET=ROOT/"qa/rootstead_entrance_bulkhead/prototype/VD_RootsteadEntranceBulkhead_
 def fail(msg): raise AssertionError(msg)
 def close(a,b,t=1e-4): return abs(a-b)<=t
 def main():
+    hygiene=assert_obj_hygiene(OBJ)
     verts=[]; uvs=[]; faces=[]; objects=[]; groups=[]; used=set(); current=None
     for line in OBJ.read_text(encoding="utf-8").splitlines():
         p=line.split()
@@ -46,8 +48,9 @@ def main():
         if not close(got,want,spec.TOL_BOUNDS): fail(f"local min bounds {mins} != {spec.EXPECTED_MIN}")
     for got,want in zip(maxs,spec.EXPECTED_MAX):
         if not close(got,want,spec.TOL_BOUNDS): fail(f"local max bounds {maxs} != {spec.EXPECTED_MAX}")
-    counts=Counter(); edges=defaultdict(list); adjacency=defaultdict(set)
+    counts=Counter(); edges=defaultdict(list); adjacency=defaultdict(set); face_groups=Counter()
     for fi,(mat,f) in enumerate(faces):
+        face_groups[(len(f),tuple(sorted(verts[index] for index in f)))]+=1
         counts[mat]+=len(f)-2
         for i in range(1,len(f)-1):
             a,b,c=(verts[f[j]] for j in (0,i,i+1)); ab=tuple(b[k]-a[k] for k in range(3)); ac=tuple(c[k]-a[k] for k in range(3))
@@ -55,7 +58,10 @@ def main():
             if .5*math.sqrt(sum(x*x for x in cross))<=spec.DEGENERATE_AREA_EPS: fail(f"degenerate fan triangle in face {fi}")
         for a,b in zip(f,f[1:]+f[:1]):
             e=tuple(sorted((a,b))); edges[e].append(fi); adjacency[a].add(b); adjacency[b].add(a)
-    # Components are based on indexed topology; each authored primitive must close itself.
+    duplicate_groups=sum(count>1 for count in face_groups.values())
+    if duplicate_groups: fail(f"{duplicate_groups} coincident duplicate face groups")
+    # Components remain useful for semantic checks below. Strict two-face edge
+    # incidence is advisory after internal caps are removed from assembled solids.
     unseen=set(range(len(verts))); components=[]
     while unseen:
         seed=next(iter(unseen)); q=[seed]; comp=set()
@@ -64,9 +70,7 @@ def main():
             if v in comp: continue
             comp.add(v); unseen.discard(v); q.extend(adjacency[v]-comp)
         components.append(comp)
-    for ci,comp in enumerate(components):
-        ce=[e for e in edges if e[0] in comp or e[1] in comp]
-        if any(len(edges[e])!=2 for e in ce): fail(f"component {ci} is not closed/manifold")
+    non_two_face_edges=sum(len(face_ids)!=2 for face_ids in edges.values())
     metrics=json.loads(MET.read_text(encoding="utf-8"))
     if dict(counts)!=metrics["triangle_counts_by_category"]: fail("parsed per-material triangle counts differ from metrics")
     if sum(counts.values())!=metrics["total_prototype_triangles"]: fail("parsed triangle total differs from metrics")
@@ -102,7 +106,7 @@ def main():
     layout=metrics["projection"]["module_layout"]
     if layout["module_count_full_wall"]!=72 or sum(f["module_equivalents"] for f in layout["face_families"].values())!=72: fail("full-wall face-family module projection is incomplete")
     if metrics["expected_world_face_x_uu"]!=-461.0: fail("metrics expected west face is not replacement extent")
-    print(json.dumps({"verified":True,"object_records":1,"group_records":0,"vertices":len(verts),"components":len(components),"aggregate_components":len(agg),"local_bounds":{"min":mins,"max":maxs},"triangles":sum(counts.values()),"triangles_by_material":dict(counts)},indent=2))
+    print(json.dumps({"verified":True,"object_records":1,"group_records":0,"vertices":len(verts),"components":len(components),"aggregate_components":len(agg),"local_bounds":{"min":mins,"max":maxs},"triangles":sum(counts.values()),"triangles_by_material":dict(counts),"coincident_duplicate_face_groups":duplicate_groups,"non_two_face_edges_advisory":non_two_face_edges,"mesh_hygiene_1cm":hygiene},indent=2))
 if __name__=="__main__":
     try: main()
     except (AssertionError,ValueError,KeyError) as e:

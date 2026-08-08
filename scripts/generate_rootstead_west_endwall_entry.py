@@ -33,6 +33,7 @@ from typing import Iterable
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 import rootstead_west_endwall_entry_spec as spec  # noqa: E402
+from mesh_hygiene import clean_obj_file  # noqa: E402
 from rootstead_vault_node_profile import (  # noqa: E402
     VaultNodeProfile,
     generated_profile_bounds,
@@ -695,6 +696,57 @@ def main() -> None:
     rails, facade_solids = build_facade_and_trellis(mesh)
     z_shift = rebase_to_z0(mesh)
     mesh.write()
+    vertex_remap: list[int | None] = []
+    face_remap: list[int | None] = []
+    mesh_hygiene = clean_obj_file(
+        OUT / f"{mesh.name}.obj", vertex_remap_out=vertex_remap,
+        face_remap_out=face_remap
+    )
+
+    def remapped_range(start: int, count: int) -> list[int]:
+        ids = {vertex_remap[index] for index in range(start, start + count)}
+        if None in ids:
+            raise AssertionError("mesh hygiene removed a graph-addressed vertex without an equivalent")
+        return sorted(index for index in ids if index is not None)
+
+    def remapped_face_range(start: int, count: int) -> list[int]:
+        return sorted({
+            index for index in face_remap[start:start + count]
+            if index is not None
+        })
+
+    def compress_spans(ids: list[int]) -> str:
+        if not ids:
+            return ""
+        spans: list[tuple[int, int]] = []
+        start = previous = ids[0]
+        for index in ids[1:]:
+            if index != previous + 1:
+                spans.append((start, previous - start + 1))
+                start = index
+            previous = index
+        spans.append((start, previous - start + 1))
+        return ",".join(f"{start}:{count}" for start, count in spans)
+
+    for node in graph_nodes.values():
+        node["collar_vertex_spans"] = compress_spans(remapped_range(
+            node["collar_vertex_start"], node["collar_vertex_count"]
+        ))
+        node["joint_face_spans"] = compress_spans(remapped_face_range(
+            node["joint_face_start"], node["joint_face_count"]
+        ))
+    for edge in edge_bucket["edges"]:
+        edge["start_vertex_spans"] = compress_spans(remapped_range(
+            edge["start_vertex_start"], edge["start_vertex_count"]
+        ))
+        edge["end_vertex_spans"] = compress_spans(remapped_range(
+            edge["end_vertex_start"], edge["end_vertex_count"]
+        ))
+    for pane in graph_panes:
+        mapped = [vertex_remap[index] for index in pane["vertex_ids"]]
+        if any(index is None for index in mapped):
+            raise AssertionError("mesh hygiene removed a pane corner without an equivalent")
+        pane["vertex_ids"] = [index for index in mapped if index is not None]
 
     write_mtl(mesh.name, {
         spec.MAT_ALUMINIUM: ((0.30, 0.36, 0.34), 0.72, 1.0),
@@ -713,6 +765,7 @@ def main() -> None:
 
     graph = {
         "spec_version": 1,
+        "mesh_hygiene": mesh_hygiene,
         "z_datum_shift": z_shift,
         "world_placement": list(spec.WORLD_PLACEMENT),
         "leaf_z_datum_shift": leaf_z_shift,

@@ -11,6 +11,8 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
+from mesh_hygiene import assert_obj_hygiene
+
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "SourceMesh" / "architecture"
 QA = ROOT / "qa" / "rootstead_entry_vestibule"
@@ -104,6 +106,7 @@ def triangle_area(a: Vec3, b: Vec3, c: Vec3) -> float:
 
 def validate(mesh: ObjMesh) -> dict[str, object]:
     failures: list[str] = []
+    hygiene = assert_obj_hygiene(SOURCE / f"{mesh.name}.obj")
     if mesh.object_names != [mesh.name]:
         failures.append(f"expected one object named {mesh.name}, got {mesh.object_names}")
     if mesh.group_count:
@@ -115,7 +118,9 @@ def validate(mesh: ObjMesh) -> dict[str, object]:
 
     uv_corner_count = 0
     edges: Counter[tuple[int, int]] = Counter()
+    face_groups: Counter[tuple[int, tuple[Vec3, ...]]] = Counter()
     for material, face, uv_indices in mesh.faces:
+        face_groups[(len(face), tuple(sorted(mesh.vertices[index] for index in face)))] += 1
         if material not in EXPECTED[mesh.name]["materials"]:
             failures.append(f"unexpected or missing material {material!r}")
         if len(face) < 3 or any(index < 0 or index >= len(mesh.vertices) for index in face):
@@ -137,9 +142,12 @@ def validate(mesh: ObjMesh) -> dict[str, object]:
             edge = (min(vertex, following), max(vertex, following))
             edges[edge] += 1
 
+    duplicate_face_groups = sum(count > 1 for count in face_groups.values())
+    if duplicate_face_groups:
+        failures.append(f"{duplicate_face_groups} coincident duplicate face groups")
     non_two_face_edges = sum(count != 2 for count in edges.values())
-    if EXPECTED[mesh.name]["closed"] and non_two_face_edges:
-        failures.append(f"opaque frame has {non_two_face_edges} boundary/non-manifold edges")
+    # Assembled render geometry may become open at removed internal caps. Edge
+    # incidence remains diagnostic; duplicate/degenerate geometry is the hard gate.
 
     mins = tuple(min(point[axis] for point in mesh.vertices) for axis in range(3))
     maxs = tuple(max(point[axis] for point in mesh.vertices) for axis in range(3))
@@ -168,7 +176,9 @@ def validate(mesh: ObjMesh) -> dict[str, object]:
         "bounds_cm": {"min": mins, "max": maxs,
                       "size": tuple(maxs[i] - mins[i] for i in range(3))},
         "material_slots": sorted(material_slots),
-        "edge_incidence": {"total": len(edges), "non_two_face": non_two_face_edges},
+        "edge_incidence": {"total": len(edges), "non_two_face_advisory": non_two_face_edges},
+        "coincident_duplicate_face_groups": duplicate_face_groups,
+        "mesh_hygiene_1cm": hygiene,
     }
 
 

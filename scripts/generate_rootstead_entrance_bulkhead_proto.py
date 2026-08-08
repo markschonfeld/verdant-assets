@@ -35,6 +35,7 @@ from typing import Iterable
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 import rootstead_entrance_bulkhead_proto_spec as spec  # noqa: E402
+from mesh_hygiene import clean_obj_file, parse_obj  # noqa: E402
 
 OUT = ROOT / "SourceMesh" / "architecture"
 QA = ROOT / "qa" / "rootstead_entrance_bulkhead" / "prototype"
@@ -465,9 +466,9 @@ def project(cat: dict[str, int]) -> dict:
     n = spec.MODULE_COUNT_FULL_WALL
     spall_modules = int(round(spec.SPALL_FRACTION * n))
 
-    repeated = {m: cat.get(m, 0) for m in spec.REPEATED_DETAIL_MATERIALS}
-    sparse = {m: cat.get(m, 0) for m in spec.SPARSE_DETAIL_MATERIALS}
-    fixed_sample = {m: cat.get(m, 0) for m in spec.FIXED_MASSING_MATERIALS}
+    repeated = {m: cat.get(m, 0) for m in sorted(spec.REPEATED_DETAIL_MATERIALS)}
+    sparse = {m: cat.get(m, 0) for m in sorted(spec.SPARSE_DETAIL_MATERIALS)}
+    fixed_sample = {m: cat.get(m, 0) for m in sorted(spec.FIXED_MASSING_MATERIALS)}
 
     per_module_repeated = sum(repeated.values())
     per_module_sparse = sum(sparse.values())
@@ -569,6 +570,8 @@ def main() -> None:
 
     mesh = build()
     obj_path = mesh.write()
+    hygiene = clean_obj_file(obj_path)
+    cleaned = parse_obj(obj_path)
 
     preview_mtl = {
         m: (tuple(c / 255.0 for c in spec.PREVIEW_COLORS[m]), 0.85, 1.0)
@@ -579,7 +582,9 @@ def main() -> None:
     }
     mtl_path = write_mtl(spec.OBJ_NAME, preview_mtl)
 
-    cat = mesh.category_triangles()
+    cat: dict[str, int] = {}
+    for face in cleaned.faces:
+        cat[face.material] = cat.get(face.material, 0) + len(face.corners) - 2
     metrics = {
         "asset": spec.OBJ_NAME,
         "purpose": ("Triangle-budget prototype gate: one representative held "
@@ -613,16 +618,17 @@ def main() -> None:
         "triangle_counts_by_category": cat,
         "triangle_counts_grouped": {
             "fixed_base_massing": {m: cat.get(m, 0)
-                                   for m in spec.FIXED_MASSING_MATERIALS},
+                                   for m in sorted(spec.FIXED_MASSING_MATERIALS)},
             "repeated_decorative_detail": {m: cat.get(m, 0)
-                                           for m in spec.REPEATED_DETAIL_MATERIALS},
+                                           for m in sorted(spec.REPEATED_DETAIL_MATERIALS)},
             "sparse_decorative_detail": {m: cat.get(m, 0)
-                                         for m in spec.SPARSE_DETAIL_MATERIALS},
+                                         for m in sorted(spec.SPARSE_DETAIL_MATERIALS)},
         },
-        "total_prototype_triangles": mesh.triangle_count(),
+        "total_prototype_triangles": sum(len(face.corners) - 2 for face in cleaned.faces),
+        "mesh_hygiene": hygiene,
         "local_bounds_uu": {
-            "min": [min(v[i] for v in mesh.vertices) for i in range(3)],
-            "max": [max(v[i] for v in mesh.vertices) for i in range(3)],
+            "min": [min(v[i] for v in cleaned.vertices) for i in range(3)],
+            "max": [max(v[i] for v in cleaned.vertices) for i in range(3)],
         },
         "expected_world_face_x_uu": spec.FACE_X,
         "aggregate_geometry": {

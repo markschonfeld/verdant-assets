@@ -4,11 +4,11 @@
     "VD_RootsteadEntryVestibule_Frame": {
       "pass": true,
       "failures": [],
-      "vertices": 744,
+      "vertices": 708,
       "texture_coordinates": 2232,
-      "faces": 522,
-      "triangles": 1188,
-      "uv_indexed_face_corners": 2232,
+      "faces": 514,
+      "triangles": 1172,
+      "uv_indexed_face_corners": 2200,
       "object_names": [
         "VD_RootsteadEntryVestibule_Frame"
       ],
@@ -38,8 +38,20 @@
         "M_Vestibule_RubberSeal"
       ],
       "edge_incidence": {
-        "total": 1116,
-        "non_two_face": 0
+        "total": 1084,
+        "non_two_face_advisory": 32
+      },
+      "coincident_duplicate_face_groups": 0,
+      "mesh_hygiene_1cm": {
+        "pass": true,
+        "vertices": 708,
+        "faces": 514,
+        "triangles": 1172,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
       }
     },
     "VD_RootsteadEntryVestibule_Glazing": {
@@ -77,7 +89,19 @@
       ],
       "edge_incidence": {
         "total": 88,
-        "non_two_face": 88
+        "non_two_face_advisory": 88
+      },
+      "coincident_duplicate_face_groups": 0,
+      "mesh_hygiene_1cm": {
+        "pass": true,
+        "vertices": 88,
+        "faces": 22,
+        "triangles": 44,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
       }
     }
   },

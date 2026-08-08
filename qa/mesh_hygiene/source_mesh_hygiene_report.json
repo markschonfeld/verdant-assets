@@ -1,0 +1,635 @@
+{
+  "all_pass": true,
+  "hard_gate": {
+    "duplicate_face_groups": 0,
+    "stacked_face_pairs_1cm": 0,
+    "degenerate_faces": 0,
+    "strict_manifold": "advisory; not a render-mesh acceptance gate"
+  },
+  "baseline_ref": "origin/main",
+  "baseline_sha": "5f6d2e8026acb3d8452da1bd3da8a4e2ebe54e28",
+  "asset_count": 20,
+  "failures": [],
+  "assets": {
+    "SourceMesh/architecture/VD_RootsteadEntranceBulkhead.obj": {
+      "before": {
+        "pass": false,
+        "vertices": 15828,
+        "faces": 17794,
+        "triangles": 23776,
+        "duplicate_face_groups": 102,
+        "redundant_duplicate_faces": 102,
+        "stacked_face_pairs_1cm": 1463,
+        "stacked_faces_1cm": 2926,
+        "degenerate_faces": 0
+      },
+      "after": {
+        "pass": true,
+        "vertices": 15271,
+        "faces": 16331,
+        "triangles": 20852,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "delta": {
+        "triangles": -2924,
+        "duplicate_face_groups": -102,
+        "stacked_face_pairs_1cm": -1463,
+        "stacked_faces_1cm": -2926,
+        "degenerate_faces": 0
+      }
+    },
+    "SourceMesh/architecture/VD_RootsteadEntranceBulkhead_Proto.obj": {
+      "before": {
+        "pass": false,
+        "vertices": 300,
+        "faces": 307,
+        "triangles": 452,
+        "duplicate_face_groups": 1,
+        "redundant_duplicate_faces": 1,
+        "stacked_face_pairs_1cm": 17,
+        "stacked_faces_1cm": 34,
+        "degenerate_faces": 0
+      },
+      "after": {
+        "pass": true,
+        "vertices": 294,
+        "faces": 290,
+        "triangles": 418,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "delta": {
+        "triangles": -34,
+        "duplicate_face_groups": -1,
+        "stacked_face_pairs_1cm": -17,
+        "stacked_faces_1cm": -34,
+        "degenerate_faces": 0
+      }
+    },
+    "SourceMesh/architecture/VD_RootsteadEntryVestibule_Frame.obj": {
+      "before": {
+        "pass": false,
+        "vertices": 744,
+        "faces": 522,
+        "triangles": 1188,
+        "duplicate_face_groups": 8,
+        "redundant_duplicate_faces": 8,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "after": {
+        "pass": true,
+        "vertices": 708,
+        "faces": 514,
+        "triangles": 1172,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "delta": {
+        "triangles": -16,
+        "duplicate_face_groups": -8,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      }
+    },
+    "SourceMesh/architecture/VD_RootsteadEntryVestibule_Glazing.obj": {
+      "before": {
+        "pass": true,
+        "vertices": 88,
+        "faces": 22,
+        "triangles": 44,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "after": {
+        "pass": true,
+        "vertices": 88,
+        "faces": 22,
+        "triangles": 44,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "delta": {
+        "triangles": 0,
+        "duplicate_face_groups": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      }
+    },
+    "SourceMesh/architecture/VD_RootsteadWestEndwallEntry.obj": {
+      "before": {
+        "pass": false,
+        "vertices": 237948,
+        "faces": 158584,
+        "triangles": 396676,
+        "duplicate_face_groups": 4687,
+        "redundant_duplicate_faces": 4687,
+        "stacked_face_pairs_1cm": 4112,
+        "stacked_faces_1cm": 8224,
+        "degenerate_faces": 0
+      },
+      "after": {
+        "pass": true,
+        "vertices": 207848,
+        "faces": 153733,
+        "triangles": 377966,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "delta": {
+        "triangles": -18710,
+        "duplicate_face_groups": -4687,
+        "stacked_face_pairs_1cm": -4112,
+        "stacked_faces_1cm": -8224,
+        "degenerate_faces": 0
+      }
+    },
+    "SourceMesh/architecture/VD_RootsteadWestEndwallEntry_Leaves.obj": {
+      "before": {
+        "pass": true,
+        "vertices": 16,
+        "faces": 12,
+        "triangles": 24,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "after": {
+        "pass": true,
+        "vertices": 16,
+        "faces": 12,
+        "triangles": 24,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "delta": {
+        "triangles": 0,
+        "duplicate_face_groups": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      }
+    },
+    "SourceMesh/props/VD_Spire.obj": {
+      "before": {
+        "pass": false,
+        "vertices": 7832,
+        "faces": 4858,
+        "triangles": 13780,
+        "duplicate_face_groups": 162,
+        "redundant_duplicate_faces": 162,
+        "stacked_face_pairs_1cm": 162,
+        "stacked_faces_1cm": 324,
+        "degenerate_faces": 0
+      },
+      "after": {
+        "pass": true,
+        "vertices": 6392,
+        "faces": 4696,
+        "triangles": 12776,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "delta": {
+        "triangles": -1004,
+        "duplicate_face_groups": -162,
+        "stacked_face_pairs_1cm": -162,
+        "stacked_faces_1cm": -324,
+        "degenerate_faces": 0
+      }
+    },
+    "SourceMesh/props/VD_SpireBase.obj": {
+      "before": {
+        "pass": false,
+        "vertices": 736,
+        "faces": 456,
+        "triangles": 1296,
+        "duplicate_face_groups": 1,
+        "redundant_duplicate_faces": 1,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "after": {
+        "pass": true,
+        "vertices": 728,
+        "faces": 455,
+        "triangles": 1290,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "delta": {
+        "triangles": -6,
+        "duplicate_face_groups": -1,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      }
+    },
+    "SourceMesh/props/VD_SpireLights.obj": {
+      "before": {
+        "pass": true,
+        "vertices": 288,
+        "faces": 168,
+        "triangles": 528,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "after": {
+        "pass": true,
+        "vertices": 288,
+        "faces": 168,
+        "triangles": 528,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "delta": {
+        "triangles": 0,
+        "duplicate_face_groups": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      }
+    },
+    "SourceMesh/terrace_botanical/VD_Dracaena_A.obj": {
+      "before": {
+        "pass": true,
+        "vertices": 872,
+        "faces": 336,
+        "triangles": 696,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "after": {
+        "pass": true,
+        "vertices": 872,
+        "faces": 336,
+        "triangles": 696,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "delta": {
+        "triangles": 0,
+        "duplicate_face_groups": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      }
+    },
+    "SourceMesh/terrace_botanical/VD_Dracaena_B.obj": {
+      "before": {
+        "pass": true,
+        "vertices": 1452,
+        "faces": 558,
+        "triangles": 1152,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "after": {
+        "pass": true,
+        "vertices": 1452,
+        "faces": 558,
+        "triangles": 1152,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "delta": {
+        "triangles": 0,
+        "duplicate_face_groups": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      }
+    },
+    "SourceMesh/terrace_botanical/VD_Dracaena_C.obj": {
+      "before": {
+        "pass": true,
+        "vertices": 1596,
+        "faces": 612,
+        "triangles": 1260,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "after": {
+        "pass": true,
+        "vertices": 1596,
+        "faces": 612,
+        "triangles": 1260,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "delta": {
+        "triangles": 0,
+        "duplicate_face_groups": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      }
+    },
+    "SourceMesh/terrace_botanical/VD_DwarfMorningGlory_A.obj": {
+      "before": {
+        "pass": true,
+        "vertices": 720,
+        "faces": 584,
+        "triangles": 788,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "after": {
+        "pass": true,
+        "vertices": 720,
+        "faces": 584,
+        "triangles": 788,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "delta": {
+        "triangles": 0,
+        "duplicate_face_groups": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      }
+    },
+    "SourceMesh/terrace_botanical/VD_DwarfMorningGlory_B.obj": {
+      "before": {
+        "pass": true,
+        "vertices": 883,
+        "faces": 710,
+        "triangles": 986,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "after": {
+        "pass": true,
+        "vertices": 883,
+        "faces": 710,
+        "triangles": 986,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "delta": {
+        "triangles": 0,
+        "duplicate_face_groups": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      }
+    },
+    "SourceMesh/terrace_botanical/VD_DwarfMorningGlory_C.obj": {
+      "before": {
+        "pass": true,
+        "vertices": 1187,
+        "faces": 960,
+        "triangles": 1308,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "after": {
+        "pass": true,
+        "vertices": 1187,
+        "faces": 960,
+        "triangles": 1308,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "delta": {
+        "triangles": 0,
+        "duplicate_face_groups": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      }
+    },
+    "SourceMesh/terrace_botanical/VD_TerracePlanter.obj": {
+      "before": {
+        "pass": true,
+        "vertices": 88,
+        "faces": 60,
+        "triangles": 144,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "after": {
+        "pass": true,
+        "vertices": 88,
+        "faces": 60,
+        "triangles": 144,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "delta": {
+        "triangles": 0,
+        "duplicate_face_groups": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      }
+    },
+    "SourceMesh/terrace_botanical/VD_TerracePlanter_EndCap.obj": {
+      "before": {
+        "pass": true,
+        "vertices": 80,
+        "faces": 52,
+        "triangles": 136,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "after": {
+        "pass": true,
+        "vertices": 80,
+        "faces": 52,
+        "triangles": 136,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "delta": {
+        "triangles": 0,
+        "duplicate_face_groups": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      }
+    },
+    "SourceMesh/terrace_botanical/VD_ZZPlant_A.obj": {
+      "before": {
+        "pass": true,
+        "vertices": 866,
+        "faces": 409,
+        "triangles": 1028,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "after": {
+        "pass": true,
+        "vertices": 866,
+        "faces": 409,
+        "triangles": 1028,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "delta": {
+        "triangles": 0,
+        "duplicate_face_groups": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      }
+    },
+    "SourceMesh/terrace_botanical/VD_ZZPlant_B.obj": {
+      "before": {
+        "pass": true,
+        "vertices": 1126,
+        "faces": 529,
+        "triangles": 1328,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "after": {
+        "pass": true,
+        "vertices": 1126,
+        "faces": 529,
+        "triangles": 1328,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "delta": {
+        "triangles": 0,
+        "duplicate_face_groups": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      }
+    },
+    "SourceMesh/terrace_botanical/VD_ZZPlant_C.obj": {
+      "before": {
+        "pass": true,
+        "vertices": 1378,
+        "faces": 647,
+        "triangles": 1624,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "after": {
+        "pass": true,
+        "vertices": 1378,
+        "faces": 647,
+        "triangles": 1624,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      },
+      "delta": {
+        "triangles": 0,
+        "duplicate_face_groups": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
+      }
+    }
+  }
+}
