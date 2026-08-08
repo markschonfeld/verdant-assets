@@ -96,6 +96,49 @@ python3 scripts/verify_institutional_surface_pbr.py
 QA maps, the 2×2 seam preview, QA-only lit preview, contact sheet and report are
 under `qa/institutional_surface_pbr/`.
 
+### Packed ORM textures
+
+Unreal does not sample the separate `_ao` and `_roughness` files. The
+`MX_ConcreteCast` material samples one packed texture per set, and this project
+packs it as:
+
+| channel | content           |
+| ------- | ----------------- |
+| **R**   | ambient occlusion |
+| **G**   | roughness         |
+| **B**   | metallic          |
+
+Build the packed maps with:
+
+```bash
+python3 scripts/pack_orm_textures.py
+```
+
+`--check` re-packs in memory and compares against what is on disk without
+writing, which is the form CI should call. Packing is a straight per-channel
+byte copy — no resampling, no colour management, no randomness — so the result
+is bit-identical on every run. The committed
+`precast_exposed_aggregate_orm.png` is pixel-for-pixel identical to the texture
+the level currently renders with.
+
+**Import ORM with sRGB OFF and compression `TC_MASKS`.** These channels are
+measurements, not colour; importing as sRGB silently gamma-shifts both
+roughness and AO.
+
+Which sets are packed, and why:
+
+- `precast_exposed_aggregate` — **packed.** `MI_EBK_Precast`, `_Aggregate`,
+  `_Arris`, `_Streak` and `_Spall` all bind it as `concrete_cast_orm`.
+- `concrete_formed` — **packed.** `MI_EBK_BoardFormed` binds only the base
+  colour and normal, so its `concrete_cast_orm` slot currently falls through to
+  the parent default and the board-formed plinth renders with a different
+  material's AO and roughness. Packing it is what makes fixing that possible;
+  the binding itself is an engine-side change, not a repository one.
+- `alu_oxidised` — **deliberately not packed.** It is the one set with a real
+  authored `_metallic` map, but its material binds AO, roughness and metallic
+  as separate slots rather than through an ORM. Packing it would add an unused
+  2048² file. Adding it later is one entry in `ORM_SETS`.
+
 ## Vault materials and engineered growth
 
 The vault-frame and glazing PBR maps are 2048×2048, aligned, and exact-edge

@@ -1,0 +1,99 @@
+{
+  "convention": "R=AO, G=Roughness, B=Metallic",
+  "materials": {
+    "precast_exposed_aggregate": {
+      "resolution": [
+        2048,
+        2048
+      ],
+      "channels": {
+        "R": {
+          "content": "ambient occlusion",
+          "source": "precast_exposed_aggregate_ao.png"
+        },
+        "G": {
+          "content": "roughness",
+          "source": "precast_exposed_aggregate_roughness.png"
+        },
+        "B": {
+          "content": "metallic",
+          "source": "constant 0 from material_scale_manifest.json"
+        }
+      },
+      "stats": {
+        "R": {
+          "min": 142,
+          "max": 255,
+          "mean": 241.977,
+          "stddev": 19.099
+        },
+        "G": {
+          "min": 122,
+          "max": 255,
+          "mean": 194.857,
+          "stddev": 28.827
+        },
+        "B": {
+          "min": 0,
+          "max": 0,
+          "mean": 0.0,
+          "stddev": 0.0
+        }
+      },
+      "unreal_import": {
+        "srgb": false,
+        "compression": "TC_MASKS",
+        "address": "wrap"
+      },
+      "sha256": "6b7ea16ca5b26354d66745f7107c7c50b6ac20f207850a9cb1c29f0fc20d43c1",
+      "check": "PASS"
+    },
+    "concrete_formed": {
+      "resolution": [
+        2048,
+        2048
+      ],
+      "channels": {
+        "R": {
+          "content": "ambient occlusion",
+          "source": "concrete_formed_ao.png"
+        },
+        "G": {
+          "content": "roughness",
+          "source": "concrete_formed_roughness.png"
+        },
+        "B": {
+          "content": "metallic",
+          "source": "constant 0 from material_scale_manifest.json"
+        }
+      },
+      "stats": {
+        "R": {
+          "min": 61,
+          "max": 255,
+          "mean": 244.85,
+          "stddev": 33.353
+        },
+        "G": {
+          "min": 70,
+          "max": 255,
+          "mean": 192.207,
+          "stddev": 25.502
+        },
+        "B": {
+          "min": 0,
+          "max": 0,
+          "mean": 0.0,
+          "stddev": 0.0
+        }
+      },
+      "unreal_import": {
+        "srgb": false,
+        "compression": "TC_MASKS",
+        "address": "wrap"
+      },
+      "sha256": "5453df066070b02079eba7b2d4ec891f5ac47c82796ae8f61e9b5951cb2e5cad",
+      "check": "PASS"
+    }
+  }
+}
