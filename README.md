@@ -108,6 +108,23 @@ remain separate for Unreal material and Nanite handling:
 - `SourceMesh/architecture/VD_RootsteadEntryVestibule_Glazing.obj`
 - `references/architecture/ROOTSTEAD_ENTRY_VESTIBULE_HANDOFF.md`
 
+## Authored prop geometry
+
+Source OBJ meshes use Unreal centimetres at 1:1, Z-up, and bottom-centre pivots.
+Generators are committed beside their outputs; imported actors must remain at
+uniform scale `1.0`.
+
+The first prop family replaces the two Engine cylinders used for the Eden Prime
+landmark with a **180 m working research exhaust stack later adapted as a
+settlement signal/observation mast**. Opaque stack/base geometry remains separate
+from the translucent aircraft-warning lenses so Nanite can stay enabled where
+supported:
+
+- `SourceMesh/props/VD_Spire.obj`
+- `SourceMesh/props/VD_SpireBase.obj`
+- `SourceMesh/props/VD_SpireLights.obj`
+- `references/props/SPIRE_LANDMARK_HANDOFF.md`
+
 Regenerate and verify with:
 
 ```bash
@@ -117,6 +134,13 @@ python3 scripts/verify_rootstead_entry_vestibule.py
 
 The OBJ verifier locks the single-object/no-group import contract, indexed UV0
 coverage, material separation, bounds, and unobstructed walk-through opening.
+
+python3 scripts/generate_spire_landmark.py
+python3 scripts/verify_spire_landmark.py
+```
+
+Machine topology/bounds reports and the dimensioned orthographic preview are
+under `qa/spire_landmark/`.
 
 ## Reproduction and QA
 

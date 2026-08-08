@@ -1,0 +1,92 @@
+{
+  "units": "centimetres (1 unit = 1 Unreal uu = 1 cm)",
+  "axis": "Z-up",
+  "pivot": "shared ground-centre assembly origin",
+  "assembly_height_cm": 18000,
+  "canonical_function": "research exhaust stack later adapted as signal/observation mast",
+  "meshes": {
+    "VD_SpireBase": {
+      "vertices": 736,
+      "faces": 456,
+      "triangles_after_import": 1296,
+      "bounds_cm": {
+        "min": [
+          -1200.0,
+          -1200.0,
+          0
+        ],
+        "max": [
+          1200.0,
+          1200.0,
+          1200
+        ],
+        "size": [
+          2400.0,
+          2400.0,
+          1200
+        ]
+      },
+      "materials": [
+        "M_Spire_BareMetal",
+        "M_Spire_Concrete",
+        "M_Spire_Fastener",
+        "M_Spire_PaintedSteel",
+        "M_Spire_ServicePanel"
+      ]
+    },
+    "VD_Spire": {
+      "vertices": 7832,
+      "faces": 4858,
+      "triangles_after_import": 13780,
+      "bounds_cm": {
+        "min": [
+          -1100.0,
+          -1100.0,
+          0
+        ],
+        "max": [
+          1100.0,
+          1100.0,
+          18000
+        ],
+        "size": [
+          2200.0,
+          2200.0,
+          18000
+        ]
+      },
+      "materials": [
+        "M_Spire_BareMetal",
+        "M_Spire_Fastener",
+        "M_Spire_ServicePanel",
+        "M_Spire_Soot",
+        "M_Spire_StackConcrete"
+      ]
+    },
+    "VD_SpireLights": {
+      "vertices": 288,
+      "faces": 168,
+      "triangles_after_import": 528,
+      "bounds_cm": {
+        "min": [
+          -660.0,
+          -660.0,
+          5980.0
+        ],
+        "max": [
+          660.0,
+          660.0,
+          17770.0
+        ],
+        "size": [
+          1320.0,
+          1320.0,
+          11790.0
+        ]
+      },
+      "materials": [
+        "M_Spire_WarningLens"
+      ]
+    }
+  }
+}

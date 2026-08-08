@@ -1,0 +1,133 @@
+{
+  "all_pass": true,
+  "assembly_height_cm": 18000.0,
+  "warning_lens_separation": {
+    "pass": true,
+    "opaque_meshes": [
+      "VD_SpireBase",
+      "VD_Spire"
+    ],
+    "non_nanite_mesh": "VD_SpireLights"
+  },
+  "checks": {
+    "VD_SpireBase": {
+      "pass": true,
+      "failures": [],
+      "vertices": 736,
+      "texture_coordinates": 2208,
+      "uv_indexed_face_corners": 2208,
+      "object_names": [
+        "VD_SpireBase"
+      ],
+      "group_records": 0,
+      "faces": 456,
+      "triangles": 1296,
+      "bounds_cm": {
+        "min": [
+          -1200.0,
+          -1200.0,
+          0.0
+        ],
+        "max": [
+          1200.0,
+          1200.0,
+          1200.0
+        ],
+        "size": [
+          2400.0,
+          2400.0,
+          1200.0
+        ]
+      },
+      "material_slots": [
+        "M_Spire_BareMetal",
+        "M_Spire_Concrete",
+        "M_Spire_Fastener",
+        "M_Spire_PaintedSteel",
+        "M_Spire_ServicePanel"
+      ],
+      "edge_incidence": {
+        "total": 1104,
+        "nonmanifold": 0
+      }
+    },
+    "VD_Spire": {
+      "pass": true,
+      "failures": [],
+      "vertices": 7832,
+      "texture_coordinates": 23496,
+      "uv_indexed_face_corners": 23496,
+      "object_names": [
+        "VD_Spire"
+      ],
+      "group_records": 0,
+      "faces": 4858,
+      "triangles": 13780,
+      "bounds_cm": {
+        "min": [
+          -1100.0,
+          -1100.0,
+          0.0
+        ],
+        "max": [
+          1100.0,
+          1100.0,
+          18000.0
+        ],
+        "size": [
+          2200.0,
+          2200.0,
+          18000.0
+        ]
+      },
+      "material_slots": [
+        "M_Spire_BareMetal",
+        "M_Spire_Fastener",
+        "M_Spire_ServicePanel",
+        "M_Spire_Soot",
+        "M_Spire_StackConcrete"
+      ],
+      "edge_incidence": {
+        "total": 11748,
+        "nonmanifold": 0
+      }
+    },
+    "VD_SpireLights": {
+      "pass": true,
+      "failures": [],
+      "vertices": 288,
+      "texture_coordinates": 864,
+      "uv_indexed_face_corners": 864,
+      "object_names": [
+        "VD_SpireLights"
+      ],
+      "group_records": 0,
+      "faces": 168,
+      "triangles": 528,
+      "bounds_cm": {
+        "min": [
+          -660.0,
+          -660.0,
+          5980.0
+        ],
+        "max": [
+          660.0,
+          660.0,
+          17770.0
+        ],
+        "size": [
+          1320.0,
+          1320.0,
+          11790.0
+        ]
+      },
+      "material_slots": [
+        "M_Spire_WarningLens"
+      ],
+      "edge_incidence": {
+        "total": 432,
+        "nonmanifold": 0
+      }
+    }
+  }
+}
