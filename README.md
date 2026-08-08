@@ -324,3 +324,25 @@ python3 scripts/verify_terrace_planter_botanical_kit.py
 
 Machine verification, the alpha-sheet contact sheet, and isolated/assembled visual previews are under
 `qa/terrace_planter_botanical/`.
+
+## Rootstead west endwall + entrance replacement
+
+`VD_RootsteadWestEndwallEntry` replaces the separate west-gable and entrance
+systems with one authored rigid architectural mesh. It includes the complete
+triangulated gable, mixed-era panes, the ENDGLAZE_W transfer junction, a deep
+entrance reveal, and a fully proud rigid trellis. Animated door leaves are not
+baked into the main mesh; the optional `_Leaves` OBJ is a replacement for the
+existing leaf actors, never an additive closed-door overlay. Its lattice fittings
+are generated from the committed `reference-kit/rootstead-vault/VD_VaultNode_Far.obj`
+profile: six collar/barrel directions with separate flange pieces, not annular hubs.
+
+Regenerate and verify the delivery with:
+
+```bash
+python3 scripts/generate_rootstead_west_endwall_entry.py
+python3 scripts/verify_rootstead_west_endwall_entry.py
+```
+
+The machine report, lattice graph, and full-gable/entrance preview are under
+`qa/rootstead_west_endwall_entry/`. Import and collision instructions are in
+`references/architecture/ROOTSTEAD_WEST_ENDWALL_ENTRY_HANDOFF.md`.

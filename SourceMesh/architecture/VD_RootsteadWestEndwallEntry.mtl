@@ -1,0 +1,42 @@
+# Semantic preview materials for VD_RootsteadWestEndwallEntry
+newmtl M_WestEndwall_OxidisedAluminium
+Kd 0.300 0.360 0.340
+Pr 0.720
+d 1.000
+illum 2
+
+newmtl M_WestEndwall_GlazeAcrylic
+Kd 0.580 0.720 0.780
+Pr 0.350
+d 0.450
+illum 2
+
+newmtl M_WestEndwall_GlazeRepair
+Kd 0.680 0.760 0.600
+Pr 0.300
+d 0.450
+illum 2
+
+newmtl M_WestEndwall_EntranceReveal
+Kd 0.440 0.420 0.350
+Pr 0.880
+d 1.000
+illum 2
+
+newmtl M_WestEndwall_TrellisSteel
+Kd 0.200 0.240 0.190
+Pr 0.760
+d 1.000
+illum 2
+
+newmtl M_WestEndwall_SealShadowGap
+Kd 0.060 0.060 0.060
+Pr 0.950
+d 1.000
+illum 2
+
+newmtl M_WestEndwall_FrostedTransom
+Kd 0.640 0.730 0.700
+Pr 0.600
+d 0.550
+illum 2
