@@ -1,0 +1,794 @@
+{
+  "pass": true,
+  "missing": [],
+  "extra": [],
+  "mesh_count": 16,
+  "meshes": {
+    "VD_SpecimenPlanter_Concrete": {
+      "pass": true,
+      "failures": [],
+      "vertices": 674,
+      "texture_coordinates": 2784,
+      "faces": 720,
+      "triangles": 1344,
+      "object_names": [
+        "VD_SpecimenPlanter_Concrete"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_ConcretePlanter_Cast",
+        "M_ConcretePlanter_Rim",
+        "M_Planter_DressedSoil"
+      ],
+      "material_face_counts": {
+        "M_ConcretePlanter_Cast": 528,
+        "M_ConcretePlanter_Rim": 48,
+        "M_Planter_DressedSoil": 144
+      },
+      "wind_stiffness": null,
+      "bounds_cm": {
+        "min": [
+          -112.0,
+          -112.0,
+          0.0
+        ],
+        "max": [
+          112.0,
+          112.0,
+          98.0
+        ],
+        "size": [
+          224.0,
+          224.0,
+          98.0
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_SpecimenPlanter_Ceramic": {
+      "pass": true,
+      "failures": [],
+      "vertices": 674,
+      "texture_coordinates": 2784,
+      "faces": 720,
+      "triangles": 1344,
+      "object_names": [
+        "VD_SpecimenPlanter_Ceramic"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_CeramicPlanter_Glaze",
+        "M_CeramicPlanter_Rim",
+        "M_Planter_DressedSoil"
+      ],
+      "material_face_counts": {
+        "M_CeramicPlanter_Glaze": 528,
+        "M_CeramicPlanter_Rim": 48,
+        "M_Planter_DressedSoil": 144
+      },
+      "wind_stiffness": null,
+      "bounds_cm": {
+        "min": [
+          -94.0,
+          -94.0,
+          0.0
+        ],
+        "max": [
+          94.0,
+          94.0,
+          116.0
+        ],
+        "size": [
+          188.0,
+          188.0,
+          116.0
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_DatePalm_Hero": {
+      "pass": true,
+      "failures": [],
+      "vertices": 6613,
+      "texture_coordinates": 10692,
+      "faces": 2772,
+      "triangles": 5148,
+      "object_names": [
+        "VD_DatePalm_Hero"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_DatePalm_Leaflet",
+        "M_DatePalm_Rachis",
+        "M_DatePalm_Trunk"
+      ],
+      "material_face_counts": {
+        "M_DatePalm_Leaflet": 1536,
+        "M_DatePalm_Rachis": 672,
+        "M_DatePalm_Trunk": 564
+      },
+      "wind_stiffness": {
+        "encoding": "vertex RGB grayscale",
+        "min": 0.0,
+        "max": 1.0,
+        "vertex_count": 6613
+      },
+      "bounds_cm": {
+        "min": [
+          -172.966361,
+          -173.476777,
+          0.0
+        ],
+        "max": [
+          172.966361,
+          173.476777,
+          416.721334
+        ],
+        "size": [
+          345.932722,
+          346.953554,
+          416.721334
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_SoilDressing_Mound": {
+      "pass": true,
+      "failures": [],
+      "vertices": 42,
+      "texture_coordinates": 200,
+      "faces": 60,
+      "triangles": 80,
+      "object_names": [
+        "VD_SoilDressing_Mound"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_SoilDressing_Mound"
+      ],
+      "material_face_counts": {
+        "M_SoilDressing_Mound": 60
+      },
+      "wind_stiffness": null,
+      "bounds_cm": {
+        "min": [
+          -51.920508,
+          -52.519551,
+          0.0
+        ],
+        "max": [
+          51.920508,
+          52.519551,
+          15.0
+        ],
+        "size": [
+          103.841016,
+          105.039102,
+          15.0
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_SoilDressing_Litter": {
+      "pass": true,
+      "failures": [],
+      "vertices": 60,
+      "texture_coordinates": 60,
+      "faces": 15,
+      "triangles": 30,
+      "object_names": [
+        "VD_SoilDressing_Litter"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_SoilDressing_Litter"
+      ],
+      "material_face_counts": {
+        "M_SoilDressing_Litter": 15
+      },
+      "wind_stiffness": null,
+      "bounds_cm": {
+        "min": [
+          -41.467112,
+          -42.726299,
+          0.0
+        ],
+        "max": [
+          41.467112,
+          42.726299,
+          6.431301
+        ],
+        "size": [
+          82.934224,
+          85.452598,
+          6.431301
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_SoilDressing_Stones": {
+      "pass": true,
+      "failures": [],
+      "vertices": 42,
+      "texture_coordinates": 180,
+      "faces": 60,
+      "triangles": 60,
+      "object_names": [
+        "VD_SoilDressing_Stones"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_SoilDressing_Stone"
+      ],
+      "material_face_counts": {
+        "M_SoilDressing_Stone": 60
+      },
+      "wind_stiffness": null,
+      "bounds_cm": {
+        "min": [
+          -34.706744,
+          -28.589801,
+          0.0
+        ],
+        "max": [
+          34.706744,
+          28.589801,
+          11.320861
+        ],
+        "size": [
+          69.413488,
+          57.179602,
+          11.320861
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_Aloe_Specimen": {
+      "pass": true,
+      "failures": [],
+      "vertices": 1282,
+      "texture_coordinates": 4704,
+      "faces": 1264,
+      "triangles": 2176,
+      "object_names": [
+        "VD_Aloe_Specimen"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_Aloe_Base",
+        "M_Aloe_Leaf"
+      ],
+      "material_face_counts": {
+        "M_Aloe_Base": 48,
+        "M_Aloe_Leaf": 1216
+      },
+      "wind_stiffness": {
+        "encoding": "vertex RGB grayscale",
+        "min": 0.0,
+        "max": 0.85,
+        "vertex_count": 1282
+      },
+      "bounds_cm": {
+        "min": [
+          -62.903993,
+          -63.720722,
+          0.0
+        ],
+        "max": [
+          62.903993,
+          63.720722,
+          86.371281
+        ],
+        "size": [
+          125.807986,
+          127.441444,
+          86.371281
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_Philodendron_Specimen": {
+      "pass": true,
+      "failures": [],
+      "vertices": 1215,
+      "texture_coordinates": 2820,
+      "faces": 714,
+      "triangles": 1392,
+      "object_names": [
+        "VD_Philodendron_Specimen"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_Philodendron_Crown",
+        "M_Philodendron_Leaf",
+        "M_Philodendron_Petiole"
+      ],
+      "material_face_counts": {
+        "M_Philodendron_Crown": 54,
+        "M_Philodendron_Leaf": 264,
+        "M_Philodendron_Petiole": 396
+      },
+      "wind_stiffness": {
+        "encoding": "vertex RGB grayscale",
+        "min": 0.0,
+        "max": 1.0,
+        "vertex_count": 1215
+      },
+      "bounds_cm": {
+        "min": [
+          -108.127247,
+          -108.564475,
+          0.0
+        ],
+        "max": [
+          108.127247,
+          108.564475,
+          143.460717
+        ],
+        "size": [
+          216.254494,
+          217.12895,
+          143.460717
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_Coleus_Specimen": {
+      "pass": true,
+      "failures": [],
+      "vertices": 1114,
+      "texture_coordinates": 2320,
+      "faces": 588,
+      "triangles": 1144,
+      "object_names": [
+        "VD_Coleus_Specimen"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_Coleus_Base",
+        "M_Coleus_Leaf",
+        "M_Coleus_Stem"
+      ],
+      "material_face_counts": {
+        "M_Coleus_Base": 48,
+        "M_Coleus_Leaf": 360,
+        "M_Coleus_Stem": 180
+      },
+      "wind_stiffness": {
+        "encoding": "vertex RGB grayscale",
+        "min": 0.0,
+        "max": 1.0,
+        "vertex_count": 1114
+      },
+      "bounds_cm": {
+        "min": [
+          -36.659828,
+          -34.277199,
+          0.0
+        ],
+        "max": [
+          36.659828,
+          34.277199,
+          61.653714
+        ],
+        "size": [
+          73.319656,
+          68.554398,
+          61.653714
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_Bench_Municipal_Intact": {
+      "pass": true,
+      "failures": [],
+      "vertices": 496,
+      "texture_coordinates": 1392,
+      "faces": 348,
+      "triangles": 696,
+      "object_names": [
+        "VD_Bench_Municipal_Intact"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_Bench_BackSlat_Intact",
+        "M_Bench_CastFrame_Intact",
+        "M_Bench_SeatSlat_Intact"
+      ],
+      "material_face_counts": {
+        "M_Bench_BackSlat_Intact": 88,
+        "M_Bench_CastFrame_Intact": 128,
+        "M_Bench_SeatSlat_Intact": 132
+      },
+      "wind_stiffness": null,
+      "bounds_cm": {
+        "min": [
+          -97.2,
+          -32.221195,
+          0.0
+        ],
+        "max": [
+          97.2,
+          32.221195,
+          80.612714
+        ],
+        "size": [
+          194.4,
+          64.44239,
+          80.612714
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_Bench_Municipal_Damaged": {
+      "pass": true,
+      "failures": [],
+      "vertices": 496,
+      "texture_coordinates": 1392,
+      "faces": 348,
+      "triangles": 696,
+      "object_names": [
+        "VD_Bench_Municipal_Damaged"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_Bench_BackSlat_Damaged",
+        "M_Bench_CastFrame_Damaged",
+        "M_Bench_SeatSlat_Damaged"
+      ],
+      "material_face_counts": {
+        "M_Bench_BackSlat_Damaged": 88,
+        "M_Bench_CastFrame_Damaged": 128,
+        "M_Bench_SeatSlat_Damaged": 132
+      },
+      "wind_stiffness": null,
+      "bounds_cm": {
+        "min": [
+          -97.2,
+          -34.936622,
+          0.0
+        ],
+        "max": [
+          97.2,
+          34.936622,
+          79.45548
+        ],
+        "size": [
+          194.4,
+          69.873244,
+          79.45548
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_BrochureStand_Institutional": {
+      "pass": true,
+      "failures": [],
+      "vertices": 168,
+      "texture_coordinates": 296,
+      "faces": 74,
+      "triangles": 148,
+      "object_names": [
+        "VD_BrochureStand_Institutional"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_BrochureStand_Frame",
+        "M_BrochureStand_Paper",
+        "M_BrochureStand_Pocket"
+      ],
+      "material_face_counts": {
+        "M_BrochureStand_Frame": 34,
+        "M_BrochureStand_Paper": 30,
+        "M_BrochureStand_Pocket": 10
+      },
+      "wind_stiffness": null,
+      "bounds_cm": {
+        "min": [
+          -18.854527,
+          -24.299584,
+          0.0
+        ],
+        "max": [
+          18.854527,
+          24.299584,
+          149.654461
+        ],
+        "size": [
+          37.709054,
+          48.599168,
+          149.654461
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_Fountain_DryBasin": {
+      "pass": true,
+      "failures": [],
+      "vertices": 130,
+      "texture_coordinates": 408,
+      "faces": 106,
+      "triangles": 196,
+      "object_names": [
+        "VD_Fountain_DryBasin"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_Fountain_BasinFloor",
+        "M_Fountain_BasinWall",
+        "M_Fountain_LeafLitter",
+        "M_Fountain_Pedestal"
+      ],
+      "material_face_counts": {
+        "M_Fountain_BasinFloor": 8,
+        "M_Fountain_BasinWall": 64,
+        "M_Fountain_LeafLitter": 10,
+        "M_Fountain_Pedestal": 24
+      },
+      "wind_stiffness": null,
+      "bounds_cm": {
+        "min": [
+          -190.0,
+          -190.0,
+          0.0
+        ],
+        "max": [
+          190.0,
+          190.0,
+          112.0
+        ],
+        "size": [
+          380.0,
+          380.0,
+          112.0
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_Banner_Institute_Faded": {
+      "pass": true,
+      "failures": [],
+      "vertices": 425,
+      "texture_coordinates": 3072,
+      "faces": 768,
+      "triangles": 1536,
+      "object_names": [
+        "VD_Banner_Institute_Faded"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_Banner_Institute_Faded"
+      ],
+      "material_face_counts": {
+        "M_Banner_Institute_Faded": 768
+      },
+      "wind_stiffness": null,
+      "bounds_cm": {
+        "min": [
+          -85.0,
+          -7.571556,
+          0.0
+        ],
+        "max": [
+          85.0,
+          7.571556,
+          320.0
+        ],
+        "size": [
+          170.0,
+          15.143112,
+          320.0
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_Banner_Institute_Torn": {
+      "pass": true,
+      "failures": [],
+      "vertices": 925,
+      "texture_coordinates": 6912,
+      "faces": 1728,
+      "triangles": 3456,
+      "object_names": [
+        "VD_Banner_Institute_Torn"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_Banner_Institute_Torn"
+      ],
+      "material_face_counts": {
+        "M_Banner_Institute_Torn": 1728
+      },
+      "wind_stiffness": null,
+      "bounds_cm": {
+        "min": [
+          -79.305556,
+          -13.191807,
+          0.0
+        ],
+        "max": [
+          79.305556,
+          13.191807,
+          321.164382
+        ],
+        "size": [
+          158.611112,
+          26.383614,
+          321.164382
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_Pennant_BotanicalTerrace": {
+      "pass": true,
+      "failures": [],
+      "vertices": 253,
+      "texture_coordinates": 1760,
+      "faces": 440,
+      "triangles": 880,
+      "object_names": [
+        "VD_Pennant_BotanicalTerrace"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_Pennant_BotanicalTerrace"
+      ],
+      "material_face_counts": {
+        "M_Pennant_BotanicalTerrace": 440
+      },
+      "wind_stiffness": null,
+      "bounds_cm": {
+        "min": [
+          -65.0,
+          -5.391157,
+          0.0
+        ],
+        "max": [
+          65.0,
+          5.391157,
+          280.0
+        ],
+        "size": [
+          130.0,
+          10.782314,
+          280.0
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    }
+  },
+  "textures": {
+    "date_palm_leaflet": {
+      "pass": true,
+      "failures": [],
+      "path": "cutouts/entrance_terrace_reveal/date_palm_leaflet_ribbon_rgba_1024.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "opaque_fraction": 0.4286
+    },
+    "leaf_bark_litter": {
+      "pass": true,
+      "failures": [],
+      "path": "cutouts/entrance_terrace_reveal/leaf_bark_litter_rgba_1024.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "opaque_fraction": 0.1757
+    },
+    "philodendron_leaf": {
+      "pass": true,
+      "failures": [],
+      "path": "cutouts/entrance_terrace_reveal/philodendron_lobed_leaf_rgba_1024.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "opaque_fraction": 0.3965
+    },
+    "coleus_leaf": {
+      "pass": true,
+      "failures": [],
+      "path": "cutouts/entrance_terrace_reveal/coleus_leaf_rgba_1024.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "opaque_fraction": 0.3777
+    }
+  },
+  "banner_textures": {
+    "VD_Banner_Institute_Faded": {
+      "pass": true,
+      "failures": [],
+      "path": "cutouts/entrance_terrace_reveal/banner_institute_faded_rgba_2048.png",
+      "size": [
+        2048,
+        2048
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "opaque_fraction": 0.9855
+    },
+    "VD_Banner_Institute_Torn": {
+      "pass": true,
+      "failures": [],
+      "path": "cutouts/entrance_terrace_reveal/banner_institute_torn_rgba_2048.png",
+      "size": [
+        2048,
+        2048
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "opaque_fraction": 0.9182
+    },
+    "VD_Pennant_BotanicalTerrace": {
+      "pass": true,
+      "failures": [],
+      "path": "cutouts/entrance_terrace_reveal/pennant_botanical_terrace_rgba_2048.png",
+      "size": [
+        2048,
+        2048
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "opaque_fraction": 0.9831
+    }
+  },
+  "visual_outputs": {
+    "entrance_terrace_reveal_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_preview.png",
+    "entrance_terrace_reveal_hero_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_hero_preview.png",
+    "entrance_terrace_reveal_alpha_sheets_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_alpha_sheets_preview.png",
+    "entrance_terrace_reveal_supporting_species_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_supporting_species_preview.png",
+    "entrance_terrace_reveal_furniture_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_furniture_preview.png",
+    "entrance_terrace_reveal_banner_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_banner_preview.png",
+    "entrance_terrace_reveal_banner_graphics_preview.png": "qa/entrance_terrace_reveal/entrance_terrace_reveal_banner_graphics_preview.png"
+  }
+}

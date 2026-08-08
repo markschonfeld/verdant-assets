@@ -1,0 +1,191 @@
+# Unreal material-slot placeholder library for the entrance-terrace reveal kit
+newmtl M_ConcretePlanter_Cast
+Kd 0.4 0.4 0.37
+Pm 0.0
+Pr 0.9
+
+newmtl M_ConcretePlanter_Rim
+Kd 0.47 0.46 0.42
+Pm 0.0
+Pr 0.84
+
+newmtl M_CeramicPlanter_Glaze
+Kd 0.12 0.34 0.33
+Pm 0.05
+Pr 0.22
+
+newmtl M_CeramicPlanter_Rim
+Kd 0.16 0.4 0.38
+Pm 0.05
+Pr 0.18
+
+newmtl M_Planter_DressedSoil
+Kd 0.11 0.08 0.05
+Pm 0.0
+Pr 0.95
+
+newmtl M_DatePalm_Trunk
+Kd 0.32 0.24 0.15
+Pm 0.0
+Pr 0.86
+
+newmtl M_DatePalm_Rachis
+Kd 0.3 0.33 0.16
+Pm 0.0
+Pr 0.62
+
+newmtl M_DatePalm_Leaflet
+Kd 0.2 0.36 0.17
+Pm 0.0
+Pr 0.46
+map_Kd ../../cutouts/entrance_terrace_reveal/date_palm_leaflet_ribbon_rgba_1024.png
+map_d ../../cutouts/entrance_terrace_reveal/date_palm_leaflet_ribbon_rgba_1024.png
+
+newmtl M_SoilDressing_Mound
+Kd 0.13 0.09 0.055
+Pm 0.0
+Pr 0.95
+
+newmtl M_SoilDressing_Litter
+Kd 0.42 0.3 0.16
+Pm 0.0
+Pr 0.72
+map_Kd ../../cutouts/entrance_terrace_reveal/leaf_bark_litter_rgba_1024.png
+map_d ../../cutouts/entrance_terrace_reveal/leaf_bark_litter_rgba_1024.png
+
+newmtl M_SoilDressing_Stone
+Kd 0.35 0.35 0.34
+Pm 0.0
+Pr 0.8
+
+newmtl M_Aloe_Leaf
+Kd 0.24 0.42 0.22
+Pm 0.0
+Pr 0.55
+
+newmtl M_Aloe_Base
+Kd 0.2 0.16 0.1
+Pm 0.0
+Pr 0.9
+
+newmtl M_Philodendron_Crown
+Kd 0.18 0.14 0.09
+Pm 0.0
+Pr 0.9
+
+newmtl M_Philodendron_Petiole
+Kd 0.28 0.34 0.16
+Pm 0.0
+Pr 0.6
+
+newmtl M_Philodendron_Leaf
+Kd 0.1 0.26 0.13
+Pm 0.0
+Pr 0.42
+map_Kd ../../cutouts/entrance_terrace_reveal/philodendron_lobed_leaf_rgba_1024.png
+map_d ../../cutouts/entrance_terrace_reveal/philodendron_lobed_leaf_rgba_1024.png
+
+newmtl M_Coleus_Base
+Kd 0.18 0.13 0.08
+Pm 0.0
+Pr 0.9
+
+newmtl M_Coleus_Stem
+Kd 0.34 0.28 0.2
+Pm 0.0
+Pr 0.6
+
+newmtl M_Coleus_Leaf
+Kd 0.36 0.16 0.2
+Pm 0.0
+Pr 0.5
+map_Kd ../../cutouts/entrance_terrace_reveal/coleus_leaf_rgba_1024.png
+map_d ../../cutouts/entrance_terrace_reveal/coleus_leaf_rgba_1024.png
+
+newmtl M_Bench_CastFrame_Intact
+Kd 0.16 0.24 0.16
+Pm 0.15
+Pr 0.55
+
+newmtl M_Bench_SeatSlat_Intact
+Kd 0.42 0.27 0.14
+Pm 0.0
+Pr 0.62
+
+newmtl M_Bench_BackSlat_Intact
+Kd 0.4 0.26 0.13
+Pm 0.0
+Pr 0.62
+
+newmtl M_Bench_CastFrame_Damaged
+Kd 0.3 0.18 0.1
+Pm 0.05
+Pr 0.72
+
+newmtl M_Bench_SeatSlat_Damaged
+Kd 0.34 0.3 0.24
+Pm 0.0
+Pr 0.8
+
+newmtl M_Bench_BackSlat_Damaged
+Kd 0.33 0.29 0.23
+Pm 0.0
+Pr 0.8
+
+newmtl M_BrochureStand_Frame
+Kd 0.1 0.1 0.11
+Pm 0.1
+Pr 0.5
+
+newmtl M_BrochureStand_Pocket
+Kd 0.44 0.44 0.4
+Pm 0.05
+Pr 0.42
+
+newmtl M_BrochureStand_Paper
+Kd 0.82 0.78 0.66
+Pm 0.0
+Pr 0.7
+
+newmtl M_Fountain_BasinWall
+Kd 0.46 0.45 0.4
+Pm 0.0
+Pr 0.86
+
+newmtl M_Fountain_BasinFloor
+Kd 0.3 0.28 0.23
+Pm 0.0
+Pr 0.92
+
+newmtl M_Fountain_Pedestal
+Kd 0.24 0.22 0.19
+Pm 0.0
+Pr 0.88
+
+newmtl M_Fountain_LeafLitter
+Kd 0.42 0.3 0.16
+Pm 0.0
+Pr 0.72
+map_Kd ../../cutouts/entrance_terrace_reveal/leaf_bark_litter_rgba_1024.png
+map_d ../../cutouts/entrance_terrace_reveal/leaf_bark_litter_rgba_1024.png
+
+newmtl M_Banner_Institute_Faded
+Kd 0.76 0.71 0.61
+Pm 0.0
+Pr 0.8
+map_Kd ../../cutouts/entrance_terrace_reveal/banner_institute_faded_rgba_2048.png
+map_d ../../cutouts/entrance_terrace_reveal/banner_institute_faded_rgba_2048.png
+
+newmtl M_Banner_Institute_Torn
+Kd 0.56 0.49 0.35
+Pm 0.0
+Pr 0.84
+map_Kd ../../cutouts/entrance_terrace_reveal/banner_institute_torn_rgba_2048.png
+map_d ../../cutouts/entrance_terrace_reveal/banner_institute_torn_rgba_2048.png
+
+newmtl M_Pennant_BotanicalTerrace
+Kd 0.63 0.66 0.58
+Pm 0.0
+Pr 0.78
+map_Kd ../../cutouts/entrance_terrace_reveal/pennant_botanical_terrace_rgba_2048.png
+map_d ../../cutouts/entrance_terrace_reveal/pennant_botanical_terrace_rgba_2048.png

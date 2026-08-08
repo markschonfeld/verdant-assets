@@ -1,0 +1,244 @@
+{
+  "units": "centimetres; Z-up",
+  "slice": "entrance-terrace reveal kit (slice 1 base + slice 2 supporting species + slice 3 furniture + slice 4 banners)",
+  "mesh_count": 16,
+  "foliage_contract": {
+    "alpha_cut_rgba_sheets": 4,
+    "wind_encoding": "OBJ vertex RGB grayscale; 0=root/rigid, 1=free tip",
+    "palm_fronds": 16,
+    "palm_leaflet_pairs_per_frond": 24
+  },
+  "supporting_species": {
+    "VD_Aloe_Specimen": {
+      "form": "multi-tier succulent rosette; thick 3-D diamond-section leaves, serrated margins",
+      "leaves": 32,
+      "alpha_sheets": []
+    },
+    "VD_Philodendron_Specimen": {
+      "form": "real petioles carrying large lobed alpha-cut leaf sheets on curved ribbons",
+      "leaves": 11,
+      "alpha_sheets": [
+        "philodendron_lobed_leaf_rgba_1024.png"
+      ]
+    },
+    "VD_Coleus_Specimen": {
+      "form": "low dense mound; branching real stems, opposite decussate patterned alpha-cut leaves",
+      "leaves": 60,
+      "alpha_sheets": [
+        "coleus_leaf_rgba_1024.png"
+      ]
+    }
+  },
+  "public_furniture": {
+    "contract": "rigid props; zero vertex colour on every furniture mesh",
+    "VD_Bench_Municipal_Intact": {
+      "form": "tubular end frames + real slatted timber seat/back, flat and true",
+      "seat_slats": 6,
+      "back_slats": 4,
+      "sag_cm": 0.0
+    },
+    "VD_Bench_Municipal_Damaged": {
+      "form": "same frame layout as the intact bench; boards bow down mid-span, frame leans further",
+      "seat_slats": 6,
+      "back_slats": 4,
+      "sag_cm": 5.0
+    },
+    "VD_BrochureStand_Institutional": {
+      "form": "tripod-footed post with angled sheet-metal pockets, each holding one warped paper card",
+      "pockets": 5,
+      "paper_cards": 5
+    },
+    "VD_Fountain_DryBasin": {
+      "form": "dry octagonal basin, recessed floor well below the rim, stained pedestal stub, no water material",
+      "sides": 8,
+      "leaf_litter_cards": 10,
+      "rim_to_floor_drop_cm": 66.0
+    }
+  },
+  "banner_kit": {
+    "contract": "rigid baked cloth; zero vertex colour; wind runtime deferred; NO COLLISION on every banner/pennant",
+    "graphic_sheets": "one 2048 RGBA sheet per banner, alpha-cut torn/frayed edges, PIL-typeset copy (DejaVu Sans Bold/Regular, Liberation Sans Bold)",
+    "VD_Banner_Institute_Faded": {
+      "form": "16x24 subdivided cloth grid, multi-wave attachment sag + fine creases, intact silhouette",
+      "message": "EDEN PRIME / A GARDEN FOR THE ATOMIC AGE",
+      "torn": false,
+      "hole_count": 0
+    },
+    "VD_Banner_Institute_Torn": {
+      "form": "24x36 subdivided cloth grid, lost top-right corner droop/pull, alpha-cut ragged punctures, tattered hem",
+      "message": "THE INSTITUTE / SCIENCE IN SERVICE OF ABUNDANCE",
+      "torn": true,
+      "alpha_puncture_count": 3,
+      "torn_side": "right",
+      "corner_drop_cm": 75.0
+    },
+    "VD_Pennant_BotanicalTerrace": {
+      "form": "10x22 subdivided cloth grid tapering from 130 cm header to a 10 cm foot",
+      "message": "BOTANICAL TERRACE / PUBLIC EXHIBITION",
+      "torn": false,
+      "hole_count": 0
+    }
+  },
+  "meshes": [
+    {
+      "name": "VD_SpecimenPlanter_Concrete",
+      "vertices": 674,
+      "faces": 720,
+      "size_cm": [
+        224.0,
+        224.0,
+        98.0
+      ]
+    },
+    {
+      "name": "VD_SpecimenPlanter_Ceramic",
+      "vertices": 674,
+      "faces": 720,
+      "size_cm": [
+        188.0,
+        188.0,
+        116.0
+      ]
+    },
+    {
+      "name": "VD_DatePalm_Hero",
+      "vertices": 6613,
+      "faces": 2772,
+      "size_cm": [
+        345.93,
+        346.95,
+        416.72
+      ]
+    },
+    {
+      "name": "VD_SoilDressing_Mound",
+      "vertices": 42,
+      "faces": 60,
+      "size_cm": [
+        103.84,
+        105.04,
+        15.0
+      ]
+    },
+    {
+      "name": "VD_SoilDressing_Litter",
+      "vertices": 60,
+      "faces": 15,
+      "size_cm": [
+        82.93,
+        85.45,
+        6.43
+      ]
+    },
+    {
+      "name": "VD_SoilDressing_Stones",
+      "vertices": 42,
+      "faces": 60,
+      "size_cm": [
+        69.41,
+        57.18,
+        11.32
+      ]
+    },
+    {
+      "name": "VD_Aloe_Specimen",
+      "vertices": 1282,
+      "faces": 1264,
+      "size_cm": [
+        125.81,
+        127.44,
+        86.37
+      ]
+    },
+    {
+      "name": "VD_Philodendron_Specimen",
+      "vertices": 1215,
+      "faces": 714,
+      "size_cm": [
+        216.25,
+        217.13,
+        143.46
+      ]
+    },
+    {
+      "name": "VD_Coleus_Specimen",
+      "vertices": 1114,
+      "faces": 588,
+      "size_cm": [
+        73.32,
+        68.55,
+        61.65
+      ]
+    },
+    {
+      "name": "VD_Bench_Municipal_Intact",
+      "vertices": 496,
+      "faces": 348,
+      "size_cm": [
+        194.4,
+        64.44,
+        80.61
+      ]
+    },
+    {
+      "name": "VD_Bench_Municipal_Damaged",
+      "vertices": 496,
+      "faces": 348,
+      "size_cm": [
+        194.4,
+        69.87,
+        79.46
+      ]
+    },
+    {
+      "name": "VD_BrochureStand_Institutional",
+      "vertices": 168,
+      "faces": 74,
+      "size_cm": [
+        37.71,
+        48.6,
+        149.65
+      ]
+    },
+    {
+      "name": "VD_Fountain_DryBasin",
+      "vertices": 130,
+      "faces": 106,
+      "size_cm": [
+        380.0,
+        380.0,
+        112.0
+      ]
+    },
+    {
+      "name": "VD_Banner_Institute_Faded",
+      "vertices": 425,
+      "faces": 768,
+      "size_cm": [
+        170.0,
+        15.14,
+        320.0
+      ]
+    },
+    {
+      "name": "VD_Banner_Institute_Torn",
+      "vertices": 925,
+      "faces": 1728,
+      "size_cm": [
+        158.61,
+        26.38,
+        321.16
+      ]
+    },
+    {
+      "name": "VD_Pennant_BotanicalTerrace",
+      "vertices": 253,
+      "faces": 440,
+      "size_cm": [
+        130.0,
+        10.78,
+        280.0
+      ]
+    }
+  ]
+}
