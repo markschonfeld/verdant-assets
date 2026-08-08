@@ -95,24 +95,36 @@ ground visibility.
 empty country. That is the geography doing the storytelling for a game where
 nobody answered the SOS.
 
+## Scope — the whole set is wanted
+
+Mark: *"skyway first but we want them all."* This is not a pick-the-visible-ones
+exercise. Every item below is in scope; the order is about sequencing, not
+about which ones survive a budget cut.
+
+**Already placed, compose around it:** `STACK_Spire` sits at `(-25000, -14000)`,
+282 m west-south-west, inside this arc. It is the microwave relay that sent the
+SOS (`references/props/SPIRE_SIGNAL_MAST_REWORK.md`) and at 180 m it is the
+tallest thing on site by a wide margin. It is context for the layout, not a
+delivery step here.
+
 ## Delivery order
 
-0. **The signal mast is already here.** `STACK_Spire` has been moved west to
-   `(-25000, -14000)` — 282 m out, inside this arc — and is being reworked as
-   the microwave relay that sent the SOS. See
-   `references/props/SPIRE_SIGNAL_MAST_REWORK.md`. At 180 m it is the tallest
-   thing on site by a wide margin, so **compose the rest of the campus around
-   it** rather than treating it as separate.
+1. **The skyway.** First, by Mark's call. The freight tunnel runs west from the
+   greenhouse to about x -8000 and currently dead-ends at a blocking volume.
+   Turning it into an elevated enclosed walkway arriving at the office block
+   fixes that dead end and delivers the structure the player meets first, on
+   the way in. Exterior form only; the interior is a separate job.
+2. **The office/classroom block** — the skyway's destination, and the primary
+   built silhouette after the mast.
+3. **The lecture hall.**
+4. **Laboratory buildings** — note the *smaller* lab has moved out of this spec
+   and attaches to the mast base instead; these are the remaining ones.
+5. **Graduate residence halls** — furthest out, low massing, reads as a cluster.
+6. **Ground treatment** beyond ~150 m, all four sides, N and S first.
+7. **The bounding hills.**
 
-1. **The skyway.** The freight tunnel runs west from the greenhouse to about
-   x -8000 and currently stops at a blocking volume. It should become an
-   elevated enclosed walkway that arrives at the office block — which fixes a
-   dead end and delivers the most visible structure at the same time. Interior
-   is a separate job; this is the exterior form.
-2. **The office/classroom block** — the skyway's destination. The tallest thing
-   on site and the primary silhouette.
-3. **Lecture hall and laboratory buildings** — the mid-distance arc.
-4. **Graduate residence halls** — furthest out, low massing, read as a cluster.
+Items 6 and 7 are as much a part of "all" as the buildings are — a campus of
+good massing on a flat infinite plain will still read as unfinished.
 
 ## What these assets are, and are not
 
