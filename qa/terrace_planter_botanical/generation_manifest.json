@@ -1,0 +1,87 @@
+{
+  "units": "centimetres; Z-up",
+  "module_length_y_cm": 245.0,
+  "planter_size_cm": [
+    126.0,
+    245.0,
+    110.0
+  ],
+  "mesh_count": 11,
+  "foliage_contract": {
+    "alpha_cut_rgba_sheets": 3,
+    "wind_encoding": "OBJ vertex RGB grayscale; 0=root/attachment, 1=free tip",
+    "dracaena_leaves_per_head": [
+      52,
+      58,
+      64
+    ],
+    "zz_fronds_per_crown": [
+      7,
+      9,
+      11
+    ],
+    "zz_leaflets_per_frond": "10-16",
+    "morning_glory_strands": [
+      6,
+      8,
+      10
+    ]
+  },
+  "meshes": [
+    {
+      "name": "VD_TerracePlanter",
+      "vertices": 88,
+      "faces": 60
+    },
+    {
+      "name": "VD_TerracePlanter_EndCap",
+      "vertices": 80,
+      "faces": 52
+    },
+    {
+      "name": "VD_Dracaena_A",
+      "vertices": 872,
+      "faces": 336
+    },
+    {
+      "name": "VD_Dracaena_B",
+      "vertices": 1452,
+      "faces": 558
+    },
+    {
+      "name": "VD_Dracaena_C",
+      "vertices": 1596,
+      "faces": 612
+    },
+    {
+      "name": "VD_ZZPlant_A",
+      "vertices": 866,
+      "faces": 409
+    },
+    {
+      "name": "VD_ZZPlant_B",
+      "vertices": 1126,
+      "faces": 529
+    },
+    {
+      "name": "VD_ZZPlant_C",
+      "vertices": 1378,
+      "faces": 647
+    },
+    {
+      "name": "VD_DwarfMorningGlory_A",
+      "vertices": 720,
+      "faces": 584
+    },
+    {
+      "name": "VD_DwarfMorningGlory_B",
+      "vertices": 883,
+      "faces": 710
+    },
+    {
+      "name": "VD_DwarfMorningGlory_C",
+      "vertices": 1187,
+      "faces": 960
+    }
+  ]
+}

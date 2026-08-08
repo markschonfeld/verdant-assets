@@ -1,0 +1,58 @@
+# Unreal material-slot placeholder library
+newmtl M_Planter_AgedConcrete
+Kd 0.29 0.31 0.28
+Pm 0.0
+Pr 0.88
+
+newmtl M_Planter_CastRepair
+Kd 0.38 0.36 0.3
+Pm 0.0
+Pr 0.82
+
+newmtl M_Planter_Soil
+Kd 0.09 0.07 0.045
+Pm 0.0
+Pr 0.95
+
+newmtl M_Dracaena_Cane
+Kd 0.27 0.21 0.13
+Pm 0.0
+Pr 0.72
+
+newmtl M_Dracaena_Leaf
+Kd 0.14 0.25 0.12
+Pm 0.0
+Pr 0.54
+map_Kd ../../cutouts/terrace_botanical/dracaena_marginata_leaf_rgba_1024.png
+map_d ../../cutouts/terrace_botanical/dracaena_marginata_leaf_rgba_1024.png
+
+newmtl M_ZZ_Stem
+Kd 0.2 0.32 0.14
+Pm 0.0
+Pr 0.38
+
+newmtl M_ZZ_Leaf
+Kd 0.1 0.25 0.11
+Pm 0.0
+Pr 0.24
+map_Kd ../../cutouts/terrace_botanical/zz_leaflet_pair_rgba_1024.png
+map_d ../../cutouts/terrace_botanical/zz_leaflet_pair_rgba_1024.png
+
+newmtl M_MorningGlory_Stem
+Kd 0.18 0.3 0.13
+Pm 0.0
+Pr 0.52
+
+newmtl M_MorningGlory_Leaf
+Kd 0.2 0.39 0.19
+Pm 0.0
+Pr 0.42
+map_Kd ../../cutouts/terrace_botanical/morning_glory_leaf_flower_rgba_1024.png
+map_d ../../cutouts/terrace_botanical/morning_glory_leaf_flower_rgba_1024.png
+
+newmtl M_MorningGlory_Flower
+Kd 0.22 0.31 0.68
+Pm 0.0
+Pr 0.36
+map_Kd ../../cutouts/terrace_botanical/morning_glory_leaf_flower_rgba_1024.png
+map_d ../../cutouts/terrace_botanical/morning_glory_leaf_flower_rgba_1024.png

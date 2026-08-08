@@ -1,0 +1,563 @@
+{
+  "pass": true,
+  "missing": [],
+  "extra": [],
+  "mesh_count": 11,
+  "meshes": {
+    "VD_TerracePlanter": {
+      "pass": true,
+      "failures": [],
+      "vertices": 88,
+      "texture_coordinates": 264,
+      "faces": 60,
+      "triangles": 144,
+      "object_names": [
+        "VD_TerracePlanter"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_Planter_AgedConcrete",
+        "M_Planter_CastRepair",
+        "M_Planter_Soil"
+      ],
+      "material_face_counts": {
+        "M_Planter_AgedConcrete": 18,
+        "M_Planter_CastRepair": 36,
+        "M_Planter_Soil": 6
+      },
+      "wind_stiffness": null,
+      "bounds_cm": {
+        "min": [
+          -63.0,
+          -122.5,
+          0.0
+        ],
+        "max": [
+          63.0,
+          122.5,
+          110.0
+        ],
+        "size": [
+          126.0,
+          245.0,
+          110.0
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_TerracePlanter_EndCap": {
+      "pass": true,
+      "failures": [],
+      "vertices": 80,
+      "texture_coordinates": 240,
+      "faces": 52,
+      "triangles": 136,
+      "object_names": [
+        "VD_TerracePlanter_EndCap"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_Planter_AgedConcrete",
+        "M_Planter_CastRepair"
+      ],
+      "material_face_counts": {
+        "M_Planter_AgedConcrete": 6,
+        "M_Planter_CastRepair": 46
+      },
+      "wind_stiffness": null,
+      "bounds_cm": {
+        "min": [
+          -63.0,
+          -6.5,
+          0.0
+        ],
+        "max": [
+          63.0,
+          6.5,
+          110.0
+        ],
+        "size": [
+          126.0,
+          13.0,
+          110.0
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_Dracaena_A": {
+      "pass": true,
+      "failures": [],
+      "vertices": 872,
+      "texture_coordinates": 1368,
+      "faces": 336,
+      "triangles": 696,
+      "object_names": [
+        "VD_Dracaena_A"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_Dracaena_Cane",
+        "M_Dracaena_Leaf"
+      ],
+      "material_face_counts": {
+        "M_Dracaena_Cane": 24,
+        "M_Dracaena_Leaf": 312
+      },
+      "wind_stiffness": {
+        "encoding": "vertex RGB grayscale",
+        "min": 0.0,
+        "max": 1.0,
+        "vertex_count": 872
+      },
+      "bounds_cm": {
+        "min": [
+          -71.750476,
+          -67.025099,
+          0.0
+        ],
+        "max": [
+          71.750476,
+          67.025099,
+          175.730468
+        ],
+        "size": [
+          143.500952,
+          134.050198,
+          175.730468
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_Dracaena_B": {
+      "pass": true,
+      "failures": [],
+      "vertices": 1452,
+      "texture_coordinates": 2268,
+      "faces": 558,
+      "triangles": 1152,
+      "object_names": [
+        "VD_Dracaena_B"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_Dracaena_Cane",
+        "M_Dracaena_Leaf"
+      ],
+      "material_face_counts": {
+        "M_Dracaena_Cane": 36,
+        "M_Dracaena_Leaf": 522
+      },
+      "wind_stiffness": {
+        "encoding": "vertex RGB grayscale",
+        "min": 0.0,
+        "max": 1.0,
+        "vertex_count": 1452
+      },
+      "bounds_cm": {
+        "min": [
+          -76.648592,
+          -80.125327,
+          0.0
+        ],
+        "max": [
+          76.648592,
+          80.125327,
+          200.228293
+        ],
+        "size": [
+          153.297184,
+          160.250654,
+          200.228293
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_Dracaena_C": {
+      "pass": true,
+      "failures": [],
+      "vertices": 1596,
+      "texture_coordinates": 2484,
+      "faces": 612,
+      "triangles": 1260,
+      "object_names": [
+        "VD_Dracaena_C"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_Dracaena_Cane",
+        "M_Dracaena_Leaf"
+      ],
+      "material_face_counts": {
+        "M_Dracaena_Cane": 36,
+        "M_Dracaena_Leaf": 576
+      },
+      "wind_stiffness": {
+        "encoding": "vertex RGB grayscale",
+        "min": 0.0,
+        "max": 1.0,
+        "vertex_count": 1596
+      },
+      "bounds_cm": {
+        "min": [
+          -71.656938,
+          -71.545857,
+          0.0
+        ],
+        "max": [
+          71.656938,
+          71.545857,
+          215.972701
+        ],
+        "size": [
+          143.313876,
+          143.091714,
+          215.972701
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_ZZPlant_A": {
+      "pass": true,
+      "failures": [],
+      "vertices": 866,
+      "texture_coordinates": 1846,
+      "faces": 409,
+      "triangles": 1028,
+      "object_names": [
+        "VD_ZZPlant_A"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_ZZ_Leaf",
+        "M_ZZ_Stem"
+      ],
+      "material_face_counts": {
+        "M_ZZ_Leaf": 94,
+        "M_ZZ_Stem": 315
+      },
+      "wind_stiffness": {
+        "encoding": "vertex RGB grayscale",
+        "min": 0.0,
+        "max": 1.0,
+        "vertex_count": 866
+      },
+      "bounds_cm": {
+        "min": [
+          -43.585412,
+          -42.700314,
+          0.0
+        ],
+        "max": [
+          43.585412,
+          42.700314,
+          61.000736
+        ],
+        "size": [
+          87.170824,
+          85.400628,
+          61.000736
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_ZZPlant_B": {
+      "pass": true,
+      "failures": [],
+      "vertices": 1126,
+      "texture_coordinates": 2386,
+      "faces": 529,
+      "triangles": 1328,
+      "object_names": [
+        "VD_ZZPlant_B"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_ZZ_Leaf",
+        "M_ZZ_Stem"
+      ],
+      "material_face_counts": {
+        "M_ZZ_Leaf": 124,
+        "M_ZZ_Stem": 405
+      },
+      "wind_stiffness": {
+        "encoding": "vertex RGB grayscale",
+        "min": 0.0,
+        "max": 1.0,
+        "vertex_count": 1126
+      },
+      "bounds_cm": {
+        "min": [
+          -45.932744,
+          -48.263047,
+          0.0
+        ],
+        "max": [
+          45.932744,
+          48.263047,
+          73.082876
+        ],
+        "size": [
+          91.865488,
+          96.526094,
+          73.082876
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_ZZPlant_C": {
+      "pass": true,
+      "failures": [],
+      "vertices": 1378,
+      "texture_coordinates": 2918,
+      "faces": 647,
+      "triangles": 1624,
+      "object_names": [
+        "VD_ZZPlant_C"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_ZZ_Leaf",
+        "M_ZZ_Stem"
+      ],
+      "material_face_counts": {
+        "M_ZZ_Leaf": 152,
+        "M_ZZ_Stem": 495
+      },
+      "wind_stiffness": {
+        "encoding": "vertex RGB grayscale",
+        "min": 0.0,
+        "max": 1.0,
+        "vertex_count": 1378
+      },
+      "bounds_cm": {
+        "min": [
+          -57.732439,
+          -55.019242,
+          0.0
+        ],
+        "max": [
+          57.732439,
+          55.019242,
+          81.645649
+        ],
+        "size": [
+          115.464878,
+          110.038484,
+          81.645649
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_DwarfMorningGlory_A": {
+      "pass": true,
+      "failures": [],
+      "vertices": 720,
+      "texture_coordinates": 1956,
+      "faces": 584,
+      "triangles": 788,
+      "object_names": [
+        "VD_DwarfMorningGlory_A"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_MorningGlory_Flower",
+        "M_MorningGlory_Leaf",
+        "M_MorningGlory_Stem"
+      ],
+      "material_face_counts": {
+        "M_MorningGlory_Flower": 160,
+        "M_MorningGlory_Leaf": 288,
+        "M_MorningGlory_Stem": 136
+      },
+      "wind_stiffness": {
+        "encoding": "vertex RGB grayscale",
+        "min": 0.0,
+        "max": 0.965,
+        "vertex_count": 720
+      },
+      "bounds_cm": {
+        "min": [
+          -15.781828,
+          -56.60293,
+          0.0
+        ],
+        "max": [
+          15.781828,
+          56.60293,
+          100.78618
+        ],
+        "size": [
+          31.563656,
+          113.20586,
+          100.78618
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_DwarfMorningGlory_B": {
+      "pass": true,
+      "failures": [],
+      "vertices": 883,
+      "texture_coordinates": 2406,
+      "faces": 710,
+      "triangles": 986,
+      "object_names": [
+        "VD_DwarfMorningGlory_B"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_MorningGlory_Flower",
+        "M_MorningGlory_Leaf",
+        "M_MorningGlory_Stem"
+      ],
+      "material_face_counts": {
+        "M_MorningGlory_Flower": 160,
+        "M_MorningGlory_Leaf": 366,
+        "M_MorningGlory_Stem": 184
+      },
+      "wind_stiffness": {
+        "encoding": "vertex RGB grayscale",
+        "min": 0.0,
+        "max": 0.965,
+        "vertex_count": 883
+      },
+      "bounds_cm": {
+        "min": [
+          -16.889853,
+          -71.880167,
+          0.0
+        ],
+        "max": [
+          16.889853,
+          71.880167,
+          100.749032
+        ],
+        "size": [
+          33.779706,
+          143.760334,
+          100.749032
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    },
+    "VD_DwarfMorningGlory_C": {
+      "pass": true,
+      "failures": [],
+      "vertices": 1187,
+      "texture_coordinates": 3228,
+      "faces": 960,
+      "triangles": 1308,
+      "object_names": [
+        "VD_DwarfMorningGlory_C"
+      ],
+      "group_records": 0,
+      "material_slots": [
+        "M_MorningGlory_Flower",
+        "M_MorningGlory_Leaf",
+        "M_MorningGlory_Stem"
+      ],
+      "material_face_counts": {
+        "M_MorningGlory_Flower": 248,
+        "M_MorningGlory_Leaf": 480,
+        "M_MorningGlory_Stem": 232
+      },
+      "wind_stiffness": {
+        "encoding": "vertex RGB grayscale",
+        "min": 0.0,
+        "max": 0.965,
+        "vertex_count": 1187
+      },
+      "bounds_cm": {
+        "min": [
+          -16.180782,
+          -83.03638,
+          0.0
+        ],
+        "max": [
+          16.180782,
+          83.03638,
+          102.023899
+        ],
+        "size": [
+          32.361564,
+          166.07276,
+          102.023899
+        ]
+      },
+      "invalid_uv_corners": 0,
+      "degenerate_regions": 0
+    }
+  },
+  "textures": {
+    "dracaena": {
+      "pass": true,
+      "failures": [],
+      "path": "cutouts/terrace_botanical/dracaena_marginata_leaf_rgba_1024.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "opaque_fraction": 0.1051
+    },
+    "zz": {
+      "pass": true,
+      "failures": [],
+      "path": "cutouts/terrace_botanical/zz_leaflet_pair_rgba_1024.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "opaque_fraction": 0.204
+    },
+    "morning_glory": {
+      "pass": true,
+      "failures": [],
+      "path": "cutouts/terrace_botanical/morning_glory_leaf_flower_rgba_1024.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "opaque_fraction": 0.4014
+    }
+  },
+  "tiling": {
+    "axis": "Y",
+    "module_length_cm": 245.0,
+    "end_planes_cm": [
+      -122.5,
+      122.5
+    ],
+    "continuous_components": [
+      "front wall",
+      "back wall",
+      "rim rails",
+      "soil surface"
+    ],
+    "separate_end_cap": true
+  }
+}
