@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "units": "centimetres",
+  "materials": {
+    "precast_exposed_aggregate": {
+      "tile_width_cm": 146.0,
+      "tile_height_cm": 146.0,
+      "resolution": [
+        2048,
+        2048
+      ],
+      "normal_convention": "DirectX tangent-space, green-down",
+      "metallic": 0,
+      "intended_use": "architectural precast face; one Rootstead facade bay wide",
+      "application": "WorldAlignedTexture/WorldAlignedNormal TextureSize=146 cm, or UV density 2048 px per 146 cm",
+      "panel_note": "A 146 x 225 cm panel uses U=1.0 tile and V=1.541096 tiles. Keep joints/runoff/spalls in geometry, decals or local masks.",
+      "aggregate_diameter_cm": [
+        0.7,
+        2.5
+      ]
+    },
+    "concrete_formed": {
+      "tile_width_cm": 225.0,
+      "tile_height_cm": 225.0,
+      "resolution": [
+        2048,
+        2048
+      ],
+      "normal_convention": "DirectX tangent-space, green-down",
+      "metallic": 0,
+      "intended_use": "board-marked in-situ plinth and construction junction",
+      "application": "WorldAlignedTexture/WorldAlignedNormal TextureSize=225 cm",
+      "authored_feature_scale": "board courses ~26.8 cm high; tie pattern ~63.3 x 53.6 cm"
+    },
+    "alu_oxidised": {
+      "tile_width_cm": 200.0,
+      "tile_height_cm": 200.0,
+      "resolution": [
+        2048,
+        2048
+      ],
+      "normal_convention": "DirectX tangent-space, green-down",
+      "metallic": 1,
+      "intended_use": "weathered anodised aluminium vault tubes and nodes",
+      "application": "WorldAlignedTexture/WorldAlignedNormal TextureSize=200 cm; ~20 cm tube width spans ~205 px",
+      "wear_note": "Handled-edge bright wear is a local mask/decal, not uniformly baked into the tile."
+    }
+  }
+}

@@ -62,6 +62,40 @@ python3 scripts/verify_batch2.py
 RGB, content-padding, and format checks. The `batch2_*_contact_sheet.png` files
 and individual 2×2/checkerboard previews support visual review.
 
+## Institutional architectural surfaces
+
+The primary Institute wall face is a dedicated exposed-aggregate architectural
+precast material, not a recolour of the board-formed concrete. All maps are
+aligned, exact-edge seamless 2048×2048 PNGs; normals use Unreal DirectX
+(green-down), and base color contains no baked lighting or AO.
+
+- `textures/pbr/precast_exposed_aggregate_{basecolor,normal,roughness,ao}.png`
+- **Physical tile: 146 × 146 cm** — one Rootstead façade bay wide.
+- Aggregate diameter: **0.7–2.5 cm**.
+- On a 146 × 225 cm panel, use one tile across and 1.541096 tiles vertically.
+- Keep recessed panel joints, runoff below joints/sills, corner spalls and local
+  handling wear in geometry, decals or local masks; a repeating face texture
+  cannot place those causes honestly.
+
+The two existing related materials now have explicit physical scales:
+
+- `concrete_formed_*`: **225 × 225 cm** per tile (board courses ~26.8 cm;
+  tie pattern ~63.3 × 53.6 cm).
+- `alu_oxidised_*`: **200 × 200 cm** per tile under world/triplanar projection;
+  a ~20 cm tube spans ~205 source pixels. Bright handled-edge wear remains a
+  local mask/decal rather than repeating around every tube.
+
+Machine-readable application metadata is in
+`textures/pbr/material_scale_manifest.json`. Regenerate and verify with:
+
+```bash
+python3 scripts/generate_institutional_surface_pbr.py
+python3 scripts/verify_institutional_surface_pbr.py
+```
+
+QA maps, the 2×2 seam preview, QA-only lit preview, contact sheet and report are
+under `qa/institutional_surface_pbr/`.
+
 ## Vault materials and engineered growth
 
 The vault-frame and glazing PBR maps are 2048×2048, aligned, and exact-edge
