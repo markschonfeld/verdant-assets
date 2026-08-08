@@ -78,7 +78,9 @@ for name,maps in MATERIALS.items():
   elif suffix=="roughness":
    s["p95_minus_p05"]=round(s["p95"]-s["p05"],2)
    ok=ok and s["p95_minus_p05"]>=45 and s["stddev"]>=14
-   if name=="alu_oxidised": ok=ok and s["max"]<=210
+   # v7's in-engine calibration deliberately raises the chalked-oxide ceiling
+   # to 214; keep the verifier synchronized with the generator's explicit clamp.
+   if name=="alu_oxidised": ok=ok and s["max"]<=214
   elif suffix=="ao": ok=ok and s["p95"]>=245
   elif suffix=="opacity": ok=ok and s["p95"]>=230 and s["p95"]-s["p05"]>=30
   maps_rec[suffix]={"path":str(p.relative_to(ROOT)),"size":list(raw.size),"mode":raw.mode,

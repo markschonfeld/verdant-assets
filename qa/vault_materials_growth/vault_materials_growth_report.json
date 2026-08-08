@@ -25,12 +25,12 @@
           "exact_lr": true,
           "exact_tb": true,
           "statistics": {
-            "min": 160,
-            "max": 187,
-            "mean": 177.81,
+            "min": 179,
+            "max": 206,
+            "mean": 196.58,
             "stddev": 4.09,
-            "p05": 171.36,
-            "p95": 184.36,
+            "p05": 190.14,
+            "p95": 203.14,
             "channel_spread_mean": 4.04
           },
           "pass": true
@@ -90,13 +90,13 @@
           "exact_lr": true,
           "exact_tb": true,
           "statistics": {
-            "min": 62,
-            "max": 208,
-            "mean": 125.5,
-            "stddev": 24.71,
-            "p05": 85.0,
-            "p95": 167.0,
-            "p95_minus_p05": 82.0
+            "min": 105,
+            "max": 214,
+            "mean": 153.41,
+            "stddev": 22.54,
+            "p05": 116.0,
+            "p95": 191.0,
+            "p95_minus_p05": 75.0
           },
           "pass": true
         },

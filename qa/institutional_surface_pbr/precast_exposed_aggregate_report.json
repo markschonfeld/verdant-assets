@@ -1,0 +1,173 @@
+{
+  "spec": {
+    "dimensions": [
+      2048,
+      2048
+    ],
+    "format": "PNG",
+    "normal_convention": "DirectX tangent-space; green-down",
+    "new_material_tile_cm": [
+      146.0,
+      146.0
+    ],
+    "basecolor_policy": "pigment/material identity only; no baked lighting, AO or height shading"
+  },
+  "scale_manifest": {
+    "precast_exposed_aggregate": {
+      "actual_cm": [
+        146.0,
+        146.0
+      ],
+      "expected_cm": [
+        146.0,
+        146.0
+      ],
+      "pass": true
+    },
+    "concrete_formed": {
+      "actual_cm": [
+        225.0,
+        225.0
+      ],
+      "expected_cm": [
+        225.0,
+        225.0
+      ],
+      "pass": true
+    },
+    "alu_oxidised": {
+      "actual_cm": [
+        200.0,
+        200.0
+      ],
+      "expected_cm": [
+        200.0,
+        200.0
+      ],
+      "pass": true
+    }
+  },
+  "maps": {
+    "basecolor": {
+      "path": "textures/pbr/precast_exposed_aggregate_basecolor.png",
+      "mode": "RGB",
+      "format": "PNG",
+      "size": [
+        2048,
+        2048
+      ],
+      "exact_left_right": true,
+      "exact_top_bottom": true,
+      "bytes": 3656005,
+      "statistics": {
+        "min": 71,
+        "max": 175,
+        "mean": 145.151,
+        "stddev": 12.697,
+        "p05": 122.269,
+        "p95": 165.393,
+        "quadrant_luminance_spread": 1.549
+      },
+      "pass": true
+    },
+    "normal": {
+      "path": "textures/pbr/precast_exposed_aggregate_normal.png",
+      "mode": "RGB",
+      "format": "PNG",
+      "size": [
+        2048,
+        2048
+      ],
+      "exact_left_right": true,
+      "exact_top_bottom": true,
+      "bytes": 7738070,
+      "statistics": {
+        "min": 36,
+        "max": 221,
+        "mean": 135.206,
+        "stddev": 28.333,
+        "p05": 77.591,
+        "p95": 189.207,
+        "channels_rgb": [
+          {
+            "min": 4,
+            "max": 250,
+            "mean": 127.013,
+            "stddev": 37.722,
+            "p05": 52.0,
+            "p95": 202.0
+          },
+          {
+            "min": 4,
+            "max": 250,
+            "mean": 127.002,
+            "stddev": 37.922,
+            "p05": 52.0,
+            "p95": 202.0
+          },
+          {
+            "min": 152,
+            "max": 255,
+            "mean": 240.586,
+            "stddev": 20.994,
+            "p05": 192.0,
+            "p95": 254.0
+          }
+        ]
+      },
+      "pass": true
+    },
+    "roughness": {
+      "path": "textures/pbr/precast_exposed_aggregate_roughness.png",
+      "mode": "L",
+      "format": "PNG",
+      "size": [
+        2048,
+        2048
+      ],
+      "exact_left_right": true,
+      "exact_top_bottom": true,
+      "bytes": 1820171,
+      "statistics": {
+        "min": 122,
+        "max": 255,
+        "mean": 194.857,
+        "stddev": 28.827,
+        "p05": 142.0,
+        "p95": 227.0,
+        "p95_minus_p05": 85.0
+      },
+      "pass": true
+    },
+    "ao": {
+      "path": "textures/pbr/precast_exposed_aggregate_ao.png",
+      "mode": "L",
+      "format": "PNG",
+      "size": [
+        2048,
+        2048
+      ],
+      "exact_left_right": true,
+      "exact_top_bottom": true,
+      "bytes": 1701575,
+      "statistics": {
+        "min": 142,
+        "max": 255,
+        "mean": 241.977,
+        "stddev": 19.099,
+        "p05": 204.0,
+        "p95": 255.0,
+        "p95_minus_p05": 51.0
+      },
+      "pass": true
+    }
+  },
+  "base_ao_abs_correlation": 0.2428,
+  "base_ao_independence_pass": true,
+  "directx_convention_unit_check": {
+    "positive_image_y_slope_green": 141,
+    "negative_image_y_slope_green": 113,
+    "pass": true
+  },
+  "pass": true
+}
