@@ -14,6 +14,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Iterable
 
+from mesh_hygiene import clean_obj_file, parse_obj
+
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "SourceMesh" / "architecture"
 QA = ROOT / "qa" / "rootstead_entry_vestibule"
@@ -315,19 +317,21 @@ def write_mtl(path: Path) -> None:
     path.write_text("\n".join(lines), encoding="utf-8")
 
 
-def mesh_record(mesh: Mesh) -> dict[str, object]:
+def mesh_record(path: Path, hygiene: dict[str, int | float]) -> dict[str, object]:
+    mesh = parse_obj(path)
     mins = [min(point[axis] for point in mesh.vertices) for axis in range(3)]
     maxs = [max(point[axis] for point in mesh.vertices) for axis in range(3)]
     return {
         "vertices": len(mesh.vertices),
         "faces": len(mesh.faces),
-        "triangles_after_import": sum(len(face) - 2 for _, face in mesh.faces),
+        "triangles_after_import": sum(len(face.corners) - 2 for face in mesh.faces),
         "bounds_cm": {
             "min": [round(value, 3) for value in mins],
             "max": [round(value, 3) for value in maxs],
             "size": [round(maxs[axis] - mins[axis], 3) for axis in range(3)],
         },
-        "materials": sorted({material for material, _ in mesh.faces}),
+        "materials": sorted({face.material for face in mesh.faces}),
+        "mesh_hygiene": hygiene,
     }
 
 
@@ -336,8 +340,11 @@ def main() -> None:
     QA.mkdir(parents=True, exist_ok=True)
     meshes = (build_frame(), build_glazing())
     write_mtl(OUT / MTL_NAME)
+    hygiene: dict[str, dict[str, int | float]] = {}
     for mesh in meshes:
-        mesh.write_obj(OUT / f"{mesh.name}.obj")
+        path = OUT / f"{mesh.name}.obj"
+        mesh.write_obj(path)
+        hygiene[mesh.name] = clean_obj_file(path)
     report = {
         "units": "centimetres (1 OBJ unit = 1 Unreal uu = 1 cm)",
         "axis": "Z-up; +X projects east into the greenhouse",
@@ -345,7 +352,10 @@ def main() -> None:
         "placement_world_cm": [128, 0, 3500],
         "walkthrough_clear_cm": {"width": 920, "height": 520},
         "trellis_internal_clear_cm": {"width": 1840, "eave_height": 810},
-        "meshes": {mesh.name: mesh_record(mesh) for mesh in meshes},
+        "meshes": {
+            mesh.name: mesh_record(OUT / f"{mesh.name}.obj", hygiene[mesh.name])
+            for mesh in meshes
+        },
     }
     (QA / "rootstead_entry_vestibule_report.json").write_text(
         json.dumps(report, indent=2) + "\n", encoding="utf-8"

@@ -6,24 +6,24 @@
   "canonical_function": "research exhaust stack later adapted as signal/observation mast",
   "meshes": {
     "VD_SpireBase": {
-      "vertices": 736,
-      "faces": 456,
-      "triangles_after_import": 1296,
+      "vertices": 728,
+      "faces": 455,
+      "triangles_after_import": 1290,
       "bounds_cm": {
         "min": [
           -1200.0,
           -1200.0,
-          0
+          0.0
         ],
         "max": [
           1200.0,
           1200.0,
-          1200
+          1200.0
         ],
         "size": [
           2400.0,
           2400.0,
-          1200
+          1200.0
         ]
       },
       "materials": [
@@ -32,27 +32,41 @@
         "M_Spire_Fastener",
         "M_Spire_PaintedSteel",
         "M_Spire_ServicePanel"
-      ]
+      ],
+      "mesh_hygiene": {
+        "merge_distance_cm": 0.0001,
+        "vertices_before": 736,
+        "vertices_after": 728,
+        "vertices_merged_or_orphaned": 8,
+        "faces_before": 456,
+        "faces_after": 455,
+        "duplicate_faces_removed": 1,
+        "stacked_faces_removed_1cm": 0,
+        "degenerate_faces_removed": 0,
+        "triangles_before": 1296,
+        "triangles_after": 1290,
+        "triangles_removed": 6
+      }
     },
     "VD_Spire": {
-      "vertices": 7832,
-      "faces": 4858,
-      "triangles_after_import": 13780,
+      "vertices": 6392,
+      "faces": 4696,
+      "triangles_after_import": 12776,
       "bounds_cm": {
         "min": [
           -1100.0,
           -1100.0,
-          0
+          0.0
         ],
         "max": [
           1100.0,
           1100.0,
-          18000
+          18000.0
         ],
         "size": [
           2200.0,
           2200.0,
-          18000
+          18000.0
         ]
       },
       "materials": [
@@ -61,7 +75,21 @@
         "M_Spire_ServicePanel",
         "M_Spire_Soot",
         "M_Spire_StackConcrete"
-      ]
+      ],
+      "mesh_hygiene": {
+        "merge_distance_cm": 0.0001,
+        "vertices_before": 7832,
+        "vertices_after": 6392,
+        "vertices_merged_or_orphaned": 1440,
+        "faces_before": 4858,
+        "faces_after": 4696,
+        "duplicate_faces_removed": 0,
+        "stacked_faces_removed_1cm": 162,
+        "degenerate_faces_removed": 0,
+        "triangles_before": 13780,
+        "triangles_after": 12776,
+        "triangles_removed": 1004
+      }
     },
     "VD_SpireLights": {
       "vertices": 288,
@@ -86,7 +114,21 @@
       },
       "materials": [
         "M_Spire_WarningLens"
-      ]
+      ],
+      "mesh_hygiene": {
+        "merge_distance_cm": 0.0001,
+        "vertices_before": 288,
+        "vertices_after": 288,
+        "vertices_merged_or_orphaned": 0,
+        "faces_before": 168,
+        "faces_after": 168,
+        "duplicate_faces_removed": 0,
+        "stacked_faces_removed_1cm": 0,
+        "degenerate_faces_removed": 0,
+        "triangles_before": 528,
+        "triangles_after": 528,
+        "triangles_removed": 0
+      }
     }
   }
 }

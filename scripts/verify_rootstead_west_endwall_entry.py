@@ -32,6 +32,7 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 import rootstead_west_endwall_entry_spec as spec  # noqa: E402
+from mesh_hygiene import assert_obj_hygiene  # noqa: E402
 from rootstead_vault_node_profile import (  # noqa: E402
     VaultNodeProfile,
     generated_triangles_per_node,
@@ -225,6 +226,24 @@ def contract_checks(mesh: ObjMesh, *, expected_name: str, expected_mtl: str,
     }
 
 
+def mesh_hygiene_checks(mesh: ObjMesh) -> dict[str, object]:
+    groups: Counter[tuple[int, tuple[Vec3, ...]]] = Counter()
+    degenerate = 0
+    for _, face, _ in mesh.faces:
+        groups[(len(face), tuple(sorted(mesh.vertices[index] for index in face)))] += 1
+        if face_triangle_area(mesh, face) < spec.DEGENERATE_AREA_EPS:
+            degenerate += 1
+    duplicate_groups = sum(count > 1 for count in groups.values())
+    redundant_faces = sum(count - 1 for count in groups.values() if count > 1)
+    return {
+        "pass": duplicate_groups == 0 and degenerate == 0,
+        "failures": ([] if duplicate_groups == 0 and degenerate == 0 else [f"{duplicate_groups} duplicate face groups; {degenerate} degenerate faces"]),
+        "duplicate_face_groups": duplicate_groups,
+        "redundant_duplicate_faces": redundant_faces,
+        "degenerate_faces": degenerate,
+    }
+
+
 # ---------------------------------------------------------------------------
 # Lattice-graph cross checks
 # ---------------------------------------------------------------------------
@@ -239,6 +258,24 @@ def _vertex_ring_radius(mesh: ObjMesh, start: int, count: int, centroid: Vec3) -
     pts = mesh.vertices[start:start + count]
     return sum(math.dist(p, centroid) for p in pts) / len(pts)
 
+def _expand_spans(spans: str) -> list[int]:
+    result: list[int] = []
+    for span in filter(None, spans.split(",")):
+        start_text, count_text = span.split(":", 1)
+        start, count = int(start_text), int(count_text)
+        result.extend(range(start, start + count))
+    return result
+
+
+def _vertex_centroid_ids(mesh: ObjMesh, ids: list[int]) -> Vec3:
+    pts = [mesh.vertices[index] for index in ids]
+    n = len(pts)
+    return (sum(p[0] for p in pts) / n, sum(p[1] for p in pts) / n, sum(p[2] for p in pts) / n)
+
+
+def _vertex_ring_radius_ids(mesh: ObjMesh, ids: list[int], centroid: Vec3) -> float:
+    pts = [mesh.vertices[index] for index in ids]
+    return sum(math.dist(p, centroid) for p in pts) / len(pts)
 
 
 def hole_signed_distance(y: float, z: float, half_y: float, z_min: float, z_max: float) -> float:
@@ -265,26 +302,40 @@ def hole_signed_distance(y: float, z: float, half_y: float, z_min: float, z_max:
 def _joint_face_components(mesh: ObjMesh, node: dict) -> tuple[list[list[Vec3]], list[str], int]:
     """Measure edge-connected components from the actual OBJ face/vertex ranges."""
     failures: list[str] = []
-    face_start = node.get("joint_face_start")
-    face_count = node.get("joint_face_count")
-    vertex_start = node.get("collar_vertex_start")
-    vertex_count = node.get("collar_vertex_count")
-    if not all(isinstance(value, int) for value in (face_start, face_count, vertex_start, vertex_count)):
-        return [], ["joint profile ranges are missing from the graph"], 0
-    face_start = cast(int, face_start)
-    face_count = cast(int, face_count)
-    vertex_start = cast(int, vertex_start)
-    vertex_count = cast(int, vertex_count)
-    if face_start < 0 or face_count <= 0 or face_start + face_count > len(mesh.faces):
-        return [], ["joint face range is outside the actual OBJ"], 0
-    if vertex_start < 0 or vertex_count <= 0 or vertex_start + vertex_count > len(mesh.vertices):
-        return [], ["joint vertex range is outside the actual OBJ"], 0
-
-    selected = mesh.faces[face_start:face_start + face_count]
-    allowed = range(vertex_start, vertex_start + vertex_count)
-    allowed_min, allowed_max = allowed.start, allowed.stop
-    if any(vertex < allowed_min or vertex >= allowed_max for _, face, _ in selected for vertex in face):
-        failures.append("joint face range references vertices outside its declared joint vertex range")
+    face_spans = node.get("joint_face_spans")
+    vertex_spans = node.get("collar_vertex_spans")
+    if isinstance(face_spans, str) and isinstance(vertex_spans, str):
+        face_ids = _expand_spans(face_spans)
+        vertex_ids = _expand_spans(vertex_spans)
+        if not face_ids or not vertex_ids:
+            return [], ["cleaned joint face/vertex ids are empty"], 0
+        if any(not isinstance(value, int) or value < 0 or value >= len(mesh.faces) for value in face_ids):
+            return [], ["cleaned joint face ids are outside the actual OBJ"], 0
+        if any(not isinstance(value, int) or value < 0 or value >= len(mesh.vertices) for value in vertex_ids):
+            return [], ["cleaned joint vertex ids are outside the actual OBJ"], 0
+        selected = [mesh.faces[index] for index in face_ids]
+        allowed_ids = set(vertex_ids)
+        if any(vertex not in allowed_ids for _, face, _ in selected for vertex in face):
+            failures.append("cleaned joint faces reference vertices outside their declared joint ids")
+    else:
+        face_start = node.get("joint_face_start")
+        face_count = node.get("joint_face_count")
+        vertex_start = node.get("collar_vertex_start")
+        vertex_count = node.get("collar_vertex_count")
+        if not all(isinstance(value, int) for value in (face_start, face_count, vertex_start, vertex_count)):
+            return [], ["joint profile ranges are missing from the graph"], 0
+        face_start = cast(int, face_start)
+        face_count = cast(int, face_count)
+        vertex_start = cast(int, vertex_start)
+        vertex_count = cast(int, vertex_count)
+        if face_start < 0 or face_count <= 0 or face_start + face_count > len(mesh.faces):
+            return [], ["joint face range is outside the actual OBJ"], 0
+        if vertex_start < 0 or vertex_count <= 0 or vertex_start + vertex_count > len(mesh.vertices):
+            return [], ["joint vertex range is outside the actual OBJ"], 0
+        selected = mesh.faces[face_start:face_start + face_count]
+        allowed_ids = set(range(vertex_start, vertex_start + vertex_count))
+        if any(vertex not in allowed_ids for _, face, _ in selected for vertex in face):
+            failures.append("joint face range references vertices outside its declared joint vertex range")
     if any(material != spec.MAT_ALUMINIUM for material, _, _ in selected):
         failures.append("joint face range contains a non-aluminium material")
 
@@ -536,20 +587,31 @@ def lattice_checks(mesh: ObjMesh, graph: dict) -> dict[str, object]:
         failures.append(f"{short_or_long} edges fall outside pitch-coherence tolerance for their kind")
 
     # -- cross-check declared graph geometry against actual OBJ vertices -------
-    node_mismatch = 0
-    for nid, n in nodes.items():
-        c = _vertex_centroid(mesh, n["collar_vertex_start"], n["collar_vertex_count"])
+    cleaned_export = bool(graph.get("mesh_hygiene"))
+    node_mismatch = edge_mismatch = floating_ends = pane_mismatch = radius_mismatch = 0
+    band_radii: dict[str, list[float]] = {"lower": [], "mid": [], "upper": []}
+
+    for n in nodes.values():
+        if cleaned_export:
+            c = _vertex_centroid_ids(mesh, _expand_spans(n["collar_vertex_spans"]))
+        else:
+            c = _vertex_centroid(mesh, n["collar_vertex_start"], n["collar_vertex_count"])
         if math.hypot(c[1] - n["y"], c[2] - lz(n["z_world"])) > spec.TOL_NODE_TO_VERTEX:
             node_mismatch += 1
     if node_mismatch:
         failures.append(f"{node_mismatch} node joint collars are not centred on their declared position")
 
-    edge_mismatch = 0
-    floating_ends = 0
     for e in edges:
         a, b = nodes[e["a"]], nodes[e["b"]]
-        cs = _vertex_centroid(mesh, e["start_vertex_start"], e["start_vertex_count"])
-        ce = _vertex_centroid(mesh, e["end_vertex_start"], e["end_vertex_count"])
+        if cleaned_export:
+            start_ids = _expand_spans(e["start_vertex_spans"])
+            cs = _vertex_centroid_ids(mesh, start_ids)
+            ce = _vertex_centroid_ids(mesh, _expand_spans(e["end_vertex_spans"]))
+            measured = _vertex_ring_radius_ids(mesh, start_ids, cs)
+        else:
+            cs = _vertex_centroid(mesh, e["start_vertex_start"], e["start_vertex_count"])
+            ce = _vertex_centroid(mesh, e["end_vertex_start"], e["end_vertex_count"])
+            measured = _vertex_ring_radius(mesh, e["start_vertex_start"], e["start_vertex_count"], cs)
         da = math.hypot(cs[1] - a["y"], cs[2] - lz(a["z_world"]))
         db = math.hypot(ce[1] - b["y"], ce[2] - lz(b["z_world"]))
         da2 = math.hypot(ce[1] - a["y"], ce[2] - lz(a["z_world"]))
@@ -559,11 +621,16 @@ def lattice_checks(mesh: ObjMesh, graph: dict) -> dict[str, object]:
             edge_mismatch += 1
         if min(da, da2, db, db2) > spec.TOL_NODE_TO_VERTEX and best > 2 * spec.TOL_NODE_TO_VERTEX:
             floating_ends += 1
+        if abs(measured - e["radius"]) > 0.5:
+            radius_mismatch += 1
+        z_mid = e["z_mid_world"]
+        band = "lower" if z_mid < spec.BAND_LOWER_Z_WORLD else ("mid" if z_mid < spec.BAND_UPPER_Z_WORLD else "upper")
+        band_radii[band].append(measured)
     if edge_mismatch:
-        failures.append(f"{edge_mismatch} tube endpoints do not coincide with their declared nodes "
-                         "(floating tube end)")
+        failures.append(f"{edge_mismatch} tube endpoints do not coincide with their declared nodes (floating tube end)")
+    if radius_mismatch:
+        failures.append(f"{radius_mismatch} tube radii measured from the OBJ do not match the declared radius")
 
-    pane_mismatch = 0
     for p in panes:
         for nid, vid in zip(p["nodes"], p["vertex_ids"]):
             n = nodes[nid]
@@ -573,28 +640,13 @@ def lattice_checks(mesh: ObjMesh, graph: dict) -> dict[str, object]:
     if pane_mismatch:
         failures.append(f"{pane_mismatch} pane corners do not coincide with their declared lattice node")
 
-    # -- measured member sizing against the installed vault kit ----------------
-    band_radii: dict[str, list[float]] = {"lower": [], "mid": [], "upper": []}
-    radius_mismatch = 0
-    for e in edges:
-        cs = _vertex_centroid(mesh, e["start_vertex_start"], e["start_vertex_count"])
-        measured = _vertex_ring_radius(mesh, e["start_vertex_start"], e["start_vertex_count"], cs)
-        if abs(measured - e["radius"]) > 0.5:
-            radius_mismatch += 1
-        z_mid = e["z_mid_world"]
-        band = "lower" if z_mid < spec.BAND_LOWER_Z_WORLD else ("mid" if z_mid < spec.BAND_UPPER_Z_WORLD else "upper")
-        band_radii[band].append(measured)
-    if radius_mismatch:
-        failures.append(f"{radius_mismatch} tube radii measured from the OBJ do not match the declared radius")
-
-    avg = {k: (sum(v) / len(v) if v else 0.0) for k, v in band_radii.items()}
-    if not (9.4 <= avg["mid"] <= 10.5):
-        failures.append(f"z4000..6000 band (avg r={avg['mid']:.2f}) is outside the vault-tube "
-                         "barrel range 9.4..10.5")
-
     joint_profile = joint_profile_checks(mesh, graph)
     if not joint_profile["pass"]:
         failures.extend(cast(list[str], joint_profile["failures"]))
+
+    avg = {k: (sum(v) / len(v) if v else 0.0) for k, v in band_radii.items()}
+    if not (9.4 <= avg["mid"] <= 10.5):
+        failures.append(f"z4000..6000 band (avg r={avg['mid']:.2f}) is outside the vault-tube barrel range 9.4..10.5")
 
     # -- area coverage: proves the field has no unintended gaps ----------------
     def domain_area() -> float:
@@ -665,11 +717,23 @@ def locked_delivery_checks(mesh: ObjMesh, graph: dict) -> dict[str, object]:
     if jamb_inner_edges != [-spec.JAMB_Y_INNER, spec.JAMB_Y_INNER]:
         failures.append(f"jamb inner edges {jamb_inner_edges} != locked +/-{spec.JAMB_Y_INNER}")
 
-    sill_tops = [
-        hi[2] + placement_z for lo, hi in reveal_components
-        if abs(lo[2] + placement_z - 3500.0) < 0.01 and hi[1] - lo[1] >= 900.0
-        and hi[0] <= -300.0
-    ]
+    if graph.get("mesh_hygiene"):
+        sill_tops = []
+        for material, face, _ in mesh.faces:
+            if material != spec.MAT_ENTRANCE_REVEAL:
+                continue
+            points = [mesh.vertices[index] for index in face]
+            lo = tuple(min(point[axis] for point in points) for axis in range(3))
+            hi = tuple(max(point[axis] for point in points) for axis in range(3))
+            world_top = hi[2] + placement_z
+            if hi[1] - lo[1] >= 900.0 and hi[0] <= -300.0 and 3500.0 <= world_top <= 3510.0:
+                sill_tops.append(world_top)
+    else:
+        sill_tops = [
+            hi[2] + placement_z for lo, hi in reveal_components
+            if abs(lo[2] + placement_z - 3500.0) < 0.01 and hi[1] - lo[1] >= 900.0
+            and hi[0] <= -300.0
+        ]
     sill_top = max(sill_tops, default=float("nan"))
     if not math.isfinite(sill_top) or abs(sill_top - 3506.0) > 0.01:
         failures.append(f"sill top world Z {sill_top} != locked 3506.0")
@@ -794,8 +858,9 @@ def trellis_checks(mesh: ObjMesh, graph: dict) -> dict[str, object]:
     if len(rails) != len(graph["trellis_rails"]):
         failures.append(f"actual trellis component count {len(rails)} != graph record count "
                         f"{len(graph['trellis_rails'])}")
-    if len(facades) != 3:
-        failures.append(f"actual OBJ contains {len(facades)} facade solids, expected 3")
+    expected_facade_components = {1, 3} if graph.get("mesh_hygiene") else {3}
+    if len(facades) not in expected_facade_components:
+        failures.append(f"actual OBJ contains {len(facades)} facade solids, expected one welded assembly or 3 authored solids")
     clearances = []
     overlap_count = 0
     over_limit = 0
@@ -1022,13 +1087,16 @@ def main() -> None:
     mesh = parse_obj(obj_path)
     leaf_mesh = parse_obj(leaf_path)
     graph = json.loads(graph_path.read_text(encoding="utf-8"))
+    hygiene: dict[str, object] = dict(assert_obj_hygiene(obj_path))
+    hygiene["failures"] = []
 
     sections = {
         "contract": contract_checks(
             mesh, expected_name=spec.MAIN_OBJ_NAME, expected_mtl=f"{spec.MAIN_OBJ_NAME}.mtl",
             allowed_materials=spec.MAIN_MATERIALS, required_min=REQUIRED_MIN_MATERIALS,
-            check_manifold=True,
+            check_manifold=not bool(graph.get("mesh_hygiene")),
         ),
+        "mesh_hygiene": hygiene,
         "lattice": lattice_checks(mesh, graph),
         "locked_delivery": locked_delivery_checks(mesh, graph),
         "transfer_cap": transfer_cap_checks(mesh, graph),

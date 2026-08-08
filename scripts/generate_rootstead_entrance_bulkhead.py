@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Iterable
 ROOT=Path(__file__).resolve().parents[1]; sys.path.insert(0,str(ROOT/"scripts"))
 import rootstead_entrance_bulkhead_spec as S
+from mesh_hygiene import clean_obj_file
 OUT=ROOT/"SourceMesh/architecture"; QA=ROOT/"qa/rootstead_entrance_bulkhead"
 
 class Mesh:
@@ -222,17 +223,17 @@ def parsed_obj_mesh(path):
  return m
 
 def main():
- OUT.mkdir(parents=True,exist_ok=True);QA.mkdir(parents=True,exist_ok=True);m=build();obj=m.write()
+ OUT.mkdir(parents=True,exist_ok=True);QA.mkdir(parents=True,exist_ok=True);m=build();obj=m.write();hygiene=clean_obj_file(obj)
  lines=[f"# Semantic materials for {S.NAME}"]
  for mat,c in COL.items(): lines += [f"newmtl {mat}",f"Kd {c[0]} {c[1]} {c[2]}","Pr 0.850","d 1.000","illum 2",""]
  mtl=OUT/f"{S.NAME}.mtl";mtl.write_text("\n".join(lines))
- cnt=Counter(mat for mat,f in m.f for _ in range(len(f)-2));mins=[min(v[i] for v in m.v) for i in range(3)];maxs=[max(v[i] for v in m.v) for i in range(3)]
- metrics={"asset":S.NAME,"production":True,"placement_world":list(S.PLACEMENT),"local_bounds":{"min":mins,"max":maxs},"world_bounds":{"min":[mins[0],mins[1],mins[2]+3500],"max":[maxs[0],maxs[1],maxs[2]+3500]},"vertices":len(m.v),"faces":len(m.f),"triangles":sum(cnt.values()),"triangles_by_material":dict(cnt),"module_count":72,"joints":{"width_uu":S.JOINT,"reveal_depth_uu":S.RECESS,"credible_range_uu":[2.5,4.0]},"spalls":{"components":14,"family_distribution":{"west":6,"outer_return":4,"door_return":4},"geometry":"closed irregular five-sided corner-loss facets"},"aggregate":{"components":72*S.AGGREGATES_PER_MODULE,"per_module":14,"return_reduction":False,"parsed_signature_unique_by_family":{"west":36,"outer_return":18,"door_return":18}},"weather_streaks":{"components":648,"parsed_profile_unique_by_family":{"west":36,"outer_return":18,"door_return":18},"vertical_down_gravity":True,"origins":"top joints and fixing/spall origins"},"return_bays":{"boundaries":list(S.RETURN_BOUNDS),"widths":[180,180,213],"reason":"Equal 191 uu bays put a joint at x=-79 through device mounts; closure bays keep joints outside every footprint."},"render_source":{"parsed_obj_faces":len(m.f),"semantic_materials":len(cnt)}}
+ parsed=parsed_obj_mesh(obj);cnt=Counter(mat for mat,f in parsed.f for _ in range(len(f)-2));mins=[min(v[i] for v in parsed.v) for i in range(3)];maxs=[max(v[i] for v in parsed.v) for i in range(3)]
+ metrics={"asset":S.NAME,"production":True,"placement_world":list(S.PLACEMENT),"local_bounds":{"min":mins,"max":maxs},"world_bounds":{"min":[mins[0],mins[1],mins[2]+3500],"max":[maxs[0],maxs[1],maxs[2]+3500]},"vertices":len(parsed.v),"faces":len(parsed.f),"triangles":sum(cnt.values()),"triangles_by_material":dict(cnt),"mesh_hygiene":hygiene,"module_count":72,"joints":{"width_uu":S.JOINT,"reveal_depth_uu":S.RECESS,"credible_range_uu":[2.5,4.0]},"spalls":{"components":14,"family_distribution":{"west":6,"outer_return":4,"door_return":4},"geometry":"closed irregular five-sided corner-loss facets"},"aggregate":{"components":72*S.AGGREGATES_PER_MODULE,"per_module":14,"return_reduction":False,"parsed_signature_unique_by_family":{"west":36,"outer_return":18,"door_return":18}},"weather_streaks":{"components":648,"parsed_profile_unique_by_family":{"west":36,"outer_return":18,"door_return":18},"vertical_down_gravity":True,"origins":"top joints and fixing/spall origins"},"return_bays":{"boundaries":list(S.RETURN_BOUNDS),"widths":[180,180,213],"reason":"Equal 191 uu bays put a joint at x=-79 through device mounts; closure bays keep joints outside every footprint."},"render_source":{"parsed_obj_faces":len(parsed.f),"semantic_materials":len(cnt)}}
  (QA/f"{S.NAME}_metrics.json").write_text(json.dumps(metrics,indent=2)+"\n")
  boxes=[]
  for name,x,y,z in S.COLLISION_BOXES: boxes.append({"name":name,"center_world":[(x[0]+x[1])/2,(y[0]+y[1])/2,(z[0]+z[1])/2],"extent_half":[(x[1]-x[0])/2,(y[1]-y[0])/2,(z[1]-z[0])/2],"bounds_world":{"x":list(x),"y":list(y),"z":list(z)}})
  (QA/"rootstead_entrance_bulkhead_collision_boxes.json").write_text(json.dumps({"render_mesh_collision":"disabled","primitive_type":"box","boxes":boxes},indent=2)+"\n")
- parsed=parsed_obj_mesh(obj);evidence=render(parsed,QA/"rootstead_entrance_bulkhead_production_render.png");metrics["render_evidence"]=evidence
+ evidence=render(parsed,QA/"rootstead_entrance_bulkhead_production_render.png");metrics["render_evidence"]=evidence
  (QA/f"{S.NAME}_metrics.json").write_text(json.dumps(metrics,indent=2)+"\n")
- print(json.dumps({"obj":str(obj.relative_to(ROOT)),"triangles":sum(cnt.values()),"vertices":len(m.v),"bounds":[mins,maxs],"collision_boxes":len(boxes)},indent=2))
+ print(json.dumps({"obj":str(obj.relative_to(ROOT)),"triangles":sum(cnt.values()),"vertices":len(parsed.v),"bounds":[mins,maxs],"collision_boxes":len(boxes),"mesh_hygiene":hygiene},indent=2))
 if __name__=="__main__": main()

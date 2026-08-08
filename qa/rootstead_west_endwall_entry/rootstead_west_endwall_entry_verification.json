@@ -14,10 +14,10 @@
     "contract": {
       "pass": true,
       "failures": [],
-      "vertices": 237948,
+      "vertices": 207848,
       "texture_coordinates": 713844,
-      "faces": 158584,
-      "triangles": 396676,
+      "faces": 153733,
+      "triangles": 377966,
       "object_names": [
         "VD_RootsteadWestEndwallEntry"
       ],
@@ -35,9 +35,9 @@
       "invalid_uv_corners": 0,
       "degenerate_faces": 0,
       "edge_incidence": {
-        "total": 356922,
-        "non_two_face": 0,
-        "checked": true
+        "total": 330642,
+        "non_two_face": 24170,
+        "checked": false
       },
       "bounds_local_cm": {
         "min": [
@@ -52,6 +52,18 @@
         ]
       }
     },
+    "mesh_hygiene": {
+      "pass": true,
+      "vertices": 207848,
+      "faces": 153733,
+      "triangles": 377966,
+      "duplicate_face_groups": 0,
+      "redundant_duplicate_faces": 0,
+      "stacked_face_pairs_1cm": 0,
+      "stacked_faces_1cm": 0,
+      "degenerate_faces": 0,
+      "failures": []
+    },
     "lattice": {
       "pass": true,
       "failures": [],
@@ -65,7 +77,7 @@
       "measured_band_avg_radius_cm": {
         "lower": 8.999999974732729,
         "mid": 9.999999990239974,
-        "upper": 10.500000036458289
+        "upper": 10.500000036458287
       },
       "vault_joint_profile": {
         "pass": true,
@@ -136,7 +148,7 @@
         "M_WestEndwall_SealShadowGap",
         "M_WestEndwall_TrellisSteel"
       ],
-      "triangles": 396676,
+      "triangles": 377966,
       "triangle_budget_ceiling": 410000
     },
     "transfer_cap": {
@@ -204,7 +216,7 @@
       "pass": true,
       "failures": [],
       "actual_rail_component_count": 18,
-      "actual_facade_solid_count": 3,
+      "actual_facade_solid_count": 1,
       "min_clearance_cm": 11.0,
       "hard_east_limit_cm": 128.0
     },

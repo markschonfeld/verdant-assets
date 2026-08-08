@@ -14,6 +14,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Iterable
 
+from mesh_hygiene import clean_obj_file, parse_obj
+
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "SourceMesh" / "props"
 QA = ROOT / "qa" / "spire_landmark"
@@ -396,21 +398,23 @@ def write_mtl(path: Path) -> None:
     path.write_text("\n".join(lines), encoding="utf-8")
 
 
-def mesh_record(mesh: Mesh) -> dict[str, object]:
+def mesh_record(path: Path, hygiene: dict[str, int | float]) -> dict[str, object]:
+    mesh = parse_obj(path)
     xs = [v[0] for v in mesh.vertices]
     ys = [v[1] for v in mesh.vertices]
     zs = [v[2] for v in mesh.vertices]
     return {
         "vertices": len(mesh.vertices),
         "faces": len(mesh.faces),
-        "triangles_after_import": sum(max(1, len(face) - 2) for _, face in mesh.faces),
+        "triangles_after_import": sum(len(face.corners) - 2 for face in mesh.faces),
         "bounds_cm": {
             "min": [round(min(xs), 3), round(min(ys), 3), round(min(zs), 3)],
             "max": [round(max(xs), 3), round(max(ys), 3), round(max(zs), 3)],
             "size": [round(max(xs) - min(xs), 3), round(max(ys) - min(ys), 3),
                      round(max(zs) - min(zs), 3)],
         },
-        "materials": sorted({material for material, _ in mesh.faces}),
+        "materials": sorted({face.material for face in mesh.faces}),
+        "mesh_hygiene": hygiene,
     }
 
 
@@ -420,15 +424,18 @@ def main() -> None:
     mtl = OUT / "VD_Spire_Landmark.mtl"
     write_mtl(mtl)
     meshes = [build_base(), build_spire(), build_warning_lights()]
+    hygiene = {}
     for mesh in meshes:
-        mesh.write_obj(OUT / f"{mesh.name}.obj", mtl.name)
+        path = OUT / f"{mesh.name}.obj"
+        mesh.write_obj(path, mtl.name)
+        hygiene[mesh.name] = clean_obj_file(path)
     report = {
         "units": "centimetres (1 unit = 1 Unreal uu = 1 cm)",
         "axis": "Z-up",
         "pivot": "shared ground-centre assembly origin",
         "assembly_height_cm": 18000,
         "canonical_function": "research exhaust stack later adapted as signal/observation mast",
-        "meshes": {mesh.name: mesh_record(mesh) for mesh in meshes},
+        "meshes": {mesh.name: mesh_record(OUT / f"{mesh.name}.obj", hygiene[mesh.name]) for mesh in meshes},
     }
     (QA / "spire_landmark_report.json").write_text(
         json.dumps(report, indent=2) + "\n", encoding="utf-8"

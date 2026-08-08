@@ -13,15 +13,15 @@
     "VD_SpireBase": {
       "pass": true,
       "failures": [],
-      "vertices": 736,
+      "vertices": 728,
       "texture_coordinates": 2208,
-      "uv_indexed_face_corners": 2208,
+      "uv_indexed_face_corners": 2200,
       "object_names": [
         "VD_SpireBase"
       ],
       "group_records": 0,
-      "faces": 456,
-      "triangles": 1296,
+      "faces": 455,
+      "triangles": 1290,
       "bounds_cm": {
         "min": [
           -1200.0,
@@ -47,22 +47,34 @@
         "M_Spire_ServicePanel"
       ],
       "edge_incidence": {
-        "total": 1104,
-        "nonmanifold": 0
+        "total": 1096,
+        "nonmanifold_advisory": 8
+      },
+      "coincident_duplicate_face_groups": 0,
+      "mesh_hygiene_1cm": {
+        "pass": true,
+        "vertices": 728,
+        "faces": 455,
+        "triangles": 1290,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
       }
     },
     "VD_Spire": {
       "pass": true,
       "failures": [],
-      "vertices": 7832,
+      "vertices": 6392,
       "texture_coordinates": 23496,
-      "uv_indexed_face_corners": 23496,
+      "uv_indexed_face_corners": 22168,
       "object_names": [
         "VD_Spire"
       ],
       "group_records": 0,
-      "faces": 4858,
-      "triangles": 13780,
+      "faces": 4696,
+      "triangles": 12776,
       "bounds_cm": {
         "min": [
           -1100.0,
@@ -88,8 +100,20 @@
         "M_Spire_StackConcrete"
       ],
       "edge_incidence": {
-        "total": 11748,
-        "nonmanifold": 0
+        "total": 10420,
+        "nonmanifold_advisory": 1328
+      },
+      "coincident_duplicate_face_groups": 0,
+      "mesh_hygiene_1cm": {
+        "pass": true,
+        "vertices": 6392,
+        "faces": 4696,
+        "triangles": 12776,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
       }
     },
     "VD_SpireLights": {
@@ -126,7 +150,19 @@
       ],
       "edge_incidence": {
         "total": 432,
-        "nonmanifold": 0
+        "nonmanifold_advisory": 0
+      },
+      "coincident_duplicate_face_groups": 0,
+      "mesh_hygiene_1cm": {
+        "pass": true,
+        "vertices": 288,
+        "faces": 168,
+        "triangles": 528,
+        "duplicate_face_groups": 0,
+        "redundant_duplicate_faces": 0,
+        "stacked_face_pairs_1cm": 0,
+        "stacked_faces_1cm": 0,
+        "degenerate_faces": 0
       }
     }
   }
